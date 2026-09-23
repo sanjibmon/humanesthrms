@@ -44,10 +44,21 @@ export async function updateSession(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
-  // Multi-factor is mandatory: a session that has not reached AAL2 goes to the MFA step.
+  /* Multi-factor is mandatory, which means two different cases both have to be
+     caught here:
+
+       1. The account already has a verified authenticator but this session is
+          still at aal1 — it must step up.
+       2. The account has no authenticator at all — it must enrol before going
+          any further. This is the case every brand new account starts in, and
+          checking `nextLevel === 'aal2'` alone misses it, because Supabase only
+          sets nextLevel to aal2 once a verified factor exists.
+
+     Requiring currentLevel to be aal2 covers both. /mfa is public, so there is
+     no redirect loop, and that page enrols a factor when none exists. */
   if (user && !isPublic) {
     const { data: aal } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
-    if (aal && aal.nextLevel === 'aal2' && aal.nextLevel !== aal.currentLevel) {
+    if (!aal || aal.currentLevel !== 'aal2') {
       const url = request.nextUrl.clone();
       url.pathname = '/mfa';
       return NextResponse.redirect(url);
