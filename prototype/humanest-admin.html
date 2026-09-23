@@ -1,0 +1,1802 @@
+<title>HumaNest Platform Admin</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="icon" href="data:image/webp;base64,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">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+<style>
+/* HumaNest design system
+   Structure from the two production prompts (rounded-2xl, 44px inputs,
+   12px uppercase labels, shadow-sm default / shadow-md hover, 200ms).
+   Brand colours sampled from the live site apps.humanest.co.in. */
+:root{
+  --p:#087FD9; --p-dark:#0668B4; --p-deep:#0D2E5B; --p-soft:#E9F8FF; --p-soft2:#F2FAFF;
+  --g:#20CE80; --g-text:#0E8A5B; --g-soft:#E9FFF5;
+  --amber:#F59E0B; --amber-bg:#FEF3C7; --amber-text:#D97706;
+  --red:#DC2626; --red-bg:#FEF2F2; --red-text:#B91C1C;
+  --green:#15803D; --green-bg:#F0FDF4;
+  --yellow-bg:#FEF9C3; --yellow-text:#A16207;
+  --purple-bg:#F5F3FF; --purple-text:#6D28D9;
+  --ink:#0D2E5B; --text:#334155; --slate:#64748B; --slate-2:#94A3B8;
+  --bg:#F8FAF9; --surface:#FFFFFF; --surface-2:#F8FAFC; --line:#E2E8F0; --line-2:#F1F5F9;
+  --grad:linear-gradient(135deg,#087FD9 0%,#20CE80 100%);
+  --grad-wide:linear-gradient(100deg,#087FD9 0%,#20CE80 100%);
+  --grad-deep:linear-gradient(135deg,#0D2E5B 0%,#087FD9 100%);
+  --r-2xl:16px; --r-xl:12px; --r-lg:10px; --r-full:999px;
+  --sh-sm:0 1px 2px rgba(13,46,91,.05),0 1px 3px rgba(13,46,91,.06);
+  --sh-md:0 4px 12px rgba(13,46,91,.08),0 2px 4px rgba(13,46,91,.04);
+  --sh-lg:0 10px 30px rgba(13,56,80,.09);
+  --sh-xl:0 25px 70px rgba(20,67,98,.16);
+  --font:Inter,ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+  --t:200ms cubic-bezier(.4,0,.2,1);
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font:14px/1.5 var(--font);-webkit-font-smoothing:antialiased}
+h1,h2,h3,h4{margin:0;color:var(--ink);font-weight:700;letter-spacing:-.01em}
+p{margin:0}
+button{font:inherit;cursor:pointer;border:0;background:none;color:inherit}
+a{color:var(--p-dark);text-decoration:none}
+a:hover{text-decoration:underline}
+svg{flex:none}
+.num{font-variant-numeric:tabular-nums}
+.mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px}
+.muted{color:var(--slate)}
+.sm{font-size:12px} .xs{font-size:11px} .r{text-align:right} .c{text-align:center}
+.nowrap{white-space:nowrap}
+.hide{display:none!important}
+.row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.col{display:flex;flex-direction:column;gap:10px}
+.spacer{flex:1}
+.grid{display:grid;gap:16px}
+.g2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.g3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.g4{grid-template-columns:repeat(4,minmax(0,1fr))}
+.g5{grid-template-columns:repeat(5,minmax(0,1fr))}
+@media(max-width:1100px){.g4,.g5{grid-template-columns:repeat(2,minmax(0,1fr))}.g3{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:700px){.g2,.g3,.g4,.g5{grid-template-columns:minmax(0,1fr)}}
+
+/* ---------- Brand lockup ---------- */
+.brand{display:flex;align-items:center;gap:10px}
+.brand .mark{width:32px;height:33px;object-fit:contain;display:block}
+.brand .wordwrap{display:block;height:19px;overflow:hidden}
+.brand .wordwrap img{display:block;height:31px;width:auto}
+.brand .tag{display:block;font-size:10px;font-weight:600;letter-spacing:.05em;color:var(--slate);margin-top:2px;white-space:nowrap}
+.lockup{display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center}
+.lockup .mark{width:64px;height:66px;object-fit:contain}
+.lockup .word{width:172px;height:auto;display:block}
+
+/* ---------- Buttons ---------- */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;height:40px;padding:0 18px;
+  border-radius:var(--r-xl);font-size:13px;font-weight:600;color:var(--ink);background:var(--surface);
+  border:1px solid var(--line);transition:all var(--t);white-space:nowrap}
+.btn:hover{border-color:var(--p);box-shadow:var(--sh-sm)}
+.btn.pri{background:var(--p);border-color:var(--p);color:#fff}
+.btn.pri:hover{background:var(--p-dark);border-color:var(--p-dark);box-shadow:var(--sh-md)}
+.btn.grad{background:var(--grad);border-color:transparent;color:#fff}
+.btn.grad:hover{filter:brightness(1.06);box-shadow:var(--sh-md)}
+.btn.danger{background:var(--red);border-color:var(--red);color:#fff}
+.btn.danger:hover{background:var(--red-text);border-color:var(--red-text)}
+.btn.ghost{background:transparent;border-color:var(--line);color:var(--p-dark)}
+.btn.block{width:100%;height:44px}
+.btn.sm{height:32px;padding:0 12px;font-size:12px;border-radius:var(--r-lg)}
+.btn.xs{height:26px;padding:0 10px;font-size:11px;border-radius:var(--r-full)}
+.btn[disabled]{opacity:.45;cursor:not-allowed;box-shadow:none}
+.iconbtn{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;
+  border-radius:var(--r-lg);color:var(--slate);transition:all var(--t)}
+.iconbtn:hover{background:var(--surface-2);color:var(--p)}
+
+/* ---------- Forms ---------- */
+.field{display:flex;flex-direction:column;gap:6px;min-width:0}
+.field>label,.lbl{font-size:12px;font-weight:600;color:var(--slate);text-transform:uppercase;letter-spacing:.04em}
+input,select,textarea{width:100%;height:44px;padding:0 14px;font:inherit;font-size:14px;color:var(--text);
+  background:var(--surface);border:1px solid var(--line);border-radius:var(--r-xl);transition:all var(--t);outline:none}
+textarea{height:80px;padding:12px 14px;resize:vertical;line-height:1.5}
+input::placeholder,textarea::placeholder{color:var(--slate-2)}
+input:focus,select:focus,textarea:focus{border-color:var(--p);box-shadow:0 0 0 2px rgba(8,127,217,.18)}
+input[type=checkbox],input[type=radio]{width:16px;height:16px;height:16px;padding:0;accent-color:var(--p);cursor:pointer}
+input[type=range]{height:auto;padding:0;border:0;accent-color:var(--p);background:transparent}
+input[type=range]:focus{box-shadow:none}
+select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2364748B' stroke-width='2' stroke-linecap='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 12px center;padding-right:36px}
+.checkrow{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--slate);cursor:pointer}
+.suffix{position:relative;display:block}
+.suffix input{padding-right:130px}
+.suffix span{position:absolute;right:14px;top:50%;transform:translateY(-50%);font-size:12px;color:var(--slate)}
+
+/* ---------- Cards, tables, badges ---------- */
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-2xl);
+  box-shadow:var(--sh-sm);padding:20px;transition:box-shadow var(--t);min-width:0}
+.card.hov:hover{box-shadow:var(--sh-md)}
+.card.accent{border-top:3px solid var(--p)}
+.card.accent-amber{border-top:3px solid var(--amber)}
+.card.accent-slate{border-top:3px solid var(--slate-2)}
+.card.accent-green{border-top:3px solid var(--g)}
+.cardhead{display:flex;align-items:flex-start;gap:12px;margin-bottom:14px}
+.cardhead h3{font-size:14px}
+.cardhead .sub{font-size:12px;color:var(--slate);margin-top:2px}
+.kpi .lbl{font-size:12px;color:var(--slate);text-transform:uppercase;letter-spacing:.04em;font-weight:600}
+.kpi .val{font-size:28px;font-weight:700;color:var(--ink);letter-spacing:-.02em;margin-top:6px;line-height:1.1}
+.kpi .foot{font-size:12px;color:var(--slate);margin-top:6px}
+.kpi .ic{width:40px;height:40px;border-radius:var(--r-xl);background:var(--p-soft);color:var(--p);
+  display:flex;align-items:center;justify-content:center}
+.tablewrap{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-2xl);
+  box-shadow:var(--sh-sm);overflow:hidden}
+.tablescroll{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{background:var(--surface-2);color:var(--slate);font-size:12px;font-weight:600;text-transform:uppercase;
+  letter-spacing:.04em;text-align:left;padding:12px 16px;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:12px 16px;border-bottom:1px solid var(--line-2);vertical-align:middle}
+tbody tr{transition:background var(--t)}
+tbody tr:hover{background:var(--surface-2)}
+tbody tr:last-child td{border-bottom:0}
+td.r,th.r{text-align:right}
+td .row{flex-wrap:nowrap}
+/* keep the actions column reachable on narrow viewports */
+.tablewrap th:last-child,.tablewrap td:last-child{position:sticky;right:0;z-index:1}
+.tablewrap th:last-child{background:var(--surface-2)}
+.tablewrap td:last-child{background:var(--surface);box-shadow:-8px 0 12px -10px rgba(13,46,91,.25)}
+.tablewrap tbody tr:hover td:last-child{background:var(--surface-2)}
+.badge{display:inline-flex;align-items:center;gap:4px;border-radius:var(--r-full);padding:4px 10px;
+  font-size:11px;font-weight:700;background:var(--line-2);color:var(--slate);white-space:nowrap}
+.badge.p{background:var(--p-soft);color:var(--p-dark)}
+.badge.green{background:var(--green-bg);color:var(--green)}
+.badge.amber{background:var(--amber-bg);color:var(--amber-text)}
+.badge.red{background:var(--red-bg);color:var(--red-text)}
+.badge.yellow{background:var(--yellow-bg);color:var(--yellow-text)}
+.badge.purple{background:var(--purple-bg);color:var(--purple-text)}
+.badge.slate{background:var(--line-2);color:#475569}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--slate-2);flex:none}
+.dot.green{background:#22C55E} .dot.red{background:var(--red)} .dot.amber{background:var(--amber)}
+.dot.purple{background:#8B5CF6}
+.avatar{width:32px;height:32px;border-radius:50%;background:var(--p);color:#fff;display:flex;
+  align-items:center;justify-content:center;font-size:13px;font-weight:700;flex:none}
+.avatar.sm{width:24px;height:24px;font-size:11px}
+.avatar.slate{background:var(--slate)}
+.avatar.grad{background:var(--grad)}
+.stack2{display:flex;flex-direction:column;line-height:1.35;min-width:0}
+.stack2 b{font-size:13px;color:var(--ink);font-weight:600}
+.stack2 span{font-size:11px;color:var(--slate)}
+.bar{height:6px;border-radius:var(--r-full);background:var(--line);overflow:hidden;min-width:60px}
+.bar>i{display:block;height:100%;border-radius:var(--r-full);background:var(--p)}
+.bar>i.grad{background:var(--grad-wide)}
+.bar>i.red{background:var(--red)}
+.bar>i.amber{background:var(--amber)}
+
+/* ---------- Tabs, pills ---------- */
+.pills{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.pills button{height:34px;padding:0 16px;border-radius:var(--r-full);font-size:13px;font-weight:600;
+  color:var(--slate);background:var(--surface);border:1px solid var(--line);transition:all var(--t);
+  display:inline-flex;align-items:center;gap:6px}
+.pills button:hover{border-color:var(--p)}
+.pills button[aria-selected=true]{background:var(--p);border-color:var(--p);color:#fff;box-shadow:var(--sh-sm)}
+.pills button[aria-selected=true] .badge{background:rgba(255,255,255,.22);color:#fff}
+.utabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin-bottom:18px;overflow-x:auto}
+.utabs button{padding:10px 16px;font-size:13px;font-weight:600;color:var(--slate);
+  border-bottom:2px solid transparent;white-space:nowrap;transition:all var(--t)}
+.utabs button[aria-selected=true]{color:var(--p-dark);border-bottom-color:var(--p)}
+
+/* ---------- Empty state ---------- */
+.empty{border:2px dashed var(--line);border-radius:var(--r-2xl);padding:40px 24px;text-align:center;
+  display:flex;flex-direction:column;align-items:center;gap:6px;background:var(--surface)}
+.empty .ill{width:48px;height:48px;color:var(--slate-2);margin-bottom:6px}
+.empty h4{font-size:14px;color:var(--ink)}
+.empty p{font-size:12px;color:var(--slate);max-width:360px}
+.empty .btn{margin-top:12px}
+
+/* ---------- App shell ---------- */
+.topbar{position:sticky;top:0;z-index:40;height:64px;display:flex;align-items:center;gap:12px;
+  padding:0 20px;background:var(--surface);border-bottom:1px solid var(--line)}
+.urlbadge{display:inline-flex;align-items:center;gap:6px;height:28px;padding:0 12px;border-radius:var(--r-full);
+  background:var(--line-2);color:var(--slate);font-size:12px;white-space:nowrap}
+.urlbadge .lk{color:#16A34A;display:flex}
+.vsep{width:1px;height:28px;background:var(--line);flex:none}
+.searchbox{position:relative;width:280px;max-width:32vw}
+.searchbox input{height:36px;border-radius:var(--r-full);background:var(--bg);padding:0 14px 0 38px;font-size:13px}
+.searchbox .si{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:var(--slate-2);display:flex}
+.searchbox kbd{position:absolute;right:10px;top:50%;transform:translateY(-50%);font:inherit;font-size:10px;
+  color:var(--slate-2);background:var(--surface);border:1px solid var(--line);border-radius:5px;padding:1px 5px}
+.bell{position:relative}
+.bell .dot{position:absolute;top:2px;right:3px;width:7px;height:7px;background:var(--red)}
+.userchip{display:flex;align-items:center;gap:9px}
+.layout{display:grid;grid-template-columns:260px minmax(0,1fr);align-items:start}
+.sidebar{position:sticky;top:64px;height:calc(100vh - 64px);overflow-y:auto;background:var(--surface);
+  border-right:1px solid var(--line);padding:16px 12px;display:flex;flex-direction:column;gap:3px}
+.sidebar .grp{font-size:11px;font-weight:700;color:var(--slate-2);text-transform:uppercase;
+  letter-spacing:.07em;padding:14px 12px 6px}
+.navitem{display:flex;align-items:center;gap:11px;width:100%;padding:10px 12px;border-radius:var(--r-xl);
+  font-size:14px;font-weight:500;color:var(--slate);text-align:left;transition:all var(--t)}
+.navitem:hover{background:var(--bg);color:var(--ink)}
+.navitem[aria-current=page]{background:var(--p);color:#fff;box-shadow:var(--sh-sm);font-weight:600}
+.navitem[aria-current=page] .rupee{background:rgba(255,255,255,.22);color:#fff}
+.navitem .cnt{margin-left:auto;font-size:11px;font-weight:700;background:var(--red);color:#fff;
+  border-radius:var(--r-full);padding:1px 7px}
+.navitem[aria-current=page] .cnt{background:rgba(255,255,255,.25)}
+/* Payroll rupee icon: Indian Rupee in a circle, never a dollar sign */
+.rupee{width:22px;height:22px;border-radius:50%;background:var(--p-soft);color:var(--p);
+  display:inline-flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex:none;line-height:1}
+.rupee.lg{width:40px;height:40px;font-size:20px}
+.upsell{margin-top:auto;background:var(--grad-deep);color:#fff;border-radius:var(--r-xl);padding:16px;
+  display:flex;flex-direction:column;gap:8px}
+.upsell b{font-size:13px} .upsell p{font-size:11px;opacity:.85;line-height:1.45}
+.upsell .btn{background:#fff;color:var(--p-dark);border-color:#fff;height:34px;font-size:12px}
+main{padding:24px clamp(16px,2.4vw,28px) 64px;min-width:0}
+.pagehead{display:flex;align-items:flex-start;gap:14px;flex-wrap:wrap;margin-bottom:20px}
+.pagehead h1{font-size:22px}
+.pagehead .sub{font-size:14px;color:var(--slate);margin-top:3px}
+
+/* ---------- Auth pages ---------- */
+.authwrap{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:18px;padding:32px 16px;background:var(--bg)}
+.authcard{width:100%;max-width:400px;background:var(--surface);border:1px solid var(--line);
+  border-radius:var(--r-2xl);box-shadow:var(--sh-lg);padding:32px}
+.authcard.wide{max-width:680px}
+.authfoot{font-size:11px;color:var(--slate);display:flex;align-items:center;justify-content:center;gap:6px}
+.otp{display:flex;gap:8px;justify-content:center}
+.otp input{width:48px;height:48px;padding:0;text-align:center;font-size:20px;font-weight:700;
+  border-radius:var(--r-xl);color:var(--ink)}
+.userpill{display:inline-flex;align-items:center;gap:7px;background:var(--p-soft);color:var(--p-dark);
+  border-radius:var(--r-full);padding:8px 16px;font-size:13px;font-weight:500}
+.logincard{display:flex;flex-direction:column;gap:10px;padding:24px;border:1px solid var(--line);
+  border-radius:var(--r-2xl);background:var(--surface);box-shadow:var(--sh-sm);transition:all var(--t);text-align:left}
+.logincard:hover{box-shadow:var(--sh-md);border-color:var(--p)}
+.logincard .ic{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+.logincard h3{font-size:16px}
+.feat{display:flex;align-items:center;gap:7px;font-size:11px;color:var(--slate)}
+.feat svg{color:var(--g-text)}
+
+/* ---------- Modal ---------- */
+.scrim{position:fixed;inset:0;background:rgba(13,46,91,.5);z-index:80;display:flex;align-items:center;
+  justify-content:center;padding:24px;overflow-y:auto}
+.modal{background:var(--surface);border-radius:var(--r-2xl);box-shadow:var(--sh-xl);width:100%;
+  max-width:600px;max-height:90vh;display:flex;flex-direction:column;overflow:hidden}
+.modal.lg{max-width:720px}
+.modal.sm{max-width:460px}
+.modalhead{display:flex;align-items:center;gap:12px;padding:20px 24px;border-bottom:1px solid var(--line)}
+.modalhead h2{font-size:18px}
+.modalbody{padding:24px;overflow-y:auto;display:flex;flex-direction:column;gap:16px}
+.modalfoot{display:flex;justify-content:flex-end;gap:10px;padding:16px 24px;border-top:1px solid var(--line);
+  background:var(--surface-2)}
+.modalicon{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex:none}
+.modalicon.amber{background:var(--amber-bg);color:var(--amber-text)}
+.modalicon.red{background:var(--red-bg);color:var(--red-text)}
+.modalicon.p{background:var(--p-soft);color:var(--p)}
+
+/* ---------- Misc ---------- */
+.toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%);background:var(--ink);color:#fff;
+  border-radius:var(--r-xl);padding:11px 20px;font-size:13px;box-shadow:var(--sh-xl);z-index:100}
+.note{display:flex;gap:10px;align-items:flex-start;border-radius:var(--r-xl);padding:12px 14px;font-size:13px;line-height:1.5}
+.note.p{background:var(--p-soft);color:var(--p-dark)}
+.note.amber{background:var(--amber-bg);color:var(--amber-text)}
+.note.green{background:var(--green-bg);color:var(--green)}
+.protobar{background:var(--p-soft);color:var(--p-dark);font-size:12px;padding:7px 20px;text-align:center;
+  border-bottom:1px solid var(--line)}
+.protohint{display:flex;gap:10px;align-items:flex-start;margin-top:16px;padding:12px 14px;
+  border:1px dashed var(--p);border-radius:var(--r-xl);background:var(--p-soft);color:var(--p-dark);
+  font-size:12.5px;line-height:1.55;text-align:left}
+.protohint .phi{flex:none;line-height:0;margin-top:1px}
+.protohint .btn{height:32px;font-size:12px;background:var(--surface)}
+.lifecycle{display:flex;align-items:flex-start;gap:0;overflow-x:auto;padding:4px 0}
+.lcstep{display:flex;flex-direction:column;align-items:center;gap:7px;min-width:96px}
+.lcstep .c{width:40px;height:40px;border-radius:50%;background:var(--line-2);color:var(--slate);
+  display:flex;align-items:center;justify-content:center;border:2px solid var(--line)}
+.lcstep.on .c{background:var(--p);border-color:var(--p);color:#fff;box-shadow:var(--sh-md)}
+.lcstep span{font-size:11px;font-weight:600;color:var(--slate)}
+.lcstep.on span{color:var(--p-dark)}
+.lcline{flex:1;min-width:26px;height:2px;background:var(--line);margin-top:20px}
+.lcline i{display:block;font-size:9px;color:var(--slate-2);text-align:center;margin-top:-16px;font-style:normal}
+.timeline{display:flex;flex-direction:column;gap:0}
+.tlitem{display:flex;gap:12px;padding-bottom:16px;position:relative}
+.tlitem::before{content:"";position:absolute;left:5px;top:14px;bottom:0;width:2px;background:var(--line)}
+.tlitem:last-child::before{display:none}
+.tlitem .d{width:12px;height:12px;border-radius:50%;background:var(--p);margin-top:3px;flex:none;z-index:1;
+  box-shadow:0 0 0 3px var(--p-soft)}
+.tlitem.done .d{background:var(--g)}
+.tlitem.wait .d{background:var(--line);box-shadow:0 0 0 3px var(--line-2)}
+.modcard{border:1px solid var(--line);border-radius:var(--r-xl);padding:16px;background:var(--surface);
+  display:flex;gap:12px;transition:all var(--t);position:relative}
+.modcard:hover{border-color:var(--p);box-shadow:var(--sh-sm)}
+.modcard .ic{width:32px;height:32px;border-radius:50%;background:var(--p-soft);color:var(--p);
+  display:flex;align-items:center;justify-content:center;flex:none}
+.modcard h4{font-size:14px}
+.modcard p{font-size:11px;color:var(--slate);line-height:1.45}
+.sw{width:38px;height:22px;border-radius:var(--r-full);background:var(--line);position:relative;
+  transition:background var(--t);flex:none;cursor:pointer}
+.sw::after{content:"";position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;
+  background:#fff;transition:transform var(--t);box-shadow:var(--sh-sm)}
+.sw[aria-checked=true]{background:var(--p)}
+.sw[aria-checked=true]::after{transform:translateX(16px)}
+.sw[aria-disabled=true]{opacity:.5;cursor:not-allowed}
+.plancard{border:1px solid var(--line);border-radius:var(--r-xl);padding:16px;background:var(--surface);
+  cursor:pointer;transition:all var(--t);text-align:left;position:relative}
+.plancard:hover{background:var(--surface-2)}
+.plancard[aria-pressed=true]{border:2px solid var(--p);background:var(--p-soft2);padding:15px}
+.chart{width:100%;height:auto;display:block;overflow:visible}
+svg.donut,svg.gaugechart{width:auto;height:auto;flex:none}
+.chart text{font-size:10px;fill:var(--slate);font-family:var(--font)}
+.hbar{display:grid;grid-template-columns:18px 1fr 56px;gap:10px;align-items:center;font-size:12px;padding:5px 0}
+.hbar .rk{color:var(--slate-2);font-weight:700;font-size:11px}
+.selfiebox{width:56px;height:56px;border-radius:var(--r-xl);background:var(--line-2);color:var(--slate-2);
+  display:flex;align-items:center;justify-content:center;border:1px dashed var(--line)}
+.uploadbox{border:2px dashed var(--line);border-radius:var(--r-xl);padding:20px;text-align:center;
+  color:var(--slate);display:flex;flex-direction:column;align-items:center;gap:5px;transition:all var(--t);cursor:pointer}
+.uploadbox:hover{border-color:var(--p);background:var(--p-soft2)}
+.kanban{display:grid;grid-template-columns:repeat(5,minmax(160px,1fr));gap:12px;overflow-x:auto}
+.kancol{background:var(--surface-2);border:1px solid var(--line);border-radius:var(--r-xl);padding:12px;min-height:180px}
+.kancol h4{font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:var(--slate);margin-bottom:10px}
+.kv{display:grid;grid-template-columns:minmax(120px,auto) 1fr;gap:8px 18px;font-size:13px;align-items:baseline}
+.kv dt{color:var(--slate);font-size:12px}
+.kv dd{margin:0;color:var(--ink);font-weight:500;overflow-wrap:anywhere}
+.steps{display:flex;align-items:center;gap:0;flex-wrap:wrap;margin-bottom:18px}
+.stp{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:600;color:var(--slate)}
+.stp .n{width:26px;height:26px;border-radius:50%;background:var(--line-2);color:var(--slate);
+  display:flex;align-items:center;justify-content:center;font-size:12px}
+.stp.on .n{background:var(--p);color:#fff} .stp.on{color:var(--p-dark)}
+.stp.done .n{background:var(--g);color:#fff}
+.stpline{width:28px;height:2px;background:var(--line);margin:0 8px}
+.donut{transform:rotate(-90deg)}
+.checkin{display:flex;align-items:center;gap:9px;flex-wrap:nowrap;white-space:nowrap}
+.checkin .selfiebox{width:34px;height:34px}
+@media(max-width:1480px){.searchbox{display:none}}
+@media(max-width:1280px){.checkin .geo,.checkin .stack2{display:none}}
+@media(max-width:1120px){.topbar .urlbadge,.topbar .vsep{display:none}.userchip .stack2,.userchip .badge{display:none}}
+@media(max-width:900px){
+  .layout{grid-template-columns:minmax(0,1fr)}
+  .sidebar{position:static;height:auto;border-right:0;border-bottom:1px solid var(--line);
+    flex-direction:row;overflow-x:auto;padding:10px}
+  .sidebar .grp,.upsell{display:none}
+  .navitem{width:auto;white-space:nowrap}
+  .searchbox{display:none}
+}
+
+</style>
+<div id="root"></div>
+<script>
+const HN_APP = "admin";
+const HN_HOST = "admin.humanest.co.in";
+const HN_MARK = "data:image/webp;base64,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";
+const HN_WORD = "data:image/webp;base64,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";
+</script>
+<script>
+/* ===== HumaNest prototype — shared shell, auth, helpers =====
+   Framework only. No dummy customer or employee data: every list starts
+   empty and fills only from what you create in the prototype. */
+
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const initial = (s) => (String(s || '?').trim()[0] || '?').toUpperCase();
+
+/* Indian Rupee everywhere for money. Never a dollar sign. */
+const RS = '₹';
+const inr = (n) => RS + Math.round(Number(n) || 0).toLocaleString('en-IN');
+const inrShort = (n) => {
+  n = Number(n) || 0;
+  if (n >= 1e7) return RS + (n / 1e7).toFixed(n % 1e7 ? 2 : 0) + 'Cr';
+  if (n >= 1e5) return RS + (n / 1e5).toFixed(n % 1e5 ? 1 : 0) + 'L';
+  if (n >= 1e3) return RS + Math.round(n / 1e3) + 'k';
+  return RS + n;
+};
+const today = () => new Date().toISOString().slice(0, 10);
+const addDays = (iso, d) => { const t = new Date(iso + 'T00:00:00'); t.setDate(t.getDate() + d); return t.toISOString().slice(0, 10); };
+const daysLeft = (iso) => Math.ceil((Date.parse(iso + 'T00:00:00') - Date.parse(today() + 'T00:00:00')) / 864e5);
+const MON = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+const dlabel = (iso) => { if (!iso) return '—'; const [y, m, d] = iso.split('-'); return +d + ' ' + MON[+m - 1] + ' ' + y; };
+const uid = (p) => p + '-' + String(++uid.n).padStart(3, '0');
+uid.n = 0;
+
+/* ---------- Icons ---------- */
+const P = {
+  grid: '<path d="M3 3h7v7H3zM14 3h7v7h-7zM14 14h7v7h-7zM3 14h7v7H3z"/>',
+  inbox: '<path d="M22 12h-6l-2 3h-4l-2-3H2"/><path d="M5.45 5.11L2 12v6a2 2 0 002 2h16a2 2 0 002-2v-6l-3.45-6.89A2 2 0 0016.76 4H7.24a2 2 0 00-1.79 1.11z"/>',
+  users: '<path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/>',
+  user: '<path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/>',
+  userplus: '<path d="M16 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="8.5" cy="7" r="4"/><path d="M20 8v6M23 11h-6"/>',
+  clock: '<circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>',
+  calendar: '<rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>',
+  receipt: '<path d="M4 2v20l2-1.5L8 22l2-1.5L12 22l2-1.5L16 22l2-1.5L20 22V2l-2 1.5L16 2l-2 1.5L12 2l-2 1.5L8 2 6 3.5z"/><path d="M8 8h8M8 12h8M8 16h5"/>',
+  briefcase: '<rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/>',
+  trending: '<path d="M23 6l-9.5 9.5-5-5L1 18"/><path d="M17 6h6v6"/>',
+  laptop: '<rect x="3" y="4" width="18" height="12" rx="2"/><path d="M2 20h20"/>',
+  lifebuoy: '<circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/><path d="M4.93 4.93l4.24 4.24M14.83 14.83l4.24 4.24M14.83 9.17l4.24-4.24M9.17 14.83l-4.24 4.24"/>',
+  book: '<path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/>',
+  chart: '<path d="M18 20V10M12 20V4M6 20v-6"/>',
+  file: '<path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/>',
+  shieldcheck: '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/>',
+  shield: '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>',
+  plug: '<path d="M9 2v6M15 2v6"/><path d="M6 8h12v3a6 6 0 01-6 6 6 6 0 01-6-6z"/><path d="M12 17v5"/>',
+  settings: '<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 11-4 0v-.09A1.65 1.65 0 008 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 11-2.83-2.83l.06-.06A1.65 1.65 0 004.6 15a1.65 1.65 0 00-1.51-1H3a2 2 0 110-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06A1.65 1.65 0 009 4.6a1.65 1.65 0 001-1.51V3a2 2 0 114 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 112.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 110 4h-.09a1.65 1.65 0 00-1.51 1z"/>',
+  building: '<rect x="4" y="2" width="16" height="20" rx="2"/><path d="M9 6h2M13 6h2M9 10h2M13 10h2M9 14h2M13 14h2M10 22v-4h4v4"/>',
+  card: '<rect x="1" y="4" width="22" height="16" rx="3"/><path d="M1 10h22"/>',
+  puzzle: '<path d="M14 2a2 2 0 012 2v2h2a2 2 0 012 2v3a2 2 0 01-2 2 2 2 0 100 4 2 2 0 012 2v1a2 2 0 01-2 2h-3a2 2 0 01-2-2 2 2 0 10-4 0 2 2 0 01-2 2H4a2 2 0 01-2-2v-3a2 2 0 012-2 2 2 0 100-4 2 2 0 01-2-2V8a2 2 0 012-2h2V4a2 2 0 012-2z"/>',
+  search: '<circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>',
+  bell: '<path d="M18 8A6 6 0 106 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/>',
+  help: '<circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/>',
+  lock: '<rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/>',
+  check: '<path d="M20 6L9 17l-5-5"/>',
+  checkcircle: '<circle cx="12" cy="12" r="10"/><path d="M8 12l3 3 5-6"/>',
+  x: '<path d="M18 6L6 18M6 6l12 12"/>',
+  plus: '<path d="M12 5v14M5 12h14"/>',
+  eye: '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>',
+  eyeoff: '<path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/><path d="M1 1l22 22"/>',
+  pencil: '<path d="M17 3a2.83 2.83 0 114 4L7.5 20.5 2 22l1.5-5.5z"/>',
+  trash: '<path d="M3 6h18M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/>',
+  pause: '<rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/>',
+  more: '<circle cx="12" cy="5" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="12" cy="19" r="1.6"/>',
+  chevdown: '<path d="M6 9l6 6 6-6"/>',
+  chevright: '<path d="M9 18l6-6-6-6"/>',
+  arrowup: '<path d="M12 19V5M5 12l7-7 7 7"/>',
+  arrowright: '<path d="M5 12h14M12 5l7 7-7 7"/>',
+  camera: '<path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/>',
+  pin: '<path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/>',
+  download: '<path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><path d="M7 10l5 5 5-5M12 15V3"/>',
+  upload: '<path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><path d="M17 8l-5-5-5 5M12 3v12"/>',
+  alert: '<path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><path d="M12 9v4M12 17h.01"/>',
+  info: '<circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/>',
+  mail: '<rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 6l-10 7L2 6"/>',
+  target: '<circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/>',
+  box: '<path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><path d="M3.27 6.96L12 12l8.73-5.04M12 22V12"/>',
+  key: '<path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 11-7.778 7.778 5.5 5.5 0 017.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3"/>',
+  filter: '<path d="M22 3H2l8 9.46V19l4 2v-8.54z"/>',
+  refresh: '<path d="M23 4v6h-6M1 20v-6h6"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/>',
+  logout: '<path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><path d="M16 17l5-5-5-5M21 12H9"/>',
+  star: '<path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/>',
+  clipboard: '<rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h2"/>',
+  folder: '<path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/>',
+  zap: '<path d="M13 2L3 14h9l-1 8 10-12h-9z"/>',
+  message: '<path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8z"/>',
+  award: '<circle cx="12" cy="8" r="6"/><path d="M15.5 13.5L17 22l-5-3-5 3 1.5-8.5"/>',
+  menu: '<path d="M3 12h18M3 6h18M3 18h18"/>',
+  play: '<path d="M6 4l14 8-14 8z"/>',
+  db: '<ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/>',
+};
+const ic = (n, sz = 18) => n === 'rupee'
+  ? `<svg width="${sz}" height="${sz}" viewBox="0 0 24 24" aria-hidden="true"><text x="12" y="18.5" text-anchor="middle" style="font:700 ${Math.round(sz * 1.15)}px var(--font);fill:currentColor">\u20B9</text></svg>`
+  : `<svg width="${sz}" height="${sz}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${P[n] || P.grid}</svg>`;
+/* The payroll glyph is the Indian Rupee sign, deliberately not an icon. */
+const rupeeIcon = (cls = '') => `<span class="rupee ${cls}" aria-hidden="true">${RS}</span>`;
+
+/* ---------- Brand lockup ---------- */
+const brandMark = (cls = '') => `<img class="mark ${cls}" src="${HN_MARK}" alt="">`;
+const brandBar = (sub) => `<div class="brand">${brandMark()}<div>
+  <span class="wordwrap"><img src="${HN_WORD}" alt="HumaNest"></span>
+  ${sub ? `<span class="tag">${esc(sub)}</span>` : ''}</div></div>`;
+const brandLockup = () => `<div class="lockup">${brandMark()}<img class="word" src="${HN_WORD}" alt="HumaNest — Your People. Your Process."></div>`;
+const urlBadge = (host) => `<span class="urlbadge"><span class="lk">${ic('lock', 12)}</span>https://${esc(host)}</span>`;
+
+/* ---------- UI atoms ---------- */
+const emptyState = (icon, title, sub, btn) => `<div class="empty">
+  <span class="ill">${ic(icon, 48)}</span><h4>${esc(title)}</h4><p>${esc(sub)}</p>
+  ${btn ? `<button class="btn pri" data-act="${btn.act}"${btn.arg ? ` data-arg="${esc(btn.arg)}"` : ''}>${ic('plus', 16)}${esc(btn.label)}</button>` : ''}</div>`;
+const kpi = (label, value, foot, icon, accent = '') => `<div class="card hov ${accent}">
+  <div class="row" style="align-items:flex-start"><div style="flex:1">
+    <div class="lbl">${esc(label)}</div><div class="val num">${value}</div>
+    ${foot ? `<div class="foot">${foot}</div>` : ''}</div>
+  ${icon === 'rupee' ? rupeeIcon('lg') : `<span class="ic">${ic(icon, 20)}</span>`}</div></div>`;
+const trendUp = (t) => `<span class="badge green">${ic('arrowup', 11)}${esc(t)}</span>`;
+const sw = (on, act, arg, disabled) => `<button class="sw" role="switch" aria-checked="${!!on}" ${disabled ? 'aria-disabled="true"' : `data-act="${act}" data-arg="${esc(arg || '')}"`} aria-label="Toggle"></button>`;
+const pills = (items, cur, act) => `<div class="pills">${items.map(([k, label, count]) =>
+  `<button role="tab" aria-selected="${k === cur}" data-act="${act}" data-arg="${k}">${esc(label)}${count != null ? ` <span class="badge">${count}</span>` : ''}</button>`).join('')}</div>`;
+const utabs = (items, cur, act) => `<div class="utabs">${items.map(([k, label]) =>
+  `<button role="tab" aria-selected="${k === cur}" data-act="${act}" data-arg="${k}">${esc(label)}</button>`).join('')}</div>`;
+const field = (label, inner) => `<div class="field"><label>${esc(label)}</label>${inner}</div>`;
+const inp = (id, ph, type = 'text', val = '') => `<input id="${id}" type="${type}" placeholder="${esc(ph)}" value="${esc(val)}" data-keep="${id}">`;
+const pageHead = (title, sub, right) => `<div class="pagehead"><div style="flex:1;min-width:200px">
+  <h1>${esc(title)}</h1>${sub ? `<p class="sub">${esc(sub)}</p>` : ''}</div>${right || ''}</div>`;
+
+/* ---------- Charts ---------- */
+const hbarList = (rows, max) => rows.length ? rows.map((r, i) => `<div class="hbar">
+  <span class="rk">${i + 1}</span>
+  <div><div class="row" style="justify-content:space-between;gap:8px;margin-bottom:3px">
+    <span class="sm" style="color:var(--ink);font-weight:600">${esc(r.label)}</span>
+    <span class="sm muted num">${esc(String(r.sub ?? ''))}</span></div>
+    <div class="bar"><i class="grad" style="width:${Math.max(3, (r.value / (max || 1)) * 100)}%"></i></div></div>
+  <span class="sm num r" style="font-weight:600">${esc(String(r.value))}</span></div>`).join('') : '';
+const vbars = (rows, w = 520, h = 150) => {
+  const max = Math.max(1, ...rows.map((r) => r.value));
+  const bw = Math.max(6, (w - 20) / rows.length - 6);
+  return `<svg class="chart" viewBox="0 0 ${w} ${h + 34}" role="img" aria-label="Module usage">
+    ${rows.map((r, i) => {
+      const bh = (r.value / max) * h, x = 10 + i * ((w - 20) / rows.length);
+      return `<rect x="${x}" y="${h - bh}" width="${bw}" height="${Math.max(bh, 2)}" rx="4" fill="url(#g1)"/>
+      <text x="${x + bw / 2}" y="${h + 12}" text-anchor="end" transform="rotate(-35 ${x + bw / 2} ${h + 12})">${esc(r.short)}</text>`;
+    }).join('')}</svg>`;
+};
+const donut = (segs, size = 130) => {
+  const total = segs.reduce((a, s) => a + s.value, 0) || 1;
+  const R = size / 2 - 12, C = 2 * Math.PI * R;
+  let off = 0;
+  return `<svg class="chart donut" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">
+    ${segs.map((s) => { const len = (s.value / total) * C; const el = `<circle cx="${size / 2}" cy="${size / 2}" r="${R}" fill="none" stroke="${s.color}" stroke-width="16" stroke-dasharray="${len} ${C - len}" stroke-dashoffset="${-off}"/>`; off += len; return el; }).join('')}
+  </svg>`;
+};
+const areaChart = (vals, w = 520, h = 140) => {
+  if (!vals.length) return '';
+  const max = Math.max(1, ...vals);
+  const x = (i) => 10 + (i * (w - 20)) / Math.max(1, vals.length - 1);
+  const y = (v) => h - 10 - (v / max) * (h - 24);
+  const pts = vals.map((v, i) => `${x(i)},${y(v)}`).join(' ');
+  return `<svg class="chart" viewBox="0 0 ${w} ${h}" role="img" aria-label="Trend">
+    <polygon points="10,${h - 10} ${pts} ${x(vals.length - 1)},${h - 10}" fill="url(#g1)" opacity=".16"/>
+    <polyline points="${pts}" fill="none" stroke="url(#g1)" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+    ${vals.map((v, i) => `<circle cx="${x(i)}" cy="${y(v)}" r="3" fill="var(--p)"/>`).join('')}</svg>`;
+};
+const gauge = (pct, size = 140) => {
+  const R = size / 2 - 12, C = Math.PI * R;
+  return `<svg class="chart gaugechart" width="${size}" height="${size / 2 + 22}" viewBox="0 0 ${size} ${size / 2 + 22}">
+    <path d="M12 ${size / 2} A ${R} ${R} 0 0 1 ${size - 12} ${size / 2}" fill="none" stroke="var(--line)" stroke-width="14" stroke-linecap="round"/>
+    <path d="M12 ${size / 2} A ${R} ${R} 0 0 1 ${size - 12} ${size / 2}" fill="none" stroke="url(#g1)" stroke-width="14" stroke-linecap="round" stroke-dasharray="${(pct / 100) * C} ${C}"/>
+    <text x="${size / 2}" y="${size / 2 - 6}" text-anchor="middle" style="font-size:20px;font-weight:700;fill:var(--ink)">${pct}%</text></svg>`;
+};
+
+/* ---------- State ---------- */
+const S = {
+  screen: HN_APP === 'admin' ? 'login' : 'landing',
+  side: null,          // customer portal: 'employer' | 'employee'
+  email: '',
+  pw: '',
+  showPw: false,
+  otp: ['', '', '', '', '', ''],
+  otpMethod: 'totp',
+  methodOpen: false,
+  view: HN_APP === 'admin' ? 'dashboard' : 'dashboard',
+  tab: {},
+  modal: null,
+  form: {},
+  toast: null,
+  nav: {},
+  data: { customers: [], trials: [], users: [], tickets: [], employees: [], leaves: [], claims: [], jobs: [], assets: [], etickets: [], docs: [], shifts: [], courses: [], goals: [], runs: [], punches: [] },
+};
+const tabOf = (k, d) => S.tab[k] ?? d;
+let toastTimer = null;
+function toast(msg) { S.toast = msg; render(); clearTimeout(toastTimer); toastTimer = setTimeout(() => { S.toast = null; render(); }, 2600); }
+function openModal(type, extra = {}) { S.modal = { type, ...extra }; S.form = { ...(extra.form || {}) }; render(); }
+function closeModal() { S.modal = null; S.form = {}; render(); }
+const val = (id) => ($('#' + id) ? $('#' + id).value.trim() : '');
+
+/* ---------- Auth screens ---------- */
+
+/* The prototype authenticates nobody: there is no user store behind it, so any
+   email, any password and any six digits get you in. Say so on screen rather
+   than leaving people hunting for a password that does not exist. */
+const DEMO_EMAIL = () =>
+  HN_APP === 'admin' ? 'admin@humanest.co.in'
+    : S.side === 'employee' ? 'employee@yourcompany.co.in'
+      : 'hr@yourcompany.co.in';
+const DEMO_PW = 'Demo@1234';
+
+function protoHint(kind) {
+  const body = kind === 'mfa'
+    ? `No code is sent and none is checked &mdash; type any six digits.`
+    : kind === 'landing'
+      ? `Pick either side. No account is needed &mdash; any email, any password, any six-digit code.`
+      : `No account is needed. Sign in with <b>any</b> email and <b>any</b> password.`;
+  const cta = kind === 'mfa'
+    ? `<button class="btn ghost sm" data-act="fillotp">Fill 123456</button>`
+    : kind === 'landing' ? ''
+      : `<button class="btn ghost sm" data-act="demo">Fill ${esc(DEMO_EMAIL())}</button>`;
+  return `<div class="protohint">
+    <span class="phi">${ic('info', 15)}</span>
+    <div><b>Clickable prototype.</b> ${body}${cta ? `<div style="margin-top:9px">${cta}</div>` : ''}</div>
+  </div>`;
+}
+
+function landingScreen() {
+  return `<div class="authwrap">
+    ${brandLockup()}
+    <div style="text-align:center">
+      <h1 style="font-size:22px;color:var(--p-dark)">Customer Portal</h1>
+      <p class="sub muted" style="font-size:14px;margin-top:4px">Select login type</p>
+    </div>
+    <div class="grid g2" style="max-width:640px;width:100%;gap:20px">
+      <button class="logincard" data-act="pick" data-arg="employer">
+        <span class="ic" style="background:var(--p-soft);color:var(--p)">${ic('building', 22)}</span>
+        <h3>Employer Login</h3>
+        <p class="sm muted">For HR, Admin, Managers</p>
+        <div class="col" style="gap:6px;margin:4px 0">
+          <span class="feat">${ic('check', 14)}Manage employees</span>
+          <span class="feat">${ic('check', 14)}Attendance and leave</span>
+          <span class="feat">${ic('check', 14)}Payroll and compliance</span>
+        </div>
+        <span class="btn pri block">Login as Employer</span>
+      </button>
+      <button class="logincard" data-act="pick" data-arg="employee">
+        <span class="ic" style="background:var(--amber-bg);color:var(--amber-text)">${ic('user', 22)}</span>
+        <h3>Employee Login</h3>
+        <p class="sm muted">For Employees, Self Service</p>
+        <div class="col" style="gap:6px;margin:4px 0">
+          <span class="feat">${ic('check', 14)}My attendance</span>
+          <span class="feat">${ic('check', 14)}My leave</span>
+          <span class="feat">${ic('check', 14)}My payslips</span>
+        </div>
+        <span class="btn block" style="color:var(--p-dark)">Login as Employee</span>
+      </button>
+    </div>
+    <div style="max-width:640px;width:100%">${protoHint('landing')}</div>
+    <p class="authfoot">Powered by HumaNest &bull; Secured with MFA</p>
+  </div>`;
+}
+
+function loginScreen() {
+  const isEmp = S.side === 'employee';
+  const title = HN_APP === 'admin' ? 'Sign in' : isEmp ? 'Employee Login' : 'Employer Login';
+  const sub = HN_APP === 'admin' ? 'Access your admin dashboard'
+    : isEmp ? 'Access your self-service portal' : 'Sign in to manage your organization';
+  const ph = HN_APP === 'admin' ? 'Enter your email' : 'Enter your work email';
+  return `<div class="authwrap">
+    <div class="authcard">
+      <div style="display:flex;justify-content:center;margin-bottom:18px">${brandLockup()}</div>
+      <h2 style="font-size:18px">${esc(title)}</h2>
+      <p class="muted" style="font-size:13px;margin:4px 0 20px">${esc(sub)}</p>
+      <div class="col" style="gap:14px">
+        ${field('Email', `<input id="lg-email" type="email" placeholder="${esc(ph)}" value="${esc(S.email)}" data-keep="lg-email" autocomplete="username">`)}
+        <div class="field"><label>Password</label>
+          <div style="position:relative">
+            <input id="lg-pw" type="${S.showPw ? 'text' : 'password'}" placeholder="Enter your password" value="${esc(S.pw)}" data-keep="lg-pw" style="padding-right:44px" autocomplete="current-password">
+            <button class="iconbtn" data-act="togglepw" aria-label="Show or hide password"
+              style="position:absolute;right:7px;top:7px">${ic(S.showPw ? 'eyeoff' : 'eye', 16)}</button>
+          </div></div>
+        <div class="row" style="justify-content:space-between">
+          <label class="checkrow"><input type="checkbox"> Remember me</label>
+          <a href="#" class="sm" data-act="noop">Forgot password?</a>
+        </div>
+        <button class="btn pri block" data-act="signin">Sign In</button>
+      </div>
+      <p class="authfoot" style="margin-top:18px">${ic('shield', 13)} Secured with multi-factor authentication</p>
+      ${protoHint('login')}
+    </div>
+    ${HN_APP === 'customer' ? `<button class="btn ghost sm" data-act="backlanding">Back to login options</button>` : ''}
+  </div>`;
+}
+
+function mfaScreen() {
+  const methods = [['totp', 'Authenticator App (Recommended)'], ['sms', 'SMS OTP'], ['email', 'Email OTP'], ['backup', 'Backup Codes']];
+  return `<div class="authwrap">
+    <div class="authcard">
+      <div style="display:flex;justify-content:center;margin-bottom:18px">${brandLockup()}</div>
+      <h2 style="font-size:18px">Two-factor authentication</h2>
+      <p class="muted" style="font-size:13px;margin:4px 0 16px">Enter the code from your authenticator app</p>
+      <div class="c" style="margin-bottom:18px"><span class="userpill">${ic('mail', 14)}${esc(S.email || 'you@example.com')}</span></div>
+      <div class="otp">${S.otp.map((v, i) =>
+        `<input id="otp${i}" data-otp="${i}" data-keep="otp${i}" inputmode="numeric" maxlength="1" value="${esc(v)}" aria-label="Digit ${i + 1}">`).join('')}</div>
+      <div class="row c" style="justify-content:center;margin-top:16px;gap:14px">
+        <span class="sm muted">${ic('clock', 13)} <span class="num">00:${String(S.timer ?? 28).padStart(2, '0')}</span></span>
+        <a href="#" class="sm" data-act="resend">Resend code</a>
+      </div>
+      <div style="margin-top:14px">
+        <button class="btn ghost sm block" data-act="methods">Use another method ${ic('chevdown', 14)}</button>
+        ${S.methodOpen ? `<div class="col" style="gap:4px;margin-top:8px;border:1px solid var(--line);border-radius:var(--r-xl);padding:8px">
+          ${methods.map(([k, l]) => `<button class="navitem" data-act="setmethod" data-arg="${k}" ${S.otpMethod === k ? 'aria-current="page"' : ''}>${ic('shieldcheck', 16)}<span style="font-size:13px">${esc(l)}</span></button>`).join('')}
+        </div>` : ''}
+      </div>
+      <label class="checkrow" style="margin:16px 0"><input type="checkbox"> Remember this device for 30 days</label>
+      <button class="btn pri block" data-act="verify">Verify</button>
+      <div class="c" style="margin-top:14px"><a href="#" class="sm muted" data-act="backlogin">Back to login</a></div>
+      ${protoHint('mfa')}
+    </div>
+  </div>`;
+}
+
+/* ---------- Shell ---------- */
+function topbar(cfg) {
+  return `<header class="topbar">
+    ${brandBar(cfg.brandSub)}
+    <span class="vsep"></span>
+    ${urlBadge(cfg.host)}
+    <div class="spacer"></div>
+    <div class="searchbox"><span class="si">${ic('search', 15)}</span>
+      <input placeholder="${esc(cfg.search)}" aria-label="Search"><kbd>&#8984;K</kbd></div>
+    <div class="spacer"></div>
+    ${cfg.checkin || ''}
+    <button class="iconbtn bell" aria-label="Notifications">${ic('bell', 18)}<span class="dot"></span></button>
+    <button class="iconbtn" aria-label="Help">${ic('help', 18)}</button>
+    <span class="vsep"></span>
+    <div class="userchip">
+      <span class="avatar grad">${initial(cfg.userName)}</span>
+      <span class="stack2"><b>${esc(cfg.userName)}</b><span>${esc(cfg.lastLogin || '')}</span></span>
+      <span class="badge p">${esc(cfg.roleLabel)}</span>
+      <span class="badge green">${ic('shieldcheck', 12)}MFA</span>
+      <button class="iconbtn" data-act="logout" aria-label="Sign out">${ic('logout', 16)}</button>
+    </div>
+  </header>`;
+}
+
+function sidebar(menu, upsell) {
+  return `<nav class="sidebar" aria-label="Main">
+    ${menu.map((m) => {
+      if (m.group) return `<div class="grp">${esc(m.group)}</div>`;
+      const on = S.view === m.k;
+      const icon = m.rupee ? rupeeIcon() : ic(m.icon, 18);
+      return `<button class="navitem" data-act="nav" data-arg="${m.k}" ${on ? 'aria-current="page"' : ''}>
+        ${icon}<span>${esc(m.label)}</span>${m.count ? `<span class="cnt">${m.count}</span>` : ''}</button>`;
+    }).join('')}
+    ${upsell ? `<div class="upsell"><b>${esc(upsell.title)}</b><p>${esc(upsell.body)}</p>
+      <button class="btn" data-act="noop">${esc(upsell.cta)}</button></div>` : ''}
+  </nav>`;
+}
+
+function appShell(cfg, body) {
+  return `${topbar(cfg)}
+  <div class="protobar">Clickable prototype &mdash; framework only, no sample company or employee data. Everything you see fills in from records you create here. <a href="#" data-act="reset">Reset</a></div>
+  <div class="layout">${sidebar(cfg.menu, cfg.upsell)}<main id="main">${body}</main></div>`;
+}
+
+/* ---------- Render ---------- */
+function render() {
+  const a = document.activeElement, keep = a && a.dataset && a.dataset.keep, pos = a && a.selectionStart;
+  const y = window.scrollY;
+  let html;
+  if (S.screen === 'landing') html = landingScreen();
+  else if (S.screen === 'login') html = loginScreen();
+  else if (S.screen === 'mfa') html = mfaScreen();
+  else html = HN_APP === 'admin' ? adminApp() : customerApp();
+  html += S.modal ? modalHtml() : '';
+  html += S.toast ? `<div class="toast" role="status">${esc(S.toast)}</div>` : '';
+  $('#root').innerHTML = html;
+  if (keep) { const n = $(`[data-keep="${keep}"]`); if (n) { n.focus(); try { n.setSelectionRange(pos, pos); } catch (e) {} } }
+  window.scrollTo(0, y);
+}
+
+/* ---------- Events ---------- */
+const ACT = {
+  noop: () => {},
+  pick: (arg) => { S.side = arg; S.screen = 'login'; S.email = ''; },
+  backlanding: () => { S.screen = 'landing'; S.side = null; },
+  backlogin: () => { S.screen = 'login'; S.otp = ['', '', '', '', '', '']; },
+  togglepw: () => { S.showPw = !S.showPw; },
+  demo: () => { S.email = DEMO_EMAIL(); S.pw = DEMO_PW; toast('Demo credentials filled'); },
+  fillotp: () => { S.otp = ['1', '2', '3', '4', '5', '6']; toast('Any six digits work'); },
+  signin: () => {
+    const e = val('lg-email') || DEMO_EMAIL();
+    S.email = e; S.pw = val('lg-pw'); S.screen = 'mfa'; S.timer = 28; S.otp = ['', '', '', '', '', ''];
+    startTimer();
+  },
+  methods: () => { S.methodOpen = !S.methodOpen; },
+  setmethod: (arg) => { S.otpMethod = arg; S.methodOpen = false; toast('Method switched'); },
+  resend: () => { S.timer = 28; toast('A new code has been sent'); },
+  verify: () => {
+    if (S.otp.join('').length < 6) { toast('Enter all six digits'); return; }
+    S.screen = 'portal';
+    S.view = HN_APP === 'admin' ? 'dashboard' : 'dashboard';
+  },
+  logout: () => { S.screen = HN_APP === 'admin' ? 'login' : 'landing'; S.otp = ['', '', '', '', '', '']; S.side = null; S.email = ''; S.pw = ''; },
+  reset: () => location.reload(),
+  nav: (arg) => { S.view = arg; S.tab = {}; window.scrollTo(0, 0); },
+  tab: (arg, el) => { S.tab[el.dataset.key || 'main'] = arg; },
+  closemodal: () => { closeModal(); },
+};
+
+function startTimer() {
+  clearInterval(startTimer.h);
+  startTimer.h = setInterval(() => {
+    if (S.screen !== 'mfa') { clearInterval(startTimer.h); return; }
+    S.timer = Math.max(0, (S.timer ?? 28) - 1);
+    const n = $('.authwrap .num'); if (n) n.textContent = '00:' + String(S.timer).padStart(2, '0');
+    if (!S.timer) clearInterval(startTimer.h);
+  }, 1000);
+}
+
+document.addEventListener('click', (ev) => {
+  const el = ev.target.closest('[data-act]');
+  if (!el) return;
+  ev.preventDefault();
+  const fn = ACT[el.dataset.act];
+  if (!fn) return;
+  const r = fn(el.dataset.arg, el);
+  if (r !== 'norender') render();
+});
+
+document.addEventListener('input', (ev) => {
+  const t = ev.target;
+  if (t.dataset.otp != null) {
+    const i = +t.dataset.otp;
+    const v = t.value.replace(/\D/g, '').slice(-1);
+    t.value = v; S.otp[i] = v;
+    if (v && i < 5) $('#otp' + (i + 1))?.focus();
+    return;
+  }
+  if (t.dataset.bind) { S.form[t.dataset.bind] = t.type === 'checkbox' ? t.checked : t.value; if (t.dataset.live) render(); }
+});
+
+document.addEventListener('keydown', (ev) => {
+  const t = ev.target;
+  if (t.dataset && t.dataset.otp != null && ev.key === 'Backspace' && !t.value) {
+    const i = +t.dataset.otp;
+    if (i > 0) { $('#otp' + (i - 1))?.focus(); S.otp[i - 1] = ''; }
+  }
+  if (ev.key === 'Escape' && S.modal) { closeModal(); }
+});
+
+</script>
+<script>
+/* ===== HumaNest platform admin — admin.humanest.co.in ===== */
+
+const MODULES = [
+  { k: 'core', n: 'Employee Core', ic: 'users', cat: 'core', v: 'v2.1', def: true, lock: true, addon: 0, d: 'Employee master, org chart, directory, lifecycle, promotion and transfer.' },
+  { k: 'attendance', n: 'Attendance & Time', ic: 'clock', cat: 'core', v: 'v2.0', def: true, addon: 0, d: 'Biometric, mobile selfie, geo-fencing 50m to 500m, shift, roster, regularisation, overtime.' },
+  { k: 'leave', n: 'Leave Management', ic: 'calendar', cat: 'core', v: 'v1.9', def: true, addon: 0, deps: [], d: 'CL, SL, EL, comp-off, LWP, OD, maternity, paternity, holiday calendar, L1 to L3 workflow.' },
+  { k: 'payroll', n: 'Payroll India Compliant', ic: 'rupee', cat: 'core', v: 'v3.0', def: true, addon: 0, deps: ['Attendance'], d: 'Grades, component builder, EPF, ESI, PT, LWF, TDS old and new regime, Form 16, 24Q, ECR.' },
+  { k: 'expense', n: 'Expense & Reimbursement', ic: 'receipt', cat: 'growth', v: 'v1.4', def: false, addon: 0, deps: ['Payroll'], d: 'Travel, food, fuel and medical claims, receipt upload, manager to finance approval.' },
+  { k: 'ats', n: 'Recruitment ATS', ic: 'briefcase', cat: 'growth', v: 'v1.6', def: false, addon: 50, d: 'Job openings, career page, Kanban pipeline, resume parsing, interviews, offer letters.' },
+  { k: 'onboarding', n: 'Onboarding & Offboarding', ic: 'userplus', cat: 'growth', v: 'v1.3', def: false, addon: 0, d: 'Checklists, document collection, buddy, day 1-7-30 plan, exit interview, full and final.' },
+  { k: 'pms', n: 'Performance PMS', ic: 'trending', cat: 'growth', v: 'v1.5', def: false, addon: 50, d: 'Goals, KRA, KPI, OKRs, self and manager appraisal, 360 degree, continuous feedback.' },
+  { k: 'asset', n: 'Asset Management', ic: 'laptop', cat: 'growth', v: 'v1.2', def: false, addon: 0, d: 'Laptop, ID card, SIM and access card inventory, allocation, return, depreciation.' },
+  { k: 'helpdesk', n: 'Helpdesk / Ticketing', ic: 'lifebuoy', cat: 'growth', v: 'v1.4', def: true, addon: 0, d: 'HR, IT and admin categories, ESS raise, SLA, assignment, knowledge base, satisfaction.' },
+  { k: 'lms', n: 'Learning & Development', ic: 'book', cat: 'enterprise', v: 'v1.0', def: false, beta: true, addon: 50, d: 'Courses, videos, assessments, certifications, skill matrix, training calendar.' },
+  { k: 'ess', n: 'Employee Self Service', ic: 'user', cat: 'core', v: 'v2.2', def: true, addon: 0, d: 'Me dashboard, my profile, attendance, leave, payroll isolated to own data, quick actions.' },
+  { k: 'shift', n: 'Shift & Roster Management', ic: 'clock', cat: 'growth', v: 'v1.3', def: false, addon: 0, deps: ['Attendance'], d: 'Rotational shifts, auto-roster, shift allowance, swap requests, overtime.' },
+  { k: 'reports', n: 'Reports & Analytics', ic: 'chart', cat: 'growth', v: 'v2.0', def: true, addon: 0, d: 'Headcount, attrition, attendance, leave, payroll, custom report builder, scheduled email.' },
+  { k: 'docs', n: 'Document Management', ic: 'file', cat: 'growth', v: 'v1.5', def: false, addon: 0, d: 'Aadhaar, PAN, offer and appointment letters, storage, expiry alerts, versioning, e-sign.' },
+  { k: 'compliance', n: 'Compliance & Audit India', ic: 'shieldcheck', cat: 'enterprise', v: 'v1.8', def: false, addon: 50, d: 'Shops and Establishment, Factories Act, Maternity Act, audit logs, data retention.' },
+  { k: 'integrations', n: 'Integrations & API', ic: 'plug', cat: 'enterprise', v: 'v1.7', def: false, beta: true, addon: 50, d: 'eSSL, Matrix, Realtime, Slack, Teams, Google, Microsoft 365, RazorpayX, open API.' },
+  { k: 'security', n: 'Security & Admin', ic: 'shield', cat: 'core', v: 'v2.3', def: true, lock: true, addon: 0, d: 'MFA TOTP, SMS, email, backup codes, RBAC, SSO, password policy, sessions, IP whitelist.' },
+];
+const modByKey = (k) => MODULES.find((m) => m.k === k);
+
+const PLANS = {
+  starter: { n: 'Starter', bracket: '1-50 Users', price: 199, mods: 5, best: 'Startups & Small Companies', feats: ['Up to 50 seats', '5 core modules', 'Email support', 'Basic reports', '1 GB storage'] },
+  growth: { n: 'Growth', bracket: '51-250 Users', price: 299, mods: 8, best: 'Growing Companies', popular: true, feats: ['Up to 250 seats', '8 modules', 'Priority support', 'Advanced reports', '10 GB storage'] },
+  enterprise: { n: 'Enterprise', bracket: '251-Unlimited', price: 499, mods: 18, best: 'Large Enterprises', feats: ['Unlimited seats', 'All 18 modules', 'Dedicated manager', 'Custom reports', '100 GB storage', 'White-label domain'] },
+  trial: { n: 'Trial', bracket: '1-50 Users', price: 0, mods: 8, best: 'Evaluation', free: true, feats: ['Up to 50 seats', 'All Growth modules', '7, 14 or 30 days', 'Email support'] },
+};
+const planModules = (plan) => {
+  if (plan === 'enterprise') return MODULES.map((m) => m.k);
+  if (plan === 'starter') return ['core', 'attendance', 'leave', 'ess', 'security'];
+  return ['core', 'attendance', 'leave', 'payroll', 'ess', 'security', 'helpdesk', 'reports'];
+};
+const planBadge = (p) => {
+  const cls = { starter: 'p', growth: 'amber', enterprise: 'slate', trial: 'purple' }[p] || 'slate';
+  return `<span class="badge ${cls}">${PLANS[p] ? PLANS[p].n : p}</span>`;
+};
+const statusBadge = (s) => {
+  const map = { active: ['green', 'Active'], trial: ['purple', 'Trial'], suspended: ['red', 'Suspended'], deleted: ['slate', 'Deleted'], prospect: ['slate', 'Prospect'] };
+  const [c, l] = map[s] || ['slate', s];
+  return `<span class="row" style="gap:6px"><span class="dot ${c === 'green' ? 'green' : c === 'red' ? 'red' : c === 'purple' ? 'purple' : ''}"></span><span class="badge ${c}">${l}</span></span>`;
+};
+const daysBadge = (n) => {
+  if (n == null) return '—';
+  const c = n < 3 ? 'red' : n < 7 ? 'yellow' : 'green';
+  return `<span class="badge ${c}">${n < 0 ? 'Expired' : n + ' days left'}</span>`;
+};
+const mrrOf = (c) => Math.round(c.seats * (PLANS[c.plan]?.price || 0) * (1 - (c.discount || 0) / 100));
+const activeCustomers = () => S.data.customers.filter((c) => c.status !== 'deleted');
+const totalMRR = () => activeCustomers().filter((c) => c.status === 'active').reduce((a, c) => a + mrrOf(c), 0);
+
+/* ---------- Menu ---------- */
+const ADMIN_MENU = () => [
+  { k: 'dashboard', label: 'Dashboard', icon: 'grid' },
+  { k: 'customers', label: 'Customer Management', icon: 'building' },
+  { k: 'licenses', label: 'Licenses & Plans', icon: 'card' },
+  { k: 'trials', label: 'Trial Management', icon: 'clock' },
+  { k: 'modules', label: 'Modules Catalog (18)', icon: 'puzzle' },
+  { k: 'users', label: 'Platform Users & RBAC', icon: 'users' },
+  { k: 'support', label: 'Support & Tickets', icon: 'lifebuoy', count: S.data.tickets.filter((t) => t.status === 'open').length || 0 },
+  { k: 'reports', label: 'Reports & Analytics', icon: 'chart' },
+  { k: 'settings', label: 'Settings', icon: 'settings' },
+];
+
+function adminApp() {
+  const views = { dashboard: vDashboard, customers: vCustomers, licenses: vLicenses, trials: vTrials, modules: vModules, users: vUsers, support: vSupport, reports: vReports, settings: vSettings };
+  const body = (views[S.view] || vDashboard)();
+  return appShell({
+    host: HN_HOST, brandSub: 'Platform Admin', search: 'Search customers, licenses...',
+    userName: 'Admin', roleLabel: 'Super Admin', lastLogin: 'Last login 2h ago',
+    menu: ADMIN_MENU(),
+    upsell: { title: 'Enterprise tier', body: 'White-label domains, all 18 modules and a dedicated success manager.', cta: 'See Enterprise' },
+  }, `<svg width="0" height="0"><defs><linearGradient id="g1" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#087FD9"/><stop offset="1" stop-color="#20CE80"/></linearGradient></defs></svg>${body}`);
+}
+
+/* ---------- 1. Dashboard ---------- */
+function vDashboard() {
+  const cs = activeCustomers();
+  const seatsSold = cs.reduce((a, c) => a + c.seats, 0);
+  const seatsUsed = cs.reduce((a, c) => a + (c.used || 0), 0);
+  const util = seatsSold ? Math.round((seatsUsed / seatsSold) * 100) : 0;
+  const trials = cs.filter((c) => c.status === 'trial');
+  const converted = S.data.customers.filter((c) => c.converted).length;
+  const conv = trials.length + converted ? Math.round((converted / (trials.length + converted)) * 100) : 0;
+
+  const topCust = [...cs].sort((a, b) => b.seats - a.seats).slice(0, 10)
+    .map((c) => ({ label: c.name, sub: c.domain, value: c.seats }));
+  const modUse = MODULES.map((m) => ({ short: m.n.split(' ')[0], value: cs.filter((c) => c.modules.includes(m.k)).length }));
+  const planSegs = [
+    { label: 'Starter', value: cs.filter((c) => c.plan === 'starter').length, color: '#087FD9' },
+    { label: 'Growth', value: cs.filter((c) => c.plan === 'growth').length, color: '#F59E0B' },
+    { label: 'Enterprise', value: cs.filter((c) => c.plan === 'enterprise').length, color: '#64748B' },
+  ];
+  const expiring = trials.filter((c) => c.trialEnds).sort((a, b) => daysLeft(a.trialEnds) - daysLeft(b.trialEnds));
+
+  return pageHead('Dashboard', 'Overview of your platform — customers, licenses, revenue') + `
+  <div class="grid g4" style="margin-bottom:16px">
+    ${kpi('Total Customers', cs.length, cs.length ? trendUp('+12% this month') : 'No customers yet', 'building', 'accent')}
+    ${kpi('Licensed Users', seatsSold.toLocaleString('en-IN'), 'Seats sold', 'users', 'accent-amber')}
+    ${kpi('Active Users', seatsUsed.toLocaleString('en-IN'), 'Seats in use', 'user', 'accent-slate')}
+    ${kpi('Utilization', util + '%', 'Used of licensed', 'target', 'accent-green')}
+  </div>
+  <div class="grid g4" style="margin-bottom:24px">
+    ${kpi('MRR', inrShort(totalMRR()), 'Billed on active seats', 'rupee', 'accent')}
+    ${kpi('Trial Active', trials.length, 'Live evaluations', 'clock', 'accent-amber')}
+    ${kpi('Suspended', cs.filter((c) => c.status === 'suspended').length, 'Logins blocked', 'pause', 'accent-slate')}
+    ${kpi('Conversion Rate', conv + '%', 'Trial to paid', 'trending', 'accent-green')}
+  </div>
+
+  <div class="grid g2" style="margin-bottom:20px">
+    <div class="card">
+      <div class="cardhead"><div style="flex:1"><h3>Top 10 Customers by Users</h3>
+        <div class="sub">Ranked by licensed seats</div></div>${ic('more', 18)}</div>
+      ${topCust.length ? hbarList(topCust, Math.max(...topCust.map((r) => r.value)))
+        : emptyState('building', 'No customers yet', 'Create your first customer and this chart fills in.', { act: 'openaddcust', label: 'Add Customer' })}
+    </div>
+    <div class="card">
+      <div class="cardhead"><div style="flex:1"><h3>Most Used Modules</h3>
+        <div class="sub">Across all 18 modules</div></div>${ic('more', 18)}</div>
+      ${cs.length ? vbars(modUse) : emptyState('puzzle', 'No module usage yet', 'Module adoption appears once customers are onboarded.')}
+    </div>
+  </div>
+
+  <div class="grid g2" style="margin-bottom:20px">
+    <div class="card">
+      <div class="cardhead"><div style="flex:1"><h3>License Distribution</h3><div class="sub">Share of customers by plan</div></div></div>
+      ${cs.length ? `<div class="row" style="gap:24px">${donut(planSegs)}
+        <div class="col" style="gap:8px">${planSegs.map((s) => `<div class="row" style="gap:8px">
+          <span class="dot" style="background:${s.color}"></span><span class="sm">${s.label}</span>
+          <span class="sm muted num">${s.value}</span></div>`).join('')}</div></div>`
+        : emptyState('card', 'No licenses yet', 'Plan distribution appears once customers hold a licence.')}
+    </div>
+    <div class="card">
+      <div class="cardhead"><div style="flex:1"><h3>Customer Growth</h3><div class="sub">Cumulative customers</div></div></div>
+      ${cs.length ? areaChart(cs.map((_, i) => i + 1)) : emptyState('trending', 'No growth data yet', 'Growth is plotted as customers are created.')}
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:20px">
+    <div class="cardhead"><div style="flex:1"><h3>Trials Expiring Soon</h3><div class="sub">Act before access lapses</div></div></div>
+    ${expiring.length ? `<div class="tablescroll"><table>
+      <thead><tr><th>Customer</th><th>Trial End</th><th>Days Left</th><th>Seats</th><th class="r">Actions</th></tr></thead>
+      <tbody>${expiring.map((c) => `<tr>
+        <td><div class="row" style="gap:10px"><span class="avatar">${initial(c.name)}</span>
+          <span class="stack2"><b>${esc(c.name)}</b><span>${esc(c.domain)}</span></span></div></td>
+        <td class="sm muted">${dlabel(c.trialEnds)}</td>
+        <td>${daysBadge(daysLeft(c.trialEnds))}</td>
+        <td class="sm num">${c.used || 0}/${c.seats}</td>
+        <td class="r"><div class="row" style="justify-content:flex-end;gap:6px">
+          <button class="btn xs ghost" data-act="openextend" data-arg="${c.id}">Extend</button>
+          <button class="btn xs pri" data-act="openconvert" data-arg="${c.id}">Convert</button></div></td></tr>`).join('')}
+      </tbody></table></div>`
+      : emptyState('clock', 'No trials expiring', 'Trials you create will show here as their end date approaches.', { act: 'opencreatetrial', label: 'Create Trial' })}
+  </div>
+
+  <div class="card">
+    <div class="cardhead"><div style="flex:1"><h3>Recent Activity</h3><div class="sub">Platform audit trail</div></div></div>
+    ${S.data.activity && S.data.activity.length ? `<div class="timeline">${S.data.activity.slice(0, 10).map((a, i) => `
+      <div class="tlitem ${i === 0 ? '' : 'done'}"><span class="d"></span>
+      <div><div class="sm" style="color:var(--ink);font-weight:600">${esc(a.what)}</div>
+      <div class="xs muted">${esc(a.who)} &bull; ${esc(a.when)}</div></div></div>`).join('')}</div>`
+      : emptyState('clipboard', 'No activity yet', 'Customer, trial and licence changes are recorded here.')}
+  </div>`;
+}
+
+function logActivity(what, who = 'Admin') {
+  S.data.activity = S.data.activity || [];
+  S.data.activity.unshift({ what, who, when: new Date().toLocaleString('en-IN', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit', hour12: false }) });
+}
+
+/* ---------- 2. Customer Management ---------- */
+function vCustomers() {
+  const filter = tabOf('cust', 'all');
+  const all = S.data.customers;
+  const counts = { all: all.length, trial: all.filter((c) => c.status === 'trial').length, active: all.filter((c) => c.status === 'active').length, suspended: all.filter((c) => c.status === 'suspended').length, deleted: all.filter((c) => c.status === 'deleted').length };
+  const rows = filter === 'all' ? all.filter((c) => c.status !== 'deleted') : all.filter((c) => c.status === filter);
+  const stages = [['prospect', 'Prospect', 'info'], ['trial', 'Trial', 'clock'], ['active', 'Active', 'check'], ['suspended', 'Suspended', 'pause'], ['deleted', 'Deleted', 'trash']];
+
+  return pageHead('Customer Management', 'Manage complete customer lifecycle — from trial to production',
+    `<button class="btn pri" data-act="openaddcust">${ic('plus', 16)}Add Customer</button>`) + `
+  <div class="card" style="margin-bottom:20px">
+    <div class="lifecycle">${stages.map(([k, label, icon], i) => `
+      ${i ? `<div class="lcline"><i>${['Create Trial', 'Convert', 'Suspend', 'Delete'][i - 1]}</i></div>` : ''}
+      <div class="lcstep ${filter === k ? 'on' : ''}"><span class="c">${ic(icon, 18)}</span><span>${label}</span></div>`).join('')}
+    </div>
+  </div>
+  ${pills([['all', 'All', counts.all], ['trial', 'Trial', counts.trial], ['active', 'Active', counts.active], ['suspended', 'Suspended', counts.suspended], ['deleted', 'Deleted', counts.deleted]], filter, 'custtab')}
+  ${rows.length ? `<div class="tablewrap"><div class="tablescroll"><table>
+    <thead><tr><th>Customer ID</th><th>Company</th><th>Primary Admin</th><th>Plan</th><th>Seats</th>
+      <th>Status</th><th class="r">MRR</th><th>Created</th><th>Trial Ends</th><th class="r">Actions</th></tr></thead>
+    <tbody>${rows.map((c) => `<tr>
+      <td class="mono muted">${esc(c.id)}</td>
+      <td><div class="row" style="gap:10px"><span class="avatar">${initial(c.name)}</span>
+        <span class="stack2"><b>${esc(c.name)}</b><span>${esc(c.domain)}</span></span></div></td>
+      <td><div class="row" style="gap:10px"><span class="avatar slate sm">${initial(c.adminName)}</span>
+        <span class="stack2"><b>${esc(c.adminName || '—')}</b><span>${esc(c.adminEmail || '')}</span></span></div></td>
+      <td>${planBadge(c.plan)}</td>
+      <td><div class="col" style="gap:4px"><span class="sm num">${c.used || 0}/${c.seats}</span>
+        <div class="bar" style="width:80px"><i style="width:${Math.min(100, ((c.used || 0) / c.seats) * 100)}%"></i></div></div></td>
+      <td>${statusBadge(c.status)}</td>
+      <td class="r num" style="font-weight:600">${c.status === 'trial' ? '—' : inr(mrrOf(c))}</td>
+      <td class="sm muted">${dlabel(c.created)}</td>
+      <td>${c.trialEnds ? `<div class="col" style="gap:3px"><span class="sm muted">${dlabel(c.trialEnds)}</span>${daysBadge(daysLeft(c.trialEnds))}</div>` : '—'}</td>
+      <td class="r"><div class="row" style="justify-content:flex-end;gap:2px">
+        <button class="iconbtn" data-act="viewcust" data-arg="${c.id}" aria-label="View">${ic('eye', 16)}</button>
+        <button class="iconbtn" data-act="openaddcust" data-arg="${c.id}" aria-label="Edit">${ic('pencil', 16)}</button>
+        <button class="iconbtn" data-act="custmenu" data-arg="${c.id}" aria-label="More">${ic('more', 16)}</button></div></td>
+    </tr>`).join('')}</tbody></table></div></div>`
+    : emptyState('building', 'No customers yet', 'Create your first customer to get started.', { act: 'openaddcust', label: 'Add Customer' })}`;
+}
+
+/* ---------- 3. Licenses & Plans ---------- */
+function vLicenses() {
+  return pageHead('License Management', 'Plans based on number of users — brackets suggested for the India market',
+    `<button class="btn ghost" data-act="noop">${ic('plus', 16)}Add New Plan</button>`) + `
+  <div class="card" style="background:var(--p-soft2);border-color:var(--p);margin-bottom:20px">
+    <div class="row" style="gap:8px;margin-bottom:12px;color:var(--p-dark)">${ic('info', 18)}
+      <h3 style="color:var(--p-dark)">Recommended brackets for the India market</h3></div>
+    <p class="sm muted" style="margin-bottom:12px">Based on an analysis of Keka, greytHR and Zoho People pricing.</p>
+    <div class="tablescroll" style="background:var(--surface);border-radius:var(--r-xl);border:1px solid var(--line)">
+      <table><thead><tr><th>Plan</th><th>Users bracket</th><th>Best for</th><th class="r">Price</th><th>Modules</th></tr></thead>
+      <tbody>${Object.entries(PLANS).map(([k, p]) => `<tr>
+        <td>${planBadge(k)}</td><td class="sm">${esc(p.bracket)}</td><td class="sm muted">${esc(p.best)}</td>
+        <td class="r num" style="font-weight:600">${p.free ? 'Free' : inr(p.price) + '/seat/mo'}</td>
+        <td class="sm">${p.mods} modules</td></tr>`).join('')}</tbody></table>
+    </div>
+  </div>
+
+  <div class="grid g4" style="margin-bottom:20px">
+    ${Object.entries(PLANS).map(([k, p]) => `<div class="card hov" style="position:relative">
+      ${p.popular ? `<span class="badge amber" style="position:absolute;top:-9px;right:14px">Most Popular</span>` : ''}
+      ${p.free ? `<span class="badge green" style="position:absolute;top:-9px;right:14px">Free</span>` : ''}
+      <h3 style="font-size:16px">${esc(p.n)}</h3>
+      <div class="num" style="font-size:24px;font-weight:700;color:var(--ink);margin:8px 0 2px">
+        ${p.free ? 'Free' : inr(p.price)}<span class="sm muted" style="font-weight:500">${p.free ? '' : '/seat/mo'}</span></div>
+      <span class="badge slate">${esc(p.bracket)}</span>
+      <div class="col" style="gap:8px;margin:14px 0">
+        ${p.feats.map((f) => `<span class="feat">${ic('check', 15)}${esc(f)}</span>`).join('')}</div>
+      <div class="row" style="gap:6px;margin-bottom:14px">
+        <span class="badge p">${p.mods} modules</span>${p.free ? '<span class="badge slate">7 / 14 / 30 days</span>' : ''}</div>
+      <button class="btn block sm" data-act="noop">Edit plan</button>
+    </div>`).join('')}
+  </div>
+
+  <div class="card">
+    <h3 style="margin-bottom:14px">License Rules</h3>
+    <div class="grid g2">
+      <div class="col">
+        <div class="field"><label>Seat over-allocation</label>
+          <select><option>Block new employee if seats exceeded</option><option>Allow with overage charge ${inr(299)}/seat</option></select></div>
+        <div class="field"><label>Grace period</label>
+          <select><option>7 days</option><option selected>14 days</option><option>30 days</option></select></div>
+        <div class="row" style="justify-content:space-between"><span class="sm">Auto-suspend after grace period</span>${sw(true, 'noop')}</div>
+      </div>
+      <div class="col">
+        <div class="field"><label>Billing cycle</label>
+          <select><option>Monthly</option><option>Yearly</option></select></div>
+        <div class="field"><label>Discount slabs</label>
+          <div class="tablescroll" style="border:1px solid var(--line);border-radius:var(--r-xl)">
+            <table><thead><tr><th>Seats</th><th class="r">Discount</th></tr></thead>
+            <tbody><tr><td>1-50</td><td class="r">0%</td></tr><tr><td>51-100</td><td class="r">10% yearly</td></tr>
+            <tr><td>100+</td><td class="r">20% yearly</td></tr></tbody></table></div></div>
+      </div>
+    </div>
+  </div>`;
+}
+
+/* ---------- 4. Trial Management ---------- */
+function vTrials() {
+  const trials = S.data.customers.filter((c) => c.status === 'trial' || c.converted);
+  const active = trials.filter((c) => c.status === 'trial');
+  const exp3 = active.filter((c) => daysLeft(c.trialEnds) < 3).length;
+  const exp7 = active.filter((c) => { const d = daysLeft(c.trialEnds); return d >= 3 && d < 7; }).length;
+  const converted = trials.filter((c) => c.converted).length;
+  const conv = trials.length ? Math.round((converted / trials.length) * 100) : 0;
+
+  return pageHead('Trial Management', '7 or 14 day trials with extension and conversion',
+    `<button class="btn pri" data-act="opencreatetrial">${ic('plus', 16)}Create Trial</button>`) + `
+  <div class="grid g4" style="margin-bottom:16px">
+    ${kpi('Total Trials', trials.length, '', 'clock', 'accent')}
+    ${kpi('Active', active.length, '', 'checkcircle', 'accent-green')}
+    ${kpi('Expiring < 3 days', exp3, exp3 ? 'Needs attention' : '', 'alert', 'accent-slate')}
+    ${kpi('Conversion Rate', conv + '%', converted + ' converted', 'trending', 'accent-amber')}
+  </div>
+  ${active.length || converted ? `<div class="tablewrap"><div class="tablescroll"><table>
+    <thead><tr><th>Customer</th><th>Trial Start</th><th>Trial End</th><th>Days Left</th><th>Seats</th><th>Status</th><th class="r">Actions</th></tr></thead>
+    <tbody>${trials.map((c) => `<tr>
+      <td><div class="row" style="gap:10px"><span class="avatar">${initial(c.name)}</span>
+        <span class="stack2"><b>${esc(c.name)}</b><span>${esc(c.domain)}</span></span></div></td>
+      <td class="sm muted">${dlabel(c.trialStart)}</td>
+      <td class="sm muted">${dlabel(c.trialEnds)}</td>
+      <td>${c.converted ? '—' : daysBadge(daysLeft(c.trialEnds))}</td>
+      <td><div class="col" style="gap:4px"><span class="sm num">${c.used || 0}/${c.seats}</span>
+        <div class="bar" style="width:60px"><i style="width:${Math.min(100, ((c.used || 0) / c.seats) * 100)}%"></i></div></div></td>
+      <td>${c.converted ? '<span class="badge green">Converted</span>' : daysLeft(c.trialEnds) < 0 ? '<span class="badge red">Expired</span>' : '<span class="badge purple">Active</span>'}</td>
+      <td class="r"><div class="row" style="justify-content:flex-end;gap:6px">
+        ${c.converted ? `<button class="btn xs ghost" data-act="viewcust" data-arg="${c.id}">View</button>` : `
+        <button class="btn xs ghost" data-act="openextend" data-arg="${c.id}">Extend</button>
+        <button class="btn xs pri" data-act="openconvert" data-arg="${c.id}">Convert</button>`}</div></td>
+    </tr>`).join('')}</tbody></table></div></div>
+    <div class="grid g3" style="margin-top:20px">
+      ${kpi('Conversion Rate', conv + '%', 'Trial to production', 'trending', 'accent')}
+      ${kpi('Avg Trial Duration', (active.length ? Math.round(active.reduce((a, c) => a + (Date.parse(c.trialEnds) - Date.parse(c.trialStart)) / 864e5, 0) / active.length) : 0) + ' days', '', 'clock', 'accent-amber')}
+      <div class="card"><h3 style="font-size:14px;margin-bottom:10px">Non-conversion reasons</h3>
+        <p class="sm muted">Reasons are captured when a trial is closed without converting.</p></div>
+    </div>`
+    : emptyState('clock', 'No trials yet', 'Create a trial to give customers 7, 14 or 30 days of access.', { act: 'opencreatetrial', label: 'Create Trial' })}`;
+}
+
+/* ---------- 5. Modules Catalog ---------- */
+function vModules() {
+  const enabled = MODULES.filter((m) => m.def).length;
+  const beta = MODULES.filter((m) => m.beta).length;
+  return pageHead('Module Catalog', 'All 18 modules — enable or disable per customer',
+    `<button class="btn ghost" data-act="noop">${ic('plus', 16)}Add Custom Module</button>`) + `
+  <div class="grid g4" style="margin-bottom:20px">
+    ${kpi('Total Modules', MODULES.length, '', 'puzzle', 'accent')}
+    ${kpi('Enabled by Default', enabled, '', 'checkcircle', 'accent-green')}
+    ${kpi('Beta', beta, '', 'zap', 'accent-amber')}
+    ${kpi('Custom', 0, 'None added', 'plus', 'accent-slate')}
+  </div>
+  <div class="grid g3" style="margin-bottom:20px">
+    ${MODULES.map((m) => `<div class="card hov" style="position:relative">
+      ${m.beta ? '<span class="badge amber" style="position:absolute;top:14px;right:14px">Beta</span>' : ''}
+      <div class="row" style="justify-content:space-between;align-items:flex-start;margin-bottom:10px">
+        ${m.ic === 'rupee' ? rupeeIcon('lg') : `<span class="kpi"><span class="ic">${ic(m.ic, 20)}</span></span>`}
+        ${m.beta ? '' : sw(m.def, 'togmoddefault', m.k, m.lock)}</div>
+      <div class="row" style="gap:7px"><h4 style="font-size:14px">${esc(m.n)}</h4>
+        <span class="badge slate" style="font-size:10px">${m.v}</span></div>
+      <p class="sm muted" style="margin:6px 0 10px;min-height:32px">${esc(m.d)}</p>
+      <div class="row" style="gap:6px;margin-bottom:10px">
+        <span class="badge ${m.cat === 'core' ? 'p' : m.cat === 'growth' ? 'amber' : 'slate'}">${m.cat}</span>
+        ${m.lock ? `<span class="badge amber">${ic('lock', 11)}Mandatory</span>` : ''}
+        <span class="badge p">${m.addon ? '+' + inr(m.addon) + '/seat' : '+' + inr(0)}</span></div>
+      ${m.deps && m.deps.length ? `<p class="xs" style="color:var(--amber-text);margin-bottom:10px">${ic('alert', 11)} Requires ${esc(m.deps.join(', '))}</p>` : ''}
+      <div class="row" style="gap:8px">
+        <button class="btn sm" data-act="noop">Configure</button>
+        <button class="btn xs ghost" data-act="enableall" data-arg="${m.k}">Enable for all</button></div>
+    </div>`).join('')}
+  </div>
+  <div class="card"><div class="row" style="gap:10px">
+    <button class="btn ghost" data-act="noop">Enable module for all customers</button>
+    <button class="btn ghost" data-act="noop">Disable for trial customers</button></div></div>`;
+}
+
+/* ---------- 6. Platform Users & RBAC ---------- */
+const PERMS = ['Manage Customers', 'Create/Edit Customer', 'Delete/Suspend Customer', 'Manage Licenses', 'Manage Plans', 'Manage Modules', 'Impersonate Customer', 'View Revenue', 'Manage Platform Users', 'Support Tickets', 'Reports & Analytics', 'Settings'];
+const ROLES = {
+  super_admin: { n: 'Super Admin', cls: 'p', desc: 'Full access to everything', perms: PERMS.slice() },
+  admin: { n: 'Admin', cls: 'slate', desc: 'Customers, licenses, modules, reports', perms: ['Manage Customers', 'Create/Edit Customer', 'Manage Licenses', 'Manage Plans', 'Manage Modules', 'Reports & Analytics'] },
+  support: { n: 'Support', cls: 'amber', desc: 'Customer view, impersonate, tickets', perms: ['Manage Customers', 'Impersonate Customer', 'Support Tickets'] },
+  finance: { n: 'Finance', cls: 'green', desc: 'Billing, revenue, license view', perms: ['Manage Licenses', 'View Revenue', 'Reports & Analytics'] },
+  sales: { n: 'Sales', cls: 'purple', desc: 'Customers, create trial only', perms: ['Create/Edit Customer', 'Manage Customers'] },
+};
+function vUsers() {
+  const us = S.data.users;
+  return pageHead('Platform Users', 'HumaNest team login via a single URL — admin.humanest.co.in',
+    `<button class="btn pri" data-act="openadduser">${ic('plus', 16)}Add User</button>`) + `
+  <div class="grid g5" style="margin-bottom:20px">
+    ${kpi('Total Users', us.length, '', 'users', 'accent')}
+    ${kpi('Super Admin', us.filter((u) => u.role === 'super_admin').length, '', 'shieldcheck', 'accent-amber')}
+    ${kpi('Admin', us.filter((u) => u.role === 'admin').length, '', 'user', 'accent-slate')}
+    ${kpi('Support', us.filter((u) => u.role === 'support').length, '', 'lifebuoy', 'accent-green')}
+    ${kpi('MFA Verified', us.filter((u) => u.mfa).length, '', 'shield', 'accent')}
+  </div>
+  ${us.length ? `<div class="tablewrap" style="margin-bottom:20px"><div class="tablescroll"><table>
+    <thead><tr><th>User</th><th>Role</th><th>Permissions</th><th>Last Active</th><th>MFA</th><th>Status</th><th class="r">Actions</th></tr></thead>
+    <tbody>${us.map((u) => `<tr>
+      <td><div class="row" style="gap:10px"><span class="avatar">${initial(u.name)}</span>
+        <span class="stack2"><b>${esc(u.name)}</b><span>${esc(u.email)}</span></span></div></td>
+      <td><span class="badge ${ROLES[u.role].cls}">${ROLES[u.role].n}</span></td>
+      <td><div class="row" style="gap:4px">${ROLES[u.role].perms.slice(0, 2).map((p) => `<span class="badge slate" style="font-size:10px">${esc(p)}</span>`).join('')}
+        ${ROLES[u.role].perms.length > 2 ? `<span class="badge slate" style="font-size:10px">+${ROLES[u.role].perms.length - 2}</span>` : ''}</div></td>
+      <td class="sm muted">${esc(u.lastActive || 'Never')}</td>
+      <td>${u.mfa ? `<span class="badge green">${ic('shieldcheck', 11)}Verified</span>` : '<span class="badge yellow">Pending</span>'}</td>
+      <td><span class="row" style="gap:6px"><span class="dot ${u.status === 'active' ? 'green' : 'red'}"></span>
+        <span class="sm">${u.status === 'active' ? 'Active' : 'Suspended'}</span></span></td>
+      <td class="r"><div class="row" style="justify-content:flex-end;gap:2px">
+        <button class="iconbtn" data-act="noop" aria-label="Edit">${ic('pencil', 16)}</button>
+        <button class="iconbtn" data-act="toguser" data-arg="${u.id}" aria-label="Suspend">${ic('pause', 16)}</button>
+        <button class="iconbtn" data-act="deluser" data-arg="${u.id}" aria-label="Delete">${ic('trash', 16)}</button></div></td>
+    </tr>`).join('')}</tbody></table></div></div>`
+    : emptyState('users', 'No platform users yet', 'Add your HumaNest team members and assign their roles.', { act: 'openadduser', label: 'Add User' })}
+  <div class="card">
+    <h3 style="margin-bottom:14px">Permissions Matrix</h3>
+    <div class="tablescroll"><table>
+      <thead><tr><th>Permission</th>${Object.values(ROLES).map((r) => `<th class="r">${esc(r.n)}</th>`).join('')}</tr></thead>
+      <tbody>${PERMS.map((p) => `<tr><td class="sm">${esc(p)}</td>
+        ${Object.entries(ROLES).map(([k, r]) => `<td class="r"><input type="checkbox" ${r.perms.includes(p) ? 'checked' : ''} ${k === 'super_admin' ? 'disabled' : ''}></td>`).join('')}
+      </tr>`).join('')}</tbody></table></div>
+    <div class="row" style="margin-top:14px"><button class="btn pri" data-act="savematrix">Save Matrix</button></div>
+  </div>`;
+}
+
+/* ---------- 7. Support & Tickets ---------- */
+function vSupport() {
+  const f = tabOf('sup', 'all');
+  const ts = S.data.tickets;
+  const rows = f === 'all' ? ts : ts.filter((t) => t.status === f);
+  return pageHead('Support', 'Manage customer queries and issues',
+    `<button class="btn ghost" data-act="openticket">${ic('plus', 16)}Add Ticket</button>`) + `
+  ${pills([['all', 'All', ts.length], ['open', 'Open', ts.filter((t) => t.status === 'open').length],
+    ['progress', 'In Progress', ts.filter((t) => t.status === 'progress').length],
+    ['resolved', 'Resolved', ts.filter((t) => t.status === 'resolved').length]], f, 'suptab')}
+  ${rows.length ? `<div class="tablewrap" style="margin-bottom:20px"><div class="tablescroll"><table>
+    <thead><tr><th>Ticket ID</th><th>Customer</th><th>Subject</th><th>Category</th><th>Priority</th><th>Status</th><th>Assigned</th><th>Created</th><th class="r">Actions</th></tr></thead>
+    <tbody>${rows.map((t) => `<tr>
+      <td class="mono muted">${esc(t.id)}</td>
+      <td class="sm">${esc(t.customer || '—')}</td>
+      <td class="sm" style="font-weight:600;color:var(--ink)">${esc(t.subject)}</td>
+      <td><span class="badge slate">${esc(t.category)}</span></td>
+      <td><span class="badge ${t.priority === 'High' ? 'red' : t.priority === 'Medium' ? 'yellow' : 'green'}">${esc(t.priority)}</span></td>
+      <td><span class="badge ${t.status === 'open' ? 'amber' : t.status === 'progress' ? 'p' : 'green'}">${t.status === 'progress' ? 'In Progress' : t.status[0].toUpperCase() + t.status.slice(1)}</span></td>
+      <td class="sm muted">${esc(t.assigned || 'Unassigned')}</td>
+      <td class="sm muted">${dlabel(t.created)}</td>
+      <td class="r"><div class="row" style="justify-content:flex-end;gap:2px">
+        <button class="iconbtn" data-act="noop" aria-label="View">${ic('eye', 16)}</button>
+        <button class="iconbtn" data-act="noop" aria-label="Assign">${ic('userplus', 16)}</button>
+        <button class="iconbtn" data-act="resolveticket" data-arg="${t.id}" aria-label="Resolve">${ic('check', 16)}</button></div></td>
+    </tr>`).join('')}</tbody></table></div></div>
+    <div class="grid g3">
+      ${kpi('Open Tickets', ts.filter((t) => t.status === 'open').length, '', 'lifebuoy', 'accent')}
+      ${kpi('Avg Resolution', '—', 'Needs resolved tickets', 'clock', 'accent-amber')}
+      ${kpi('Satisfaction', '—', 'Awaiting ratings', 'star', 'accent-green')}
+    </div>`
+    : emptyState('lifebuoy', 'No tickets yet', 'Customer support requests will appear here.', { act: 'openticket', label: 'Add Ticket' })}`;
+}
+
+/* ---------- 8. Reports & Analytics ---------- */
+function vReports() {
+  const cs = activeCustomers();
+  const seatsSold = cs.reduce((a, c) => a + c.seats, 0);
+  const seatsUsed = cs.reduce((a, c) => a + (c.used || 0), 0);
+  const util = seatsSold ? Math.round((seatsUsed / seatsSold) * 100) : 0;
+  const modUse = MODULES.map((m) => ({ short: m.n.split(' ')[0], value: cs.filter((c) => c.modules.includes(m.k)).length }));
+  const byMrr = [...cs].sort((a, b) => mrrOf(b) - mrrOf(a)).slice(0, 10).map((c) => ({ label: c.name, value: mrrOf(c) }));
+  const high = cs.filter((c) => c.seats && (c.used || 0) / c.seats > 0.9);
+
+  return pageHead('Reports & Analytics', 'Platform level insight into customers, revenue and modules',
+    `<button class="btn" data-act="noop">${ic('download', 16)}Export</button>`) + `
+  <div class="grid g4" style="margin-bottom:20px">
+    ${kpi('Total Customers', cs.length, cs.length ? trendUp('+12%') : '', 'building', 'accent')}
+    ${kpi('MRR', inrShort(totalMRR()), 'Monthly recurring', 'rupee', 'accent-amber')}
+    ${kpi('Churn Rate', cs.length ? Math.round((S.data.customers.filter((c) => c.status === 'deleted').length / S.data.customers.length) * 100) + '%' : '0%', '', 'trending', 'accent-slate')}
+    ${kpi('License Utilization', util + '%', seatsUsed + ' of ' + seatsSold + ' seats', 'target', 'accent-green')}
+  </div>
+  <div class="grid g2" style="margin-bottom:20px">
+    <div class="card"><div class="cardhead"><div style="flex:1"><h3>Customer Growth</h3><div class="sub">Cumulative, last 12 months</div></div></div>
+      ${cs.length ? areaChart(cs.map((_, i) => i + 1)) : emptyState('trending', 'No data yet', 'Growth appears once customers exist.')}</div>
+    <div class="card"><div class="cardhead"><div style="flex:1"><h3>Top 10 Customers by MRR</h3><div class="sub">Monthly recurring revenue</div></div></div>
+      ${byMrr.length ? hbarList(byMrr.map((r) => ({ ...r, value: r.value })), Math.max(...byMrr.map((r) => r.value)))
+        : emptyState('rupee', 'No revenue yet', 'Convert a trial to production to start billing.')}</div>
+  </div>
+  <div class="grid g2" style="margin-bottom:20px">
+    <div class="card"><div class="cardhead"><div style="flex:1"><h3>Most Used Modules</h3><div class="sub">All 18 modules</div></div></div>
+      ${cs.length ? vbars(modUse) : emptyState('puzzle', 'No module usage yet', 'Adoption is measured across onboarded customers.')}</div>
+    <div class="card"><div class="cardhead"><div style="flex:1"><h3>License Utilization</h3><div class="sub">Seats used against licensed</div></div></div>
+      <div class="c">${gauge(util)}<p class="sm muted">${seatsUsed} of ${seatsSold} seats in use</p></div></div>
+  </div>
+  <div class="grid g2">
+    <div class="card"><h3 style="margin-bottom:12px">New Customers This Month</h3>
+      ${cs.length ? `<div class="tablescroll"><table><thead><tr><th>Company</th><th>Plan</th><th class="r">Seats</th><th>Created</th></tr></thead>
+        <tbody>${cs.slice(0, 6).map((c) => `<tr><td class="sm">${esc(c.name)}</td><td>${planBadge(c.plan)}</td>
+        <td class="r num">${c.seats}</td><td class="sm muted">${dlabel(c.created)}</td></tr>`).join('')}</tbody></table></div>`
+        : emptyState('building', 'No new customers', 'Newly created customers appear here.')}</div>
+    <div class="card"><h3 style="margin-bottom:12px">High Utilization Customers</h3>
+      ${high.length ? `<div class="tablescroll"><table><thead><tr><th>Company</th><th>Seats</th><th class="r">Usage</th></tr></thead>
+        <tbody>${high.map((c) => `<tr><td class="sm">${esc(c.name)}</td><td class="sm num">${c.used}/${c.seats}</td>
+        <td class="r"><div class="bar" style="width:80px;display:inline-block"><i class="red" style="width:${Math.min(100, (c.used / c.seats) * 100)}%"></i></div></td></tr>`).join('')}</tbody></table></div>`
+        : emptyState('target', 'No customers above 90%', 'Seat pressure is flagged here so you can upsell in time.')}</div>
+  </div>`;
+}
+
+/* ---------- 9. Settings ---------- */
+function vSettings() {
+  return pageHead('Platform Settings', 'Manage platform configuration for admin.humanest.co.in') + `
+  <div class="col" style="gap:16px">
+    <div class="card"><h3 style="margin-bottom:14px">General</h3>
+      <div class="grid g2">
+        ${field('Platform name', `<input value="HumaNest">`)}
+        ${field('Tagline', `<input value="Your People. Your Process." readonly title="Fixed brand tagline">`)}
+      </div>
+      <div class="field" style="margin-top:14px"><label>Logo</label>
+        <div class="uploadbox">${brandMark()}<span class="sm">Current mark and wordmark from the live brand</span>
+        <span class="xs muted">PNG or SVG, max 2 MB</span></div></div>
+    </div>
+    <div class="card"><h3 style="margin-bottom:14px">Domain</h3>
+      <div class="grid g2">
+        ${field('Customer subdomain pattern', `<input value="*.humanest.co.in">`)}
+        <div class="field"><label>Custom domain (Enterprise)</label>
+          <div class="row" style="height:44px">${sw(true, 'noop')}<span class="sm muted">White-label domains allowed</span></div></div>
+      </div>
+      <p class="sm muted" style="margin-top:12px">Customer portal: <b>https://apps.humanest.co.in</b> &bull;
+        White-label: <b>https://[customer].humanest.co.in</b></p>
+    </div>
+    <div class="card"><h3 style="margin-bottom:14px">Email Templates</h3>
+      <div class="tablescroll" style="border:1px solid var(--line);border-radius:var(--r-xl)">
+        <table><thead><tr><th>Template</th><th>Subject</th><th>Status</th><th class="r">Actions</th></tr></thead>
+        <tbody>${[['Trial Welcome', 'Your HumaNest trial is ready'], ['Conversion', 'Welcome to HumaNest'], ['Suspension', 'Your HumaNest account is suspended'], ['Deletion', 'Your HumaNest account has been closed']].map(([n, s]) => `
+          <tr><td class="sm" style="font-weight:600;color:var(--ink)">${esc(n)}</td><td class="sm muted">${esc(s)}</td>
+          <td><span class="badge green">Active</span></td>
+          <td class="r"><button class="iconbtn" data-act="noop">${ic('pencil', 16)}</button>
+          <button class="iconbtn" data-act="noop">${ic('eye', 16)}</button></td></tr>`).join('')}</tbody></table></div>
+    </div>
+    <div class="card"><h3 style="margin-bottom:14px">Billing</h3>
+      <div class="grid g2">
+        ${field('Razorpay API key', `<input placeholder="rzp_live_..." type="password">`)}
+        ${field('GST number', `<input placeholder="27AAAAA0000A1Z5">`)}
+        ${field('Invoice prefix', `<input value="HUMANEST-">`)}
+        ${field('Tax rate', `<input value="18%">`)}
+      </div>
+    </div>
+    <div class="card"><h3 style="margin-bottom:14px">Security</h3>
+      <div class="col" style="gap:14px">
+        <div class="row" style="justify-content:space-between"><div><b class="sm">MFA enforcement</b>
+          <p class="xs muted">Mandatory for every platform user</p></div>${sw(true, 'noop')}</div>
+        <div class="grid g2">
+          ${field('Session timeout', `<select><option>30 minutes</option><option selected>60 minutes</option><option>2 hours</option><option>8 hours</option></select>`)}
+          ${field('Deleted customer retention', `<select><option selected>30 days</option><option>60 days</option><option>90 days</option><option>Permanent</option></select>`)}
+        </div>
+        ${field('IP whitelist', `<textarea placeholder="Enter IP addresses, one per line"></textarea>`)}
+        <div><label class="lbl">Password policy</label>
+          <div class="grid g2" style="margin-top:8px">
+            ${['Minimum 12 characters', 'Uppercase required', 'Number required', 'Symbol required'].map((p) => `<label class="checkrow"><input type="checkbox" checked> ${p}</label>`).join('')}</div></div>
+        <div class="row" style="justify-content:space-between"><div><b class="sm">Daily backup</b>
+          <p class="xs muted">Automatic snapshot retained for 30 days</p></div>${sw(true, 'noop')}</div>
+      </div>
+    </div>
+  </div>`;
+}
+
+/* ---------- Modals ---------- */
+function modalHtml() {
+  const m = S.modal;
+  const M = { addcust: mAddCustomer, createtrial: mCreateTrial, extend: mExtend, convert: mConvert, suspend: mSuspend, delcust: mDelete, adduser: mAddUser, viewcust: mViewCustomer, managelicense: mManageLicense, managemodules: mManageModules, custmenu: mCustMenu, ticket: mTicket };
+  return `<div class="scrim" data-act="scrimclose">${(M[m.type] || (() => ''))(m)}</div>`;
+}
+const f = (k, d) => S.form[k] ?? d;
+
+function mAddCustomer(m) {
+  const tab = f('_tab', 'company');
+  const plan = f('plan', 'growth');
+  const seats = +f('seats', 50);
+  const disc = +f('discount', 0);
+  const mrr = Math.round(seats * PLANS[plan].price * (1 - disc / 100));
+  const mods = f('_mods', planModules(plan));
+  const tabs = [['company', 'Company Info'], ['admin', 'Admin Details'], ['license', 'License'], ['modules', 'Modules (18)'], ['billing', 'Billing']];
+  return `<div class="modal lg" role="dialog" aria-modal="true" data-act="stop">
+    <div class="modalhead"><h2>${m.edit ? 'Edit Customer' : 'Add New Customer'}</h2><div class="spacer"></div>
+      <button class="iconbtn" data-act="closemodal" aria-label="Close">${ic('x', 20)}</button></div>
+    <div style="padding:14px 24px 0">${utabs(tabs, tab, 'modaltab')}</div>
+    <div class="modalbody" style="padding-top:0">
+    ${tab === 'company' ? `
+      <div class="grid g2">
+        ${field('Company name *', `<input data-bind="name" value="${esc(f('name', ''))}" placeholder="Enter company name" data-keep="mc-name">`)}
+        <div class="field"><label>Domain *</label><span class="suffix">
+          <input data-bind="domain" value="${esc(f('domain', ''))}" placeholder="acme" data-keep="mc-domain"><span>.humanest.co.in</span></span></div>
+      </div>
+      <div class="field"><label>Logo</label><div class="uploadbox">${ic('upload', 24)}
+        <span class="sm">Drag and drop a logo, or click to browse</span><span class="xs muted">PNG or JPG, max 2 MB</span></div></div>
+      <div class="grid g2">
+        ${field('Industry', `<select data-bind="industry"><option>IT</option><option>Manufacturing</option><option>Healthcare</option><option>Education</option><option>Retail</option><option>Finance</option><option>Other</option></select>`)}
+        ${field('Company size', `<select data-bind="size"><option>1-50</option><option>51-250</option><option>251-1000</option><option>1000+</option></select>`)}
+        ${field('GST number', `<input data-bind="gst" placeholder="27AAAAA0000A1Z5" data-keep="mc-gst">`)}
+        ${field('PAN', `<input data-bind="pan" placeholder="AAAAA0000A" data-keep="mc-pan">`)}
+      </div>
+      ${field('Address', `<textarea data-bind="address" placeholder="Registered address" data-keep="mc-addr"></textarea>`)}
+      <div class="grid g4">
+        ${field('City', `<input data-bind="city" data-keep="mc-city">`)}
+        ${field('State', `<input data-bind="state" data-keep="mc-state">`)}
+        ${field('Country', `<input data-bind="country" value="${esc(f('country', 'India'))}" data-keep="mc-country">`)}
+        ${field('Pincode', `<input data-bind="pin" data-keep="mc-pin">`)}
+      </div>` : ''}
+    ${tab === 'admin' ? `
+      <div class="grid g2">
+        ${field('Primary admin name *', `<input data-bind="adminName" value="${esc(f('adminName', ''))}" placeholder="Full name" data-keep="mc-an">`)}
+        ${field('Email *', `<input data-bind="adminEmail" type="email" value="${esc(f('adminEmail', ''))}" placeholder="admin@company.in" data-keep="mc-ae">`)}
+        <div class="field"><label>Phone *</label><div class="row" style="gap:8px;flex-wrap:nowrap">
+          <span class="badge slate" style="height:44px;padding:0 12px">+91</span>
+          <input data-bind="adminPhone" placeholder="10 digit number" data-keep="mc-ap"></div></div>
+        ${field('Role *', `<select data-bind="adminRole"><option>Primary Admin</option><option>Admin</option><option>Owner</option></select>`)}
+      </div>
+      <button class="uploadbox" data-act="noop" style="margin-top:6px">${ic('plus', 20)}
+        <span class="sm">Add another admin</span></button>` : ''}
+    ${tab === 'license' ? `
+      <div><label class="lbl">Plan</label>
+        <div class="grid g4" style="margin-top:8px">${Object.entries(PLANS).map(([k, p]) => `
+          <button class="plancard" aria-pressed="${plan === k}" data-act="setplan" data-arg="${k}">
+            ${p.popular ? '<span class="badge amber" style="position:absolute;top:-8px;right:8px">Popular</span>' : ''}
+            <b style="font-size:14px;color:var(--ink)">${p.n}</b>
+            <div><span class="badge slate" style="margin:6px 0">${p.bracket}</span></div>
+            <div class="num" style="font-size:13px;font-weight:700;color:var(--p-dark)">${p.free ? 'Free' : inr(p.price) + '/seat/mo'}</div>
+            <div class="xs muted">${p.mods} modules</div></button>`).join('')}</div></div>
+      <div class="field"><label>Number of users / seats *</label>
+        <div class="row" style="gap:12px;flex-wrap:nowrap">
+          <input type="range" min="1" max="1000" value="${seats}" data-bind="seats" data-live="1" style="flex:1">
+          <span class="badge p" style="font-size:13px;padding:6px 14px">${seats} seats</span></div>
+        <div class="row" style="justify-content:space-between"><span class="xs muted">Min 1</span><span class="xs muted">Max 1000</span></div></div>
+      <div class="grid g2">
+        ${field('Billing cycle', `<select data-bind="cycle"><option>Monthly</option><option>Yearly</option></select>`)}
+        ${field('Discount %', `<input type="number" min="0" max="50" value="${disc}" data-bind="discount" data-live="1" data-keep="mc-disc">`)}
+      </div>
+      <div class="card" style="background:var(--p-soft2);border-color:var(--p)">
+        <div class="lbl">Monthly recurring revenue</div>
+        <div class="num" style="font-size:24px;font-weight:700;color:var(--p-dark)">${inr(mrr)}<span class="sm muted" style="font-weight:500"> per month</span></div>
+        <div class="sm muted">${seats} seats &times; ${inr(PLANS[plan].price)}${disc ? ` less ${disc}%` : ''} = ${inr(mrr)}</div></div>
+      <div><label class="lbl">Trial duration</label><div class="row" style="gap:16px;margin-top:8px">
+        ${['7 days', '14 days', '30 days', 'Custom'].map((d, i) => `<label class="checkrow">
+          <input type="radio" name="trialdur" value="${d}" ${i === 1 ? 'checked' : ''} data-bind="trialDur"> ${d}</label>`).join('')}</div></div>
+      ${field('Status', `<select data-bind="status"><option value="trial">Trial</option><option value="active">Active</option><option value="suspended">Suspended</option></select>`)}` : ''}
+    ${tab === 'modules' ? `
+      <div><h4 style="font-size:14px">All modules — enable or disable per customer</h4>
+        <p class="sm muted">Select the modules to enable for this customer. Mandatory modules cannot be switched off.</p></div>
+      <div class="grid g2">${MODULES.map((m2) => {
+        const on = mods.includes(m2.k);
+        return `<div class="modcard">
+          ${m2.ic === 'rupee' ? rupeeIcon() : `<span class="ic">${ic(m2.ic, 18)}</span>`}
+          <div style="flex:1;min-width:0">
+            <div class="row" style="gap:6px"><h4>${esc(m2.n)}</h4>
+              ${m2.lock ? `<span class="badge amber" style="font-size:10px">${ic('lock', 10)}Locked</span>` : ''}</div>
+            <p>${esc(m2.d)}</p>
+            <div class="row" style="gap:6px;margin-top:8px">
+              <span class="badge ${m2.cat === 'core' ? 'p' : m2.cat === 'growth' ? 'amber' : 'slate'}" style="font-size:10px">${m2.cat}</span>
+              <span class="badge p" style="font-size:10px">${m2.addon ? '+' + inr(m2.addon) + '/seat' : '+' + inr(0)}</span></div>
+            ${m2.deps && m2.deps.length ? `<p class="xs" style="color:var(--amber-text);margin-top:6px">${esc(m2.n.split(' ')[0])} requires ${esc(m2.deps.join(', '))}</p>` : ''}
+          </div>${sw(on, 'togmod', m2.k, m2.lock)}</div>`;
+      }).join('')}</div>` : ''}
+    ${tab === 'billing' ? `
+      ${field('Billing address', `<textarea data-bind="billAddr" placeholder="Billing address" data-keep="mc-ba"></textarea>`)}
+      ${field('Internal notes', `<textarea data-bind="notes" placeholder="Internal notes about this customer" data-keep="mc-nt"></textarea>`)}
+      ${field('Tags', `<input data-bind="tags" placeholder="Add a tag and press Enter" data-keep="mc-tg">`)}` : ''}
+    </div>
+    <div class="modalfoot"><button class="btn" data-act="closemodal">Cancel</button>
+      <button class="btn pri" data-act="savecust">${m.edit ? 'Save Changes' : 'Create Customer'}</button></div>
+  </div>`;
+}
+
+function mCreateTrial() {
+  const seats = +f('seats', 25);
+  const mods = f('_mods', planModules('growth'));
+  return `<div class="modal" role="dialog" aria-modal="true" data-act="stop">
+    <div class="modalhead"><h2>Create Trial</h2><div class="spacer"></div>
+      <button class="iconbtn" data-act="closemodal" aria-label="Close">${ic('x', 20)}</button></div>
+    <div class="modalbody">
+      <div class="grid g2">
+        ${field('Company name *', `<input data-bind="name" value="${esc(f('name', ''))}" placeholder="Enter company name" data-keep="ct-n">`)}
+        <div class="field"><label>Domain *</label><span class="suffix">
+          <input data-bind="domain" value="${esc(f('domain', ''))}" placeholder="acme" data-keep="ct-d"><span>.humanest.co.in</span></span></div>
+        ${field('Admin name', `<input data-bind="adminName" value="${esc(f('adminName', ''))}" data-keep="ct-an">`)}
+        ${field('Admin email', `<input data-bind="adminEmail" type="email" value="${esc(f('adminEmail', ''))}" data-keep="ct-ae">`)}
+      </div>
+      <div class="field"><label>Seats</label>
+        <div class="row" style="gap:12px;flex-wrap:nowrap">
+          <input type="range" min="1" max="50" value="${seats}" data-bind="seats" data-live="1" style="flex:1">
+          <span class="badge p" style="font-size:13px;padding:6px 14px">${seats} seats</span></div></div>
+      <div><label class="lbl">Duration</label><div class="row" style="gap:16px;margin-top:8px">
+        ${[7, 14, 30].map((d) => `<label class="checkrow"><input type="radio" name="dur" value="${d}"
+          ${+f('dur', 14) === d ? 'checked' : ''} data-bind="dur" data-live="1"> ${d} days</label>`).join('')}</div>
+        <p class="sm muted" style="margin-top:8px">Ends ${dlabel(addDays(today(), +f('dur', 14)))}</p></div>
+      <div><label class="lbl">Modules — all Growth modules are pre-enabled</label>
+        <div class="grid g2" style="margin-top:8px">${MODULES.filter((m) => planModules('growth').includes(m.k)).map((m) => `
+          <div class="modcard">${m.ic === 'rupee' ? rupeeIcon() : `<span class="ic">${ic(m.ic, 18)}</span>`}
+            <div style="flex:1"><h4>${esc(m.n)}</h4></div>${sw(mods.includes(m.k), 'togmod', m.k, m.lock)}</div>`).join('')}</div></div>
+      ${field('Notes', `<textarea data-bind="notes" placeholder="Internal notes" data-keep="ct-nt"></textarea>`)}
+    </div>
+    <div class="modalfoot"><button class="btn" data-act="closemodal">Cancel</button>
+      <button class="btn pri" data-act="savetrial">Create Trial</button></div></div>`;
+}
+
+function mExtend(m) {
+  const c = S.data.customers.find((x) => x.id === m.id) || {};
+  return `<div class="modal sm" role="dialog" aria-modal="true" data-act="stop">
+    <div class="modalhead"><span class="modalicon amber">${ic('clock', 22)}</span><h2>Extend Trial</h2>
+      <div class="spacer"></div><button class="iconbtn" data-act="closemodal" aria-label="Close">${ic('x', 20)}</button></div>
+    <div class="modalbody">
+      <p class="sm muted">${esc(c.name || 'Customer')} currently ends on ${dlabel(c.trialEnds)}.</p>
+      <div class="row" style="gap:8px">${[7, 14, 30].map((d) => `
+        <button class="btn ${+f('ext', 7) === d ? 'pri' : ''}" data-act="setext" data-arg="${d}">+${d} days</button>`).join('')}</div>
+      <p class="sm muted">New end date: <b>${dlabel(addDays(c.trialEnds || today(), +f('ext', 7)))}</b></p>
+      ${field('Reason', `<textarea data-bind="reason" placeholder="Enter reason for extension" data-keep="ex-r"></textarea>`)}
+      <label class="checkrow"><input type="checkbox" checked> Notify customer by email</label>
+    </div>
+    <div class="modalfoot"><button class="btn" data-act="closemodal">Cancel</button>
+      <button class="btn pri" data-act="doextend" data-arg="${m.id}">Extend</button></div></div>`;
+}
+
+function mConvert(m) {
+  const c = S.data.customers.find((x) => x.id === m.id) || {};
+  const plan = f('plan', 'growth');
+  const seats = +f('seats', c.seats || 50);
+  const mrr = seats * PLANS[plan].price;
+  return `<div class="modal" role="dialog" aria-modal="true" data-act="stop">
+    <div class="modalhead"><span class="modalicon p">${ic('checkcircle', 22)}</span><h2>Convert Trial to Production</h2>
+      <div class="spacer"></div><button class="iconbtn" data-act="closemodal" aria-label="Close">${ic('x', 20)}</button></div>
+    <div class="modalbody">
+      <p class="sm muted">Convert the ${esc(c.name || '')} trial into an active production account.</p>
+      <div><label class="lbl">Select plan</label><div class="grid g3" style="margin-top:8px">
+        ${['starter', 'growth', 'enterprise'].map((k) => `<button class="plancard" aria-pressed="${plan === k}" data-act="setplan" data-arg="${k}">
+          <b style="font-size:14px;color:var(--ink)">${PLANS[k].n}</b>
+          <div><span class="badge slate" style="margin:6px 0">${PLANS[k].bracket}</span></div>
+          <div class="num" style="font-size:13px;font-weight:700;color:var(--p-dark)">${inr(PLANS[k].price)}/seat/mo</div></button>`).join('')}</div></div>
+      <div class="field"><label>Seats</label><div class="row" style="gap:12px;flex-wrap:nowrap">
+        <input type="range" min="1" max="1000" value="${seats}" data-bind="seats" data-live="1" style="flex:1">
+        <span class="badge p" style="font-size:13px;padding:6px 14px">${seats}</span></div></div>
+      <div class="card" style="background:var(--p-soft2);border-color:var(--p)">
+        <div class="lbl">MRR after conversion</div>
+        <div class="num" style="font-size:24px;font-weight:700;color:var(--p-dark)">${inr(mrr)}<span class="sm muted" style="font-weight:500"> per month</span></div></div>
+      ${field('Billing start date', `<input type="date" value="${today()}" data-bind="billStart">`)}
+      <label class="checkrow"><input type="checkbox" checked> Send welcome email and invoice</label>
+    </div>
+    <div class="modalfoot"><button class="btn" data-act="closemodal">Cancel</button>
+      <button class="btn pri" data-act="doconvert" data-arg="${m.id}">Convert</button></div></div>`;
+}
+
+function mSuspend(m) {
+  const c = S.data.customers.find((x) => x.id === m.id) || {};
+  return `<div class="modal sm" role="dialog" aria-modal="true" data-act="stop">
+    <div class="modalhead"><span class="modalicon amber">${ic('pause', 22)}</span><h2>Suspend Customer</h2>
+      <div class="spacer"></div><button class="iconbtn" data-act="closemodal" aria-label="Close">${ic('x', 20)}</button></div>
+    <div class="modalbody">
+      <p class="sm muted">This blocks every login for ${esc(c.name || 'this customer')}. Data is retained.</p>
+      ${field('Reason', `<select data-bind="reason"><option>Non-payment</option><option>Policy violation</option><option>Customer request</option></select>`)}
+      <div><label class="lbl">Duration</label><div class="row" style="gap:16px;margin-top:8px">
+        <label class="checkrow"><input type="radio" name="sd" checked> Temporary</label>
+        <label class="checkrow"><input type="radio" name="sd"> Permanent</label></div></div>
+      ${field('Notes', `<textarea data-bind="notes" placeholder="Enter reason detail" data-keep="sp-n"></textarea>`)}
+      <label class="checkrow"><input type="checkbox" checked> Send email to the customer admin</label>
+    </div>
+    <div class="modalfoot"><button class="btn" data-act="closemodal">Cancel</button>
+      <button class="btn danger" data-act="dosuspend" data-arg="${m.id}">Suspend</button></div></div>`;
+}
+
+function mDelete(m) {
+  const c = S.data.customers.find((x) => x.id === m.id) || {};
+  const typed = f('confirm', '');
+  const ok = typed.trim().toLowerCase() === (c.domain || '').toLowerCase();
+  return `<div class="modal sm" role="dialog" aria-modal="true" data-act="stop">
+    <div class="modalhead"><span class="modalicon red">${ic('trash', 22)}</span><h2>Delete Customer</h2>
+      <div class="spacer"></div><button class="iconbtn" data-act="closemodal" aria-label="Close">${ic('x', 20)}</button></div>
+    <div class="modalbody">
+      <div class="note amber">${ic('alert', 18)}<span>Soft delete. All data is retained for 30 days and can be restored within that window.</span></div>
+      ${field(`Type "${c.domain || ''}" to confirm`, `<input data-bind="confirm" data-live="1" value="${esc(typed)}" placeholder="${esc(c.domain || '')}" data-keep="dl-c">`)}
+      ${field('Reason', `<textarea data-bind="reason" placeholder="Why is this customer being deleted?" data-keep="dl-r"></textarea>`)}
+    </div>
+    <div class="modalfoot"><button class="btn" data-act="closemodal">Cancel</button>
+      <button class="btn danger" data-act="dodelete" data-arg="${m.id}" ${ok ? '' : 'disabled'}>Delete</button></div></div>`;
+}
+
+function mAddUser() {
+  const role = f('role', 'admin');
+  return `<div class="modal" role="dialog" aria-modal="true" data-act="stop">
+    <div class="modalhead"><h2>Add Platform User</h2><div class="spacer"></div>
+      <button class="iconbtn" data-act="closemodal" aria-label="Close">${ic('x', 20)}</button></div>
+    <div class="modalbody">
+      <div class="grid g2">
+        ${field('Name *', `<input data-bind="name" value="${esc(f('name', ''))}" placeholder="Full name" data-keep="au-n">`)}
+        ${field('Email *', `<input data-bind="email" type="email" value="${esc(f('email', ''))}" placeholder="name@humanest.co.in" data-keep="au-e">`)}
+      </div>
+      <div class="field"><label>Role *</label>
+        <select data-bind="role" data-live="1">${Object.entries(ROLES).map(([k, r]) =>
+          `<option value="${k}" ${role === k ? 'selected' : ''}>${r.n} — ${r.desc}</option>`).join('')}</select></div>
+      <div><label class="lbl">Permissions for ${ROLES[role].n}</label>
+        <div class="grid g2" style="margin-top:8px">${PERMS.map((p) => `<label class="checkrow">
+          <input type="checkbox" ${ROLES[role].perms.includes(p) ? 'checked' : ''} ${role === 'super_admin' ? 'disabled' : ''}> ${esc(p)}</label>`).join('')}</div></div>
+      <label class="checkrow"><input type="checkbox" checked> Send invite email with login instructions</label>
+    </div>
+    <div class="modalfoot"><button class="btn" data-act="closemodal">Cancel</button>
+      <button class="btn pri" data-act="saveuser">Create User</button></div></div>`;
+}
+
+function mCustMenu(m) {
+  const c = S.data.customers.find((x) => x.id === m.id) || {};
+  const items = [
+    ['managelicense', 'card', 'Manage License'],
+    ['managemodules', 'puzzle', 'Manage Modules'],
+    ...(c.status === 'trial' ? [['openextend', 'clock', 'Extend Trial'], ['openconvert', 'checkcircle', 'Convert to Production']] : []),
+    ...(c.status === 'suspended' ? [['reactivate', 'refresh', 'Reactivate']] : [['opensuspend', 'pause', 'Suspend']]),
+    ['opendelete', 'trash', 'Delete'],
+  ];
+  return `<div class="modal sm" role="dialog" aria-modal="true" data-act="stop">
+    <div class="modalhead"><span class="avatar">${initial(c.name)}</span>
+      <span class="stack2"><b>${esc(c.name)}</b><span>${esc(c.domain)}</span></span><div class="spacer"></div>
+      <button class="iconbtn" data-act="closemodal" aria-label="Close">${ic('x', 20)}</button></div>
+    <div class="modalbody" style="gap:4px">${items.map(([act, icon, label]) => `
+      <button class="navitem" data-act="${act}" data-arg="${c.id}">${ic(icon, 18)}<span>${label}</span></button>`).join('')}</div></div>`;
+}
+
+function mManageLicense(m) {
+  const c = S.data.customers.find((x) => x.id === m.id) || {};
+  const plan = f('plan', c.plan);
+  const seats = +f('seats', c.seats);
+  return `<div class="modal sm" role="dialog" aria-modal="true" data-act="stop">
+    <div class="modalhead"><h2>Manage License</h2><div class="spacer"></div>
+      <button class="iconbtn" data-act="closemodal" aria-label="Close">${ic('x', 20)}</button></div>
+    <div class="modalbody">
+      ${field('Plan', `<select data-bind="plan" data-live="1">${Object.entries(PLANS).map(([k, p]) =>
+        `<option value="${k}" ${plan === k ? 'selected' : ''}>${p.n} — ${p.bracket}</option>`).join('')}</select>`)}
+      <div class="field"><label>Seats</label><div class="row" style="gap:12px;flex-wrap:nowrap">
+        <input type="range" min="1" max="1000" value="${seats}" data-bind="seats" data-live="1" style="flex:1">
+        <span class="badge p" style="font-size:13px;padding:6px 14px">${seats}</span></div></div>
+      <div class="card" style="background:var(--p-soft2);border-color:var(--p)">
+        <div class="lbl">New MRR</div><div class="num" style="font-size:22px;font-weight:700;color:var(--p-dark)">
+          ${inr(seats * PLANS[plan].price)}</div></div>
+    </div>
+    <div class="modalfoot"><button class="btn" data-act="closemodal">Cancel</button>
+      <button class="btn pri" data-act="savelicense" data-arg="${m.id}">Save</button></div></div>`;
+}
+
+function mManageModules(m) {
+  const c = S.data.customers.find((x) => x.id === m.id) || {};
+  const mods = f('_mods', c.modules || []);
+  return `<div class="modal lg" role="dialog" aria-modal="true" data-act="stop">
+    <div class="modalhead"><h2>Manage Modules</h2><div class="spacer"></div>
+      <button class="iconbtn" data-act="closemodal" aria-label="Close">${ic('x', 20)}</button></div>
+    <div class="modalbody"><div class="grid g2">${MODULES.map((m2) => `
+      <div class="modcard">${m2.ic === 'rupee' ? rupeeIcon() : `<span class="ic">${ic(m2.ic, 18)}</span>`}
+        <div style="flex:1;min-width:0"><div class="row" style="gap:6px"><h4>${esc(m2.n)}</h4>
+          ${m2.lock ? `<span class="badge amber" style="font-size:10px">${ic('lock', 10)}</span>` : ''}</div>
+          <p>${esc(m2.d)}</p></div>${sw(mods.includes(m2.k), 'togmod', m2.k, m2.lock)}</div>`).join('')}</div></div>
+    <div class="modalfoot"><button class="btn" data-act="closemodal">Cancel</button>
+      <button class="btn pri" data-act="savemodules" data-arg="${m.id}">Save</button></div></div>`;
+}
+
+function mViewCustomer(m) {
+  const c = S.data.customers.find((x) => x.id === m.id) || {};
+  return `<div class="modal lg" role="dialog" aria-modal="true" data-act="stop">
+    <div class="modalhead"><span class="avatar">${initial(c.name)}</span>
+      <span class="stack2"><b>${esc(c.name)}</b><span>${esc(c.domain)}</span></span>
+      <div class="spacer"></div>${statusBadge(c.status)}
+      <button class="iconbtn" data-act="closemodal" aria-label="Close">${ic('x', 20)}</button></div>
+    <div class="modalbody">
+      <dl class="kv">
+        <dt>Customer ID</dt><dd class="mono">${esc(c.id)}</dd>
+        <dt>Primary admin</dt><dd>${esc(c.adminName || '—')} &bull; ${esc(c.adminEmail || '—')}</dd>
+        <dt>Plan</dt><dd>${PLANS[c.plan]?.n || c.plan} (${PLANS[c.plan]?.bracket || ''})</dd>
+        <dt>Seats</dt><dd>${c.used || 0} used of ${c.seats}</dd>
+        <dt>MRR</dt><dd class="num">${c.status === 'trial' ? 'Trial, not billed' : inr(mrrOf(c))}</dd>
+        <dt>Created</dt><dd>${dlabel(c.created)}</dd>
+        ${c.trialEnds ? `<dt>Trial ends</dt><dd>${dlabel(c.trialEnds)} (${daysLeft(c.trialEnds)} days left)</dd>` : ''}
+        <dt>Industry</dt><dd>${esc(c.industry || '—')}</dd>
+        <dt>GST / PAN</dt><dd>${esc(c.gst || '—')} / ${esc(c.pan || '—')}</dd>
+      </dl>
+      <div><label class="lbl">Enabled modules (${(c.modules || []).length} of 18)</label>
+        <div class="row" style="gap:6px;margin-top:8px">${(c.modules || []).map((k) =>
+          `<span class="badge p">${esc(modByKey(k)?.n || k)}</span>`).join('')}</div></div>
+    </div>
+    <div class="modalfoot"><button class="btn" data-act="closemodal">Close</button>
+      <button class="btn pri" data-act="openaddcust" data-arg="${c.id}">Edit</button></div></div>`;
+}
+
+function mTicket() {
+  return `<div class="modal sm" role="dialog" aria-modal="true" data-act="stop">
+    <div class="modalhead"><h2>Add Ticket</h2><div class="spacer"></div>
+      <button class="iconbtn" data-act="closemodal" aria-label="Close">${ic('x', 20)}</button></div>
+    <div class="modalbody">
+      ${field('Customer', `<select data-bind="customer">${S.data.customers.length
+        ? S.data.customers.map((c) => `<option>${esc(c.name)}</option>`).join('')
+        : '<option value="">No customers yet</option>'}</select>`)}
+      ${field('Subject *', `<input data-bind="subject" value="${esc(f('subject', ''))}" placeholder="Short summary" data-keep="tk-s">`)}
+      <div class="grid g2">
+        ${field('Category', `<select data-bind="category"><option>Billing</option><option>Technical</option><option>Feature Request</option></select>`)}
+        ${field('Priority', `<select data-bind="priority"><option>Low</option><option selected>Medium</option><option>High</option></select>`)}
+      </div>
+      ${field('Description', `<textarea data-bind="desc" placeholder="Describe the issue" data-keep="tk-d"></textarea>`)}
+    </div>
+    <div class="modalfoot"><button class="btn" data-act="closemodal">Cancel</button>
+      <button class="btn pri" data-act="saveticket">Create Ticket</button></div></div>`;
+}
+
+/* ---------- Admin actions ---------- */
+Object.assign(ACT, {
+  stop: () => 'norender',
+  scrimclose: (a, el) => { if (el.classList.contains('scrim')) closeModal(); return 'norender'; },
+  custtab: (a) => { S.tab.cust = a; },
+  suptab: (a) => { S.tab.sup = a; },
+  modaltab: (a) => { S.form._tab = a; },
+  setplan: (a) => { S.form.plan = a; S.form._mods = planModules(a); },
+  setext: (a) => { S.form.ext = a; },
+  togmod: (a) => {
+    const cur = S.form._mods || [];
+    S.form._mods = cur.includes(a) ? cur.filter((x) => x !== a) : [...cur, a];
+  },
+  togmoddefault: (a) => { const m = modByKey(a); if (m && !m.lock) { m.def = !m.def; toast(m.n + (m.def ? ' enabled' : ' disabled') + ' by default'); } },
+  enableall: (a) => { S.data.customers.forEach((c) => { if (!c.modules.includes(a)) c.modules.push(a); }); toast(modByKey(a).n + ' enabled for all customers'); },
+
+  openaddcust: (arg) => {
+    const c = arg && S.data.customers.find((x) => x.id === arg);
+    openModal('addcust', c ? { edit: true, id: c.id, form: { ...c, _tab: 'company', _mods: c.modules } }
+      : { form: { _tab: 'company', plan: 'growth', seats: 50, _mods: planModules('growth'), country: 'India' } });
+  },
+  savecust: () => {
+    const name = (S.form.name || '').trim();
+    if (!name) { S.form._tab = 'company'; toast('Company name is required'); return; }
+    const domain = ((S.form.domain || name.toLowerCase().replace(/[^a-z0-9]/g, '')) + '.humanest.co.in');
+    const plan = S.form.plan || 'growth';
+    const seats = +(S.form.seats || 50);
+    const status = S.form.status || 'trial';
+    if (S.modal.edit) {
+      const c = S.data.customers.find((x) => x.id === S.modal.id);
+      Object.assign(c, { name, domain, plan, seats, status, discount: +(S.form.discount || 0), modules: S.form._mods || c.modules, adminName: S.form.adminName || c.adminName, adminEmail: S.form.adminEmail || c.adminEmail, industry: S.form.industry, gst: S.form.gst, pan: S.form.pan });
+      logActivity('License updated for ' + name);
+      toast('Customer updated');
+    } else {
+      const dur = parseInt(S.form.trialDur || '14', 10) || 14;
+      S.data.customers.push({
+        id: uid('CUST'), name, domain, plan, seats, used: 0, status,
+        discount: +(S.form.discount || 0), modules: S.form._mods || planModules(plan),
+        adminName: S.form.adminName || '', adminEmail: S.form.adminEmail || '', adminPhone: S.form.adminPhone || '',
+        industry: S.form.industry, gst: S.form.gst, pan: S.form.pan,
+        created: today(), trialStart: status === 'trial' ? today() : null,
+        trialEnds: status === 'trial' ? addDays(today(), dur) : null,
+      });
+      logActivity('Customer created: ' + name);
+      toast('Customer created');
+    }
+    closeModal(); S.view = 'customers';
+  },
+
+  opencreatetrial: () => openModal('createtrial', { form: { dur: 14, seats: 25, _mods: planModules('growth') } }),
+  savetrial: () => {
+    const name = (S.form.name || '').trim();
+    if (!name) { toast('Company name is required'); return; }
+    const dur = +(S.form.dur || 14);
+    S.data.customers.push({
+      id: uid('CUST'), name,
+      domain: (S.form.domain || name.toLowerCase().replace(/[^a-z0-9]/g, '')) + '.humanest.co.in',
+      plan: 'trial', seats: +(S.form.seats || 25), used: 0, status: 'trial',
+      modules: S.form._mods || planModules('growth'),
+      adminName: S.form.adminName || '', adminEmail: S.form.adminEmail || '',
+      created: today(), trialStart: today(), trialEnds: addDays(today(), dur),
+    });
+    logActivity('Trial created: ' + name);
+    toast('Trial created and invite sent');
+    closeModal(); S.view = 'trials';
+  },
+
+  openextend: (a) => openModal('extend', { id: a, form: { ext: 7 } }),
+  doextend: (a) => {
+    const c = S.data.customers.find((x) => x.id === a);
+    c.trialEnds = addDays(c.trialEnds || today(), +(S.form.ext || 7));
+    logActivity('Trial extended for ' + c.name);
+    toast('Trial extended to ' + dlabel(c.trialEnds)); closeModal();
+  },
+  openconvert: (a) => { const c = S.data.customers.find((x) => x.id === a); openModal('convert', { id: a, form: { plan: 'growth', seats: c.seats } }); },
+  doconvert: (a) => {
+    const c = S.data.customers.find((x) => x.id === a);
+    c.plan = S.form.plan || 'growth'; c.seats = +(S.form.seats || c.seats);
+    c.status = 'active'; c.converted = true; c.modules = planModules(c.plan);
+    logActivity('Converted to production: ' + c.name);
+    toast(c.name + ' converted to production'); closeModal(); S.view = 'customers';
+  },
+  opensuspend: (a) => openModal('suspend', { id: a }),
+  dosuspend: (a) => { const c = S.data.customers.find((x) => x.id === a); c.status = 'suspended'; logActivity('Suspended: ' + c.name); toast('Customer suspended'); closeModal(); },
+  reactivate: (a) => { const c = S.data.customers.find((x) => x.id === a); c.status = 'active'; logActivity('Reactivated: ' + c.name); toast('Customer reactivated'); closeModal(); },
+  opendelete: (a) => openModal('delcust', { id: a }),
+  dodelete: (a) => { const c = S.data.customers.find((x) => x.id === a); c.status = 'deleted'; logActivity('Deleted (soft): ' + c.name); toast('Customer soft deleted, data retained 30 days'); closeModal(); },
+  custmenu: (a) => openModal('custmenu', { id: a }),
+  viewcust: (a) => openModal('viewcust', { id: a }),
+  managelicense: (a) => { const c = S.data.customers.find((x) => x.id === a); openModal('managelicense', { id: a, form: { plan: c.plan, seats: c.seats } }); },
+  savelicense: (a) => { const c = S.data.customers.find((x) => x.id === a); c.plan = S.form.plan; c.seats = +S.form.seats; logActivity('License changed: ' + c.name); toast('License updated'); closeModal(); },
+  managemodules: (a) => { const c = S.data.customers.find((x) => x.id === a); openModal('managemodules', { id: a, form: { _mods: [...c.modules] } }); },
+  savemodules: (a) => { const c = S.data.customers.find((x) => x.id === a); c.modules = S.form._mods; logActivity('Modules changed: ' + c.name); toast('Modules updated'); closeModal(); },
+
+  openadduser: () => openModal('adduser', { form: { role: 'admin' } }),
+  saveuser: () => {
+    const name = (S.form.name || '').trim();
+    if (!name) { toast('Name is required'); return; }
+    S.data.users.push({ id: uid('USR'), name, email: S.form.email || '', role: S.form.role || 'admin', mfa: false, status: 'active', lastActive: 'Invite sent' });
+    logActivity('Platform user added: ' + name);
+    toast('User created and invite sent'); closeModal();
+  },
+  toguser: (a) => { const u = S.data.users.find((x) => x.id === a); u.status = u.status === 'active' ? 'suspended' : 'active'; toast('User ' + u.status); },
+  deluser: (a) => { S.data.users = S.data.users.filter((x) => x.id !== a); toast('User removed'); },
+  savematrix: () => toast('Permissions matrix saved'),
+
+  openticket: () => openModal('ticket', { form: {} }),
+  saveticket: () => {
+    const s = (S.form.subject || '').trim();
+    if (!s) { toast('Subject is required'); return; }
+    S.data.tickets.push({ id: uid('SUP'), subject: s, customer: S.form.customer || '', category: S.form.category || 'Technical', priority: S.form.priority || 'Medium', status: 'open', created: today(), assigned: '' });
+    toast('Ticket created'); closeModal();
+  },
+  resolveticket: (a) => { const t = S.data.tickets.find((x) => x.id === a); t.status = 'resolved'; toast('Ticket resolved'); },
+});
+
+</script>
+<script>
+render();
+</script>
