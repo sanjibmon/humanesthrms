@@ -2,7 +2,7 @@
 
 import { revalidatePath } from 'next/cache';
 import { createClient } from '@/lib/supabase/server';
-import { createAdminClient, hasServiceRole, inviteRedirectTo } from '@/lib/supabase/admin';
+import { createAdminClient, hasServiceRole, customerInviteRedirectTo } from '@/lib/supabase/admin';
 import { requirePlatform, PermissionError } from '@/lib/guard';
 import { ok, fail, friendly, str, nullIfBlank, type ActionResult } from '@/lib/action';
 import type { Values } from '@/components/ui/form';
@@ -89,8 +89,11 @@ export async function inviteOrgOwner(
     const lower = email.toLowerCase();
 
     let userId: string | null = null;
+    let sent: 'invite' | 'reset' | 'none' = 'invite';
+
     const { data: invited, error: inviteErr } = await admin.auth.admin.inviteUserByEmail(lower, {
-      redirectTo: inviteRedirectTo(),
+      // The customer portal, not this one — see customerInviteRedirectTo().
+      redirectTo: customerInviteRedirectTo(),
       data: { org_id: orgId, invited_as: role },
     });
 
@@ -104,6 +107,16 @@ export async function inviteOrgOwner(
       if (!userId) {
         return fail('That email already has an account, but it could not be found to link.');
       }
+
+      /* Supabase will not re-issue an invitation to an address it already knows,
+         and says so with a 422 — which used to be swallowed here, so the portal
+         reported "Invitation sent" while nothing left the mail server. Send the
+         one email that *is* allowed for an existing account instead: a password
+         reset, which lands on the same /auth/callback page. */
+      const { error: resetErr } = await createClient().auth.resetPasswordForEmail(lower, {
+        redirectTo: customerInviteRedirectTo(),
+      });
+      sent = resetErr ? 'none' : 'reset';
     } else {
       userId = invited.user?.id ?? null;
     }
@@ -119,7 +132,13 @@ export async function inviteOrgOwner(
     if (error) return fail(friendly(error));
 
     revalidatePath(`/customers/${orgId}`);
-    return ok(`Invitation sent to ${lower}.`);
+    return ok(
+      sent === 'invite'
+        ? `Invitation sent to ${lower}.`
+        : sent === 'reset'
+          ? `${lower} already had an account, so it was linked to this organisation and a password-reset email was sent instead of an invitation.`
+          : `${lower} already had an account and was linked to this organisation, but no email could be sent. Delete the account and invite again for a fresh invitation.`,
+    );
   } catch (e) {
     return boom(e);
   }
@@ -140,6 +159,62 @@ export async function setMemberActive(memberId: string, active: boolean): Promis
     if (error) return fail(friendly(error));
     revalidatePath('/customers');
     return ok(active ? 'Member reactivated.' : 'Member deactivated.');
+  } catch (e) {
+    return boom(e);
+  }
+}
+
+/**
+ * Permanent removal. Deactivation hides someone; this erases them.
+ *
+ * Two halves that must both happen, because org_members.user_id has no foreign
+ * key to auth.users:
+ *
+ *   1. api.purge_org_member clears the tenant-side rows and reports whether the
+ *      person still belongs to another organisation.
+ *   2. If they do not, the sign-in itself is destroyed with the service role,
+ *      which cascades sessions, identities, authenticator factors and any
+ *      outstanding invitation tokens.
+ *
+ * Doing only the second half is what left an orphan membership row pointing at
+ * a user id that no longer exists. Doing only the first leaves an account that
+ * can still sign in — and that cannot be re-invited, because the address is
+ * taken.
+ */
+export async function deleteOrgMember(memberId: string, orgId: string): Promise<ActionResult> {
+  try {
+    await requirePlatform('manage_customers');
+    const supabase = createClient();
+
+    const { data, error } = await supabase
+      .schema('api')
+      .rpc('purge_org_member', { p_member: memberId });
+    if (error) return fail(friendly(error));
+
+    const row = (Array.isArray(data) ? data[0] : data) as
+      | { user_id: string; purge_auth: boolean }
+      | undefined;
+
+    let note = '';
+    if (row?.purge_auth) {
+      if (!hasServiceRole()) {
+        note =
+          ' Their organisation data is gone, but the sign-in itself survives until' +
+          ' SUPABASE_SERVICE_ROLE_KEY is set.';
+      } else {
+        const { error: authErr } = await createAdminClient().auth.admin.deleteUser(row.user_id);
+        // A missing user is the desired end state, not a failure.
+        if (authErr && !/not found|does not exist/i.test(authErr.message)) {
+          note = ` Their data is gone, but the sign-in could not be deleted: ${authErr.message}`;
+        }
+      }
+    } else if (row) {
+      note = ' Their sign-in was kept — they still belong to another organisation.';
+    }
+
+    revalidatePath(`/customers/${orgId}`);
+    touch();
+    return ok(`Removed permanently.${note}`);
   } catch (e) {
     return boom(e);
   }
