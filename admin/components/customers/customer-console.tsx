@@ -109,8 +109,9 @@ export function CustomerConsole({
     { name: 'tan', label: 'TAN', step: 'Statutory', transform: 'upper', rules: [V.tan], placeholder: 'AAAA11111A', half: true },
     { name: 'gstin', label: 'GSTIN', step: 'Statutory', transform: 'upper', rules: [V.gstin], placeholder: '27AAAAA1111A1Z5' },
 
-    { name: 'owner_email', label: 'Owner email', type: 'email', step: 'Owner', rules: [V.email], hint: 'They receive an invitation to set a password and enrol an authenticator.' },
-    { name: 'owner_role', label: 'Their role', type: 'select', step: 'Owner', options: [
+    { name: 'owner_email', label: 'Admin email', type: 'email', step: 'Admin user', rules: [V.required('Admin email'), V.email], hint: 'They receive an invitation to set a password and enrol an authenticator.', half: true },
+    { name: 'owner_phone', label: 'Admin contact number', step: 'Admin user', rules: [V.required('Contact number'), V.phone], placeholder: '98765 43210', hint: 'Required. A ten-digit Indian mobile, or a full number starting with + and its country code.', half: true },
+    { name: 'owner_role', label: 'Their role', type: 'select', step: 'Admin user', options: [
       { value: 'owner', label: 'Owner — full control of their organisation' },
       { value: 'hr_admin', label: 'HR Admin' },
       { value: 'payroll_admin', label: 'Payroll Admin' },
