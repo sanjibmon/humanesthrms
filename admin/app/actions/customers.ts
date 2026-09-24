@@ -27,6 +27,18 @@ export async function createCustomer(v: Values): Promise<ActionResult> {
     const supabase = createClient();
 
     const status = str(v.status) || 'trial';
+    const ownerRole = str(v.owner_role) || 'owner';
+
+    /* Checked before the organisation is created, not after. Creating the
+       company and then failing to invite its admin leaves a half-built customer
+       that somebody has to clean up by hand. */
+    if (str(v.owner_email).trim() === '') {
+      return fail('Every account needs an admin user.', 'owner_email');
+    }
+    if (ADMIN_ROLES.includes(ownerRole) && str(v.owner_phone).trim() === '') {
+      return fail('A contact number is required for the admin user.', 'owner_phone');
+    }
+
     const { data, error } = await supabase.schema('api').rpc('create_customer', {
       p_name: str(v.name),
       p_slug: str(v.slug),
@@ -53,8 +65,8 @@ export async function createCustomer(v: Values): Promise<ActionResult> {
     let note = '';
 
     if (ownerEmail) {
-      const invited = await inviteOrgOwner(orgId, ownerEmail, str(v.owner_role) || 'owner');
-      note = invited.ok ? ' Invitation sent to ' + ownerEmail + '.' : ' ' + invited.error;
+      const invited = await inviteOrgOwner(orgId, ownerEmail, ownerRole, str(v.owner_phone));
+      note = invited.ok ? ' ' + (invited.message ?? '') : ' ' + invited.error;
     }
 
     touch();
@@ -71,13 +83,24 @@ export async function createCustomer(v: Values): Promise<ActionResult> {
  * first org_members row through api.provision_org_owner — the one write no RLS
  * policy can allow, because members.manage requires an existing member.
  */
+/** Roles that administer a customer account, and therefore must be reachable. */
+const ADMIN_ROLES = ['owner', 'hr_admin', 'payroll_admin'];
+
 export async function inviteOrgOwner(
   orgId: string,
   email: string,
   role = 'owner',
+  phone = '',
 ): Promise<ActionResult> {
   try {
     await requirePlatform('manage_customers');
+
+    /* The database refuses an administrator with no number, but a Postgres
+       error is a poor way to learn that — catch it while the form is still
+       open and the field can be pointed at. */
+    if (ADMIN_ROLES.includes(role) && phone.trim() === '') {
+      return fail('A contact number is required for an administrator.', 'phone');
+    }
 
     if (!hasServiceRole()) {
       return fail(
@@ -128,6 +151,7 @@ export async function inviteOrgOwner(
       p_org: orgId,
       p_user: userId,
       p_role: role,
+      p_phone: phone.trim() || null,
     });
     if (error) return fail(friendly(error));
 
@@ -145,7 +169,26 @@ export async function inviteOrgOwner(
 }
 
 export async function inviteOrgOwnerAction(v: Values): Promise<ActionResult> {
-  return inviteOrgOwner(str(v.org_id), str(v.email), str(v.role) || 'owner');
+  return inviteOrgOwner(str(v.org_id), str(v.email), str(v.role) || 'owner', str(v.phone));
+}
+
+/**
+ * Correct a number that was mistyped. A mandatory field with no edit path is a
+ * trap — one wrong digit and nobody can reach that customer again.
+ */
+export async function setOrgMemberPhone(v: Values): Promise<ActionResult> {
+  try {
+    await requirePlatform('manage_customers');
+    const supabase = createClient();
+    const { data, error } = await supabase
+      .schema('api')
+      .rpc('set_org_member_phone', { p_member: str(v.id), p_phone: str(v.phone) });
+    if (error) return fail(friendly(error), 'phone');
+    revalidatePath(`/customers/${str(v.org_id)}`);
+    return ok(`Contact number saved as ${String(data)}.`);
+  } catch (e) {
+    return boom(e);
+  }
 }
 
 export async function setMemberActive(memberId: string, active: boolean): Promise<ActionResult> {
