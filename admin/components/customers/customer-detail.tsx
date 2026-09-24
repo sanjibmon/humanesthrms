@@ -16,6 +16,7 @@ import {
   inviteOrgOwnerAction,
   setMemberActive,
   deleteOrgMember,
+  setOrgMemberPhone,
 } from '@/app/actions/customers';
 
 export type ModuleRow = {
@@ -38,6 +39,8 @@ export type MemberRow = {
   employee_name: string | null;
   /** Null for an orphaned membership whose sign-in was already deleted. */
   email: string | null;
+  /** E.164. Mandatory for owner / hr_admin / payroll_admin. */
+  phone: string | null;
   created_at: string;
 };
 
@@ -51,6 +54,9 @@ export type LicenseInfo = {
   custom_price_per_seat_paise: number | null;
   next_billing_at: string | null;
 };
+
+/** Roles the database requires a contact number for — mirrors app.require_phone. */
+const ADMIN_ROLES = ['owner', 'hr_admin', 'payroll_admin'];
 
 const ROLE_OPTIONS = [
   { value: 'owner', label: 'Owner' },
@@ -277,6 +283,7 @@ export function MemberPanel({
   const [invite, setInvite] = useState(false);
   const [target, setTarget] = useState<MemberRow | null>(null);
   const [doomed, setDoomed] = useState<MemberRow | null>(null);
+  const [editPhone, setEditPhone] = useState<MemberRow | null>(null);
   const [typed, setTyped] = useState('');
   const [busy, setBusy] = useState(false);
 
@@ -341,14 +348,20 @@ export function MemberPanel({
                 </b>
                 <span className="block truncate text-[11px] text-slate-muted">
                   {m.role.replace(/_/g, ' ')}
-                  {m.employee_name && m.email ? ` · ${m.email}` : ''} · added{' '}
-                  {dateLabel(m.created_at)}
+                  {m.employee_name && m.email ? ` · ${m.email}` : ''}
+                  {m.phone ? ` · ${m.phone}` : ''} · added {dateLabel(m.created_at)}
                 </span>
               </div>
               {m.is_active ? null : <span className="badge">inactive</span>}
               {m.email ? null : <span className="badge">no sign-in</span>}
+              {m.phone || !ADMIN_ROLES.includes(m.role) ? null : (
+                <span className="badge">no contact number</span>
+              )}
               {canEdit ? (
                 <>
+                  <button className="btn btn-sm" onClick={() => setEditPhone(m)} disabled={busy}>
+                    {m.phone ? 'Number' : 'Add number'}
+                  </button>
                   <button className="btn btn-sm" onClick={() => setTarget(m)} disabled={busy}>
                     {m.is_active ? 'Deactivate' : 'Reactivate'}
                   </button>
@@ -375,6 +388,13 @@ export function MemberPanel({
             fields={[
               { name: 'email', label: 'Email', type: 'email', rules: [V.required('Email'), V.email] },
               { name: 'role', label: 'Role', type: 'select', options: ROLE_OPTIONS, rules: [V.required('Role')] },
+              {
+                name: 'phone',
+                label: 'Contact number',
+                rules: [V.required('Contact number'), V.phone],
+                placeholder: '98765 43210',
+                hint: 'Required for an owner, HR admin or payroll admin.',
+              },
             ]}
             initial={{ role: 'owner' }}
             action={(v) => inviteOrgOwnerAction({ ...v, org_id: orgId })}
@@ -404,6 +424,31 @@ export function MemberPanel({
             )
           }
         />
+      ) : null}
+
+      {editPhone ? (
+        <Modal
+          title={editPhone.phone ? 'Change the contact number' : 'Add a contact number'}
+          sub={editPhone.email ?? editPhone.employee_name ?? undefined}
+          onClose={() => setEditPhone(null)}
+        >
+          <RecordForm
+            fields={[
+              {
+                name: 'phone',
+                label: 'Contact number',
+                rules: [V.required('Contact number'), V.phone],
+                placeholder: '98765 43210',
+                hint: 'Stored as +91… so it is ready for SMS and WhatsApp.',
+              },
+            ]}
+            initial={{ phone: editPhone.phone ?? '' }}
+            action={(v) => setOrgMemberPhone({ ...v, id: editPhone.id, org_id: orgId })}
+            submitLabel="Save number"
+            onDone={() => setEditPhone(null)}
+            onCancel={() => setEditPhone(null)}
+          />
+        </Modal>
       ) : null}
 
       {doomed ? (
