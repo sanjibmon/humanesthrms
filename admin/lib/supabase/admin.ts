@@ -31,12 +31,30 @@ export function createAdminClient() {
 
 export const hasServiceRole = () => Boolean(process.env.SUPABASE_SERVICE_ROLE_KEY);
 
-/** Where invited users land to choose a password. */
-export function inviteRedirectTo(): string {
-  const base =
-    process.env.NEXT_PUBLIC_SITE_URL ??
+const origin = (base: string | undefined) =>
+  (
+    base ??
     (process.env.VERCEL_PROJECT_PRODUCTION_URL
       ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
-      : 'http://localhost:3000');
-  return `${base.replace(/\/$/, '')}/auth/callback`;
+      : 'http://localhost:3000')
+  ).replace(/\/$/, '');
+
+/**
+ * Where a HumaNest staff member lands after accepting an invitation — this
+ * portal.
+ */
+export function inviteRedirectTo(): string {
+  return `${origin(process.env.NEXT_PUBLIC_SITE_URL)}/auth/callback`;
+}
+
+/**
+ * Where a *customer's* user lands. This is deliberately not the same origin:
+ * an employer or HR admin belongs in the customer portal, not in the platform
+ * admin portal. Sending them to NEXT_PUBLIC_SITE_URL drops them on a site they
+ * have no account on, with no way to set a password.
+ */
+export function customerInviteRedirectTo(): string {
+  return `${origin(
+    process.env.NEXT_PUBLIC_CUSTOMER_PORTAL_URL ?? process.env.NEXT_PUBLIC_SITE_URL,
+  )}/auth/callback`;
 }
