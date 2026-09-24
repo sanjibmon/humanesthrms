@@ -15,6 +15,7 @@ import {
   updateLicense,
   inviteOrgOwnerAction,
   setMemberActive,
+  deleteOrgMember,
 } from '@/app/actions/customers';
 
 export type ModuleRow = {
@@ -35,6 +36,8 @@ export type MemberRow = {
   role: string;
   is_active: boolean;
   employee_name: string | null;
+  /** Null for an orphaned membership whose sign-in was already deleted. */
+  email: string | null;
   created_at: string;
 };
 
@@ -273,6 +276,8 @@ export function MemberPanel({
   const router = useRouter();
   const [invite, setInvite] = useState(false);
   const [target, setTarget] = useState<MemberRow | null>(null);
+  const [doomed, setDoomed] = useState<MemberRow | null>(null);
+  const [typed, setTyped] = useState('');
   const [busy, setBusy] = useState(false);
 
   async function flip(m: MemberRow) {
@@ -285,6 +290,23 @@ export function MemberPanel({
       router.refresh();
     }
   }
+
+  async function purge(m: MemberRow) {
+    setBusy(true);
+    const res = await deleteOrgMember(m.id, orgId);
+    setBusy(false);
+    toast(res.ok ? (res.message ?? 'Removed') : res.error, !res.ok);
+    if (res.ok) {
+      setDoomed(null);
+      setTyped('');
+      router.refresh();
+    }
+  }
+
+  /* What has to be typed before the delete button unlocks. Orphaned rows have
+     no address left to type, so they fall back to the word itself. */
+  const phrase = doomed?.email ?? 'DELETE';
+  const armed = typed.trim().toLowerCase() === phrase.toLowerCase();
 
   return (
     <div className="card">
@@ -315,17 +337,32 @@ export function MemberPanel({
               <Avatar name={m.employee_name ?? m.role} slate={!m.is_active} />
               <div className="min-w-0 flex-1">
                 <b className="block truncate text-[13px] font-semibold text-ink">
-                  {m.employee_name ?? 'Invited user'}
+                  {m.employee_name ?? m.email ?? 'Invited user'}
                 </b>
-                <span className="text-[11px] text-slate-muted">
-                  {m.role.replace(/_/g, ' ')} · added {dateLabel(m.created_at)}
+                <span className="block truncate text-[11px] text-slate-muted">
+                  {m.role.replace(/_/g, ' ')}
+                  {m.employee_name && m.email ? ` · ${m.email}` : ''} · added{' '}
+                  {dateLabel(m.created_at)}
                 </span>
               </div>
               {m.is_active ? null : <span className="badge">inactive</span>}
+              {m.email ? null : <span className="badge">no sign-in</span>}
               {canEdit ? (
-                <button className="btn btn-sm" onClick={() => setTarget(m)} disabled={busy}>
-                  {m.is_active ? 'Deactivate' : 'Reactivate'}
-                </button>
+                <>
+                  <button className="btn btn-sm" onClick={() => setTarget(m)} disabled={busy}>
+                    {m.is_active ? 'Deactivate' : 'Reactivate'}
+                  </button>
+                  <button
+                    className="btn btn-sm btn-danger"
+                    onClick={() => {
+                      setTyped('');
+                      setDoomed(m);
+                    }}
+                    disabled={busy}
+                  >
+                    Delete
+                  </button>
+                </>
               ) : null}
             </div>
           ))}
@@ -365,6 +402,58 @@ export function MemberPanel({
             ) : (
               <>They get access back immediately, with the same role.</>
             )
+          }
+        />
+      ) : null}
+
+      {doomed ? (
+        <ConfirmModal
+          title="Delete this account permanently?"
+          danger
+          /* ConfirmModal disables its action button while `busy`, which is also
+             how the typed confirmation gates it. */
+          busy={busy || !armed}
+          confirmLabel={busy ? 'Deleting…' : 'Delete permanently'}
+          onClose={() => {
+            setDoomed(null);
+            setTyped('');
+          }}
+          onConfirm={() => purge(doomed)}
+          body={
+            <div className="flex flex-col gap-3">
+              <p>
+                This erases <b>{doomed.email ?? doomed.employee_name ?? 'this membership'}</b> from
+                the database — their membership of this organisation, their notifications, their
+                trusted devices
+                {doomed.email ? ', their sign-in, and their authenticator enrolment' : ''}. It
+                cannot be undone and there is no recycle bin.
+              </p>
+              {doomed.email ? (
+                <p className="text-slate-muted">
+                  Their employee record, payroll history and the security audit trail are kept —
+                  those belong to the organisation, not to the login. The address becomes free to
+                  invite again.
+                </p>
+              ) : (
+                <p className="text-slate-muted">
+                  This membership already has no sign-in behind it, so only the leftover row goes.
+                </p>
+              )}
+              <label className="flex flex-col gap-1.5">
+                <span className="text-[12px] font-semibold text-ink">
+                  Type <code className="rounded bg-slate-line2 px-1.5 py-0.5">{phrase}</code> to
+                  confirm
+                </span>
+                <input
+                  type="text"
+                  value={typed}
+                  onChange={(e: { target: { value: string } }) => setTyped(e.target.value)}
+                  autoComplete="off"
+                  spellCheck={false}
+                  placeholder={phrase}
+                />
+              </label>
+            </div>
           }
         />
       ) : null}
