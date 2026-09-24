@@ -40,6 +40,28 @@ export const gstin: Rule = (v) =>
     ? null
     : 'GSTIN must be the full 15 characters, e.g. 27ABCDE1234F1Z5.';
 
+/**
+ * Mirrors app.normalize_phone + the *_phone_check constraints. A bare ten-digit
+ * Indian mobile is accepted and the database turns it into +91…; anything else
+ * has to carry its own country code.
+ */
+export const phone: Rule = (v) => {
+  const t = v.trim();
+  if (t === '') return null; // emptiness is `required`'s job, not this rule's
+  const digits = t.replace(/[^0-9]/g, '');
+
+  if (t.startsWith('+')) {
+    return /^[1-9][0-9]{7,14}$/.test(digits)
+      ? null
+      : 'An international number needs its country code and 8 to 15 digits, e.g. +1 415 555 0123.';
+  }
+
+  const local = digits.replace(/^0+/, '');
+  return /^91[6-9][0-9]{9}$/.test(local) || /^[6-9][0-9]{9}$/.test(local)
+    ? null
+    : 'Enter a 10-digit Indian mobile, e.g. 98765 43210, or a full number starting with + and its country code.';
+};
+
 export const email: Rule = (v) =>
   v === '' || /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v) ? null : 'Enter a valid email address.';
 
