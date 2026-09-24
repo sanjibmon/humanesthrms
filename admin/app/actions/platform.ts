@@ -28,6 +28,13 @@ export async function invitePlatformUser(v: Values): Promise<ActionResult> {
     }
     if (email === me.email.toLowerCase()) return fail('That is your own account.', 'email');
 
+    /* Every member of HumaNest staff has to be reachable out of hours — a
+       platform user is somebody who can suspend a customer or touch a payroll
+       run. The database enforces this too; catching it here keeps the error in
+       the form rather than in a Postgres message. */
+    const phone = str(v.phone).trim();
+    if (phone === '') return fail('A contact number is required.', 'phone');
+
     const admin = createAdminClient();
     let userId: string | null = null;
 
@@ -50,7 +57,7 @@ export async function invitePlatformUser(v: Values): Promise<ActionResult> {
 
     const supabase = createClient();
     const { error } = await supabase.from('platform_users').upsert(
-      { id: userId, email, full_name: str(v.full_name) || email, role, is_active: true },
+      { id: userId, email, full_name: str(v.full_name) || email, role, phone, is_active: true },
       { onConflict: 'id' },
     );
     if (error) {
@@ -76,11 +83,14 @@ export async function updatePlatformUser(v: Values): Promise<ActionResult> {
       return fail('You cannot take away your own super admin role — ask another super admin.', 'role');
     }
 
+    const phone = str(v.phone).trim();
+    if (phone === '') return fail('A contact number is required.', 'phone');
+
     const { error } = await supabase
       .from('platform_users')
-      .update({ full_name: str(v.full_name), role })
+      .update({ full_name: str(v.full_name), role, phone })
       .eq('id', id);
-    if (error) return fail(friendly(error));
+    if (error) return fail(friendly(error), /contact number/i.test(error.message) ? 'phone' : undefined);
 
     revalidatePath('/users');
     return ok('Platform user updated.');
