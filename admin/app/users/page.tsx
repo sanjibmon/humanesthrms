@@ -22,7 +22,7 @@ export default async function UsersPage() {
   const [{ data: users }, { data: perms }, { data: rolePerms }] = await Promise.all([
     supabase
       .from('platform_users')
-      .select('id,email,full_name,role,is_active,last_login_at,created_at')
+      .select('id,email,full_name,role,phone,is_active,last_login_at,created_at')
       .order('created_at'),
     supabase.from('platform_permissions').select('code,description').order('code'),
     supabase.from('platform_role_permissions').select('role,permission'),
