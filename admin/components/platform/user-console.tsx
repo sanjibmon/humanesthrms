@@ -22,6 +22,8 @@ export type StaffRow = {
   email: string;
   full_name: string;
   role: string;
+  /** E.164. Mandatory for every new platform user. */
+  phone: string | null;
   is_active: boolean;
   last_login_at: string | null;
   created_at: string;
@@ -59,7 +61,15 @@ export function UserConsole({
 
   const inviteFields: FieldDef[] = [
     { name: 'full_name', label: 'Full name', rules: [V.required('Full name')] },
-    { name: 'email', label: 'Work email', type: 'email', rules: [V.required('Email'), V.email] },
+    { name: 'email', label: 'Work email', type: 'email', rules: [V.required('Email'), V.email], half: true },
+    {
+      name: 'phone',
+      label: 'Contact number',
+      rules: [V.required('Contact number'), V.phone],
+      placeholder: '98765 43210',
+      hint: 'Required. Staff who can suspend an account or touch a payroll run have to be reachable.',
+      half: true,
+    },
     { name: 'role', label: 'Role', type: 'select', options: ROLES, rules: [V.required('Role')] },
   ];
 
@@ -77,7 +87,10 @@ export function UserConsole({
               {r.full_name}
               {r.id === myId ? <span className="ml-1.5 text-[11px] font-normal text-slate-muted">you</span> : null}
             </b>
-            <span className="text-[11px] text-slate-muted">{r.email}</span>
+            <span className="block text-[11px] text-slate-muted">{r.email}</span>
+            <span className="block text-[11px] text-slate-muted">
+              {r.phone ?? <b className="font-semibold text-amber-text">no contact number</b>}
+            </span>
           </span>
         </div>
       ),
@@ -169,9 +182,16 @@ export function UserConsole({
           <RecordForm
             fields={[
               { name: 'full_name', label: 'Full name', rules: [V.required('Full name')] },
+              {
+                name: 'phone',
+                label: 'Contact number',
+                rules: [V.required('Contact number'), V.phone],
+                placeholder: '98765 43210',
+                hint: 'Stored as +91… so it is ready for SMS and WhatsApp.',
+              },
               { name: 'role', label: 'Role', type: 'select', options: ROLES, rules: [V.required('Role')] },
             ]}
-            initial={{ full_name: open.row.full_name, role: open.row.role }}
+            initial={{ full_name: open.row.full_name, phone: open.row.phone ?? '', role: open.row.role }}
             action={(v) => updatePlatformUser({ ...v, id: open.row.id })}
             submitLabel="Save changes"
             onDone={close}
