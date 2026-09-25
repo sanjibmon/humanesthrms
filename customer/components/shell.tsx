@@ -11,6 +11,12 @@ export type MenuItem = {
   /** Payroll renders the Indian Rupee glyph instead of an icon. */
   rupee?: boolean;
   count?: number;
+  /**
+   * The catalog module this item belongs to. Omitted means always available —
+   * the dashboard and settings are not sold separately. Anything else is hidden
+   * unless the organisation's licence includes it.
+   */
+  module?: string;
 };
 
 export function Shell({
