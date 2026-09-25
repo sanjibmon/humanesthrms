@@ -49,6 +49,10 @@ export type Viewer = {
   role: string | null;
   employeeId: string | null;
   isEmployer: boolean;
+  /** Permission codes granted to this member's role in this organisation. */
+  perms: string[];
+  /** Mirrors app.can() — the owner's '*' grants everything. */
+  can: (perm: string) => boolean;
 };
 
 /** Reads the caller's membership. The company is resolved after login, never chosen on the login page. */
@@ -67,14 +71,33 @@ export async function getViewer(): Promise<Viewer> {
     .maybeSingle();
 
   const role = (member as any)?.role ?? null;
+  const orgId = (member as any)?.org_id ?? null;
+
+  /* The same grants app.can() reads inside every RLS policy. Reading them here
+     lets the portal hide an action the database would refuse anyway, which is
+     the difference between a disabled button and a red error after ten minutes
+     of typing. roleperm_select scopes this to the caller's own organisation. */
+  let perms: string[] = [];
+  if (orgId && role) {
+    const { data: rows } = await supabase
+      .from('org_role_permissions')
+      .select('permission')
+      .eq('org_id', orgId)
+      .eq('role', role);
+    perms = ((rows ?? []) as { permission: string }[]).map((r) => r.permission);
+  }
+  const permSet = new Set(perms);
+
   return {
     userId: user?.id ?? '',
     email: user?.email ?? '',
-    orgId: (member as any)?.org_id ?? null,
+    orgId,
     orgName: (member as any)?.organizations?.name ?? null,
     role,
     employeeId: (member as any)?.employee_id ?? null,
     isEmployer: !!role && role !== 'employee',
+    perms,
+    can: (perm: string) => permSet.has('*') || permSet.has(perm),
   };
 }
 
