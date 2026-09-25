@@ -62,6 +62,12 @@ export const phone: Rule = (v) => {
     : 'Enter a 10-digit Indian mobile, e.g. 98765 43210, or a full number starting with + and its country code.';
 };
 
+/** Indian PIN code: six digits, never starting with zero. */
+export const pincode: Rule = (v) =>
+  v.trim() === '' || /^[1-9][0-9]{5}$/.test(v.trim())
+    ? null
+    : 'A PIN code is six digits, e.g. 411001.';
+
 export const email: Rule = (v) =>
   v === '' || /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v) ? null : 'Enter a valid email address.';
 
