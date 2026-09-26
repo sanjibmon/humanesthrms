@@ -341,7 +341,11 @@ export function SettingsConsole({
             rows={holidays.map((h) => ({
               id: h.id,
               title: h.name,
-              sub: `${dateLabel(h.holiday_date)}${h.is_optional ? ' · optional' : ''}`,
+              sub: `${dateLabel(h.holiday_date)}${h.is_optional ? ' · optional' : ''} · ${
+                h.location_id
+                  ? `${locations.find((l) => l.id === h.location_id)?.name ?? 'one location'} only`
+                  : 'every location'
+              }`,
               onDelete: caps.leave ? () => run(() => deleteHoliday(h.id)) : undefined,
             }))}
           />
@@ -728,9 +732,9 @@ export function SettingsConsole({
               { name: 'name', label: 'Occasion', rules: [V.required('Name')], placeholder: 'Diwali', half: true },
               { name: 'is_optional', label: 'Optional / restricted holiday', type: 'switch' },
               {
-                name: 'location_id', label: 'Only at one location', type: 'select',
-                options: [{ value: '', label: 'All locations' }, ...locations.map((l) => ({ value: l.id, label: l.name }))],
-                hint: 'Regional holidays differ by state, so a location-specific entry is often what you want.',
+                name: 'location_id', label: 'Applies to', type: 'select',
+                options: [{ value: '', label: 'Every location' }, ...locations.map((l) => ({ value: l.id, label: `${l.name} only` }))],
+                hint: 'Every location is the usual answer for a national holiday. Pick one location for a regional holiday — those differ by state, and a location-specific entry is only counted for people posted there.',
               },
             ]}
             action={saveHoliday}

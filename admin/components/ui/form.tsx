@@ -109,7 +109,15 @@ function FieldControl({
           {...common}
           onChange={(e: React.ChangeEvent<HTMLSelectElement>) => onChange(e.target.value)}
         >
-          <option value="">Select…</option>
+          {/* A field whose own options already carry an empty value means
+              something by it -- "All locations", "no manager", "unlink". Adding
+              this placeholder on top of that gives the select two options with
+              the same value, and the browser shows the placeholder as the
+              chosen one, so the real choice looks unavailable. Only add it when
+              the field has no empty option of its own. */}
+          {(f.options ?? []).some((o) => o.value === '') ? null : (
+            <option value="">{f.placeholder ?? 'Select…'}</option>
+          )}
           {(f.options ?? []).map((o) => (
             <option key={o.value} value={o.value}>
               {o.label}

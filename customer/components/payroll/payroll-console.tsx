@@ -274,9 +274,24 @@ export function PayrollConsole({
           </div>
 
           {structures.length === 0 ? (
-            <p className="rounded-xl border-2 border-dashed border-slate-line px-4 py-6 text-center text-[13px] text-slate-muted">
-              None yet. Most organisations need exactly one to begin with.
-            </p>
+            <div className="rounded-xl border-2 border-dashed border-slate-line px-4 py-6 text-center text-[13px] text-slate-muted">
+              {caps.config ? (
+                <>None yet. Most organisations need exactly one to begin with.</>
+              ) : (
+                /* Hiding the button and saying nothing reads as "this product
+                   cannot do it". Say which permission is missing and where it is
+                   granted, because the person reading this is usually the one
+                   who can grant it. */
+                <>
+                  <b className="text-ink">None yet, and your role cannot create one.</b>
+                  <br />
+                  Creating a salary structure needs the <code>payroll.config</code> permission,
+                  which by default belongs to the Owner and the Payroll Admin — not to HR Admin.
+                  Either sign in as one of those, or grant <code>payroll.config</code> to your own
+                  role on the permission grid in Settings &rarr; People &amp; roles.
+                </>
+              )}
+            </div>
           ) : (
             <div className="flex flex-col divide-y divide-slate-line2">
               {structures.map((s) => (
