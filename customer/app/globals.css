@@ -14,7 +14,8 @@
   }
   /* The production prompts fix inputs at 44px with 12px uppercase labels. */
   input[type='text'], input[type='email'], input[type='password'],
-  input[type='number'], input[type='date'], select {
+  input[type='number'], input[type='date'], input[type='month'],
+  input[type='time'], input[type='search'], select {
     @apply h-11 w-full rounded-xl border border-slate-line bg-white px-3.5 text-sm text-slate-body
            outline-none transition placeholder:text-slate-faint
            focus:border-brand focus:ring-2 focus:ring-brand/20;
@@ -172,5 +173,37 @@
   }
   .tabbar button[aria-selected='true'] {
     @apply border-brand text-brand-dark;
+  }
+}
+
+/* Printing a payslip.
+
+   The slip is the only thing on the page that belongs on paper; the header, the
+   sidebar and the toasts are application chrome. Rather than building a
+   separate print route, the chrome is hidden and the slip keeps its own layout,
+   so what the employee sees on screen is exactly what comes out of the printer
+   or the save-as-PDF dialog. */
+@media print {
+  body {
+    background: #fff;
+  }
+  body > header,
+  nav[aria-label='Main'],
+  .toast-stack,
+  .no-print {
+    display: none !important;
+  }
+  main {
+    padding: 0 !important;
+  }
+  .payslip {
+    max-width: none !important;
+    border: 0 !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+  }
+  @page {
+    size: A4;
+    margin: 14mm;
   }
 }

@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { CustomerShell, getViewer, EssBanner } from '@/components/customer-shell';
 import { PageHead, EmptyState, Kpi } from '@/components/shell';
 import { createClient } from '@/lib/supabase/server';
@@ -78,6 +79,7 @@ export default async function MyPayrollPage() {
                   <th className="p-3 text-right font-semibold">TDS</th>
                   <th className="p-3 text-right font-semibold">Net</th>
                   <th className="p-3 font-semibold">Published</th>
+                  <th className="p-3" />
                 </tr>
               </thead>
               <tbody>
@@ -96,6 +98,11 @@ export default async function MyPayrollPage() {
                       <td className="p-3 text-slate-muted">
                         {s.published_at ? dateLabel(s.published_at) : '—'}
                       </td>
+                      <td className="p-3 text-right">
+                        <Link href={`/me/payroll/${s.run_id}`} className="btn btn-sm">
+                          Payslip
+                        </Link>
+                      </td>
                     </tr>
                   );
                 })}
@@ -107,8 +114,8 @@ export default async function MyPayrollPage() {
 
       <p className="mt-4 text-xs leading-relaxed text-slate-muted">
         Every figure comes from the payroll run that produced it, not from a recalculation, so a
-        payslip you opened last year still shows exactly what was paid. PDF download arrives with
-        the payroll module.
+        payslip you opened last year still shows exactly what was paid. Open any slip and use Print
+        to save it as a PDF.
       </p>
     </CustomerShell>
   );

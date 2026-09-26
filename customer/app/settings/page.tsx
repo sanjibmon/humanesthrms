@@ -14,7 +14,7 @@ const PERMISSIONS = [
   'people.read', 'people.write', 'people.sensitive.read', 'people.sensitive.write',
   'attendance.read', 'attendance.write', 'attendance.approve',
   'leave.read', 'leave.approve', 'leave.config',
-  'payroll.read', 'payroll.config', 'payroll.run', 'payroll.approve',
+  'payroll.read', 'payroll.config', 'payroll.run', 'payroll.approve', 'payroll.pay',
   'expenses.read', 'expenses.approve',
   'approvals.read',
   'recruitment.read', 'recruitment.write',

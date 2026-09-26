@@ -32,6 +32,7 @@ export const EMPLOYEE_MENU: MenuItem[] = [
   { href: '/me/attendance', label: 'My Attendance', icon: 'clock', module: 'attendance' },
   { href: '/me/leave', label: 'My Leave', icon: 'calendar', module: 'leave' },
   { href: '/me/payroll', label: 'My Payroll', rupee: true, module: 'payroll' },
+  { href: '/me/tax', label: 'My Tax', icon: 'receipt', module: 'payroll' },
   { href: '/me/expenses', label: 'My Expenses', icon: 'receipt', module: 'expenses' },
   { href: '/me/assets', label: 'My Assets', icon: 'laptop', module: 'assets' },
   { href: '/me/documents', label: 'My Documents', icon: 'file', module: 'documents' },
