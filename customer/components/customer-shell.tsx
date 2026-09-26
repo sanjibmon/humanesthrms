@@ -1,4 +1,6 @@
+import { cookies } from 'next/headers';
 import { Shell, type MenuItem } from '@/components/shell';
+import { ViewSwitch } from '@/components/view-switch';
 import { EmptyState } from '@/components/shell';
 import { createClient } from '@/lib/supabase/server';
 
@@ -50,6 +52,12 @@ export type Viewer = {
   role: string | null;
   employeeId: string | null;
   isEmployer: boolean;
+  /** This login carries an employer role — anything other than plain 'employee'. */
+  canEmployer: boolean;
+  /** This login is attached to an employee record, so self service is real for them. */
+  canEmployee: boolean;
+  /** Which of the two the person is currently looking at. */
+  view: 'employer' | 'employee';
   /** Permission codes granted to this member's role in this organisation. */
   perms: string[];
   /** Mirrors app.can() — the owner's '*' grants everything. */
@@ -73,6 +81,20 @@ export async function getViewer(): Promise<Viewer> {
 
   const role = (member as any)?.role ?? null;
   const orgId = (member as any)?.org_id ?? null;
+  const employerRole = !!role && role !== 'employee';
+
+  /* Somebody can be both — an owner who is also on the payroll. The two are
+     separate facts: the employer side comes from the role, the employee side
+     from being linked to an employee record. Which one they are looking at is
+     their choice, kept in a cookie so the server renders the right menu on the
+     first paint rather than flashing the wrong one. */
+  const wanted = cookies().get('humanest-view')?.value;
+  const view: 'employer' | 'employee' =
+    wanted === 'employee' && (member as any)?.employee_id
+      ? 'employee'
+      : employerRole
+        ? 'employer'
+        : 'employee';
 
   /* The same grants app.can() reads inside every RLS policy. Reading them here
      lets the portal hide an action the database would refuse anyway, which is
@@ -96,7 +118,10 @@ export async function getViewer(): Promise<Viewer> {
     orgName: (member as any)?.organizations?.name ?? null,
     role,
     employeeId: (member as any)?.employee_id ?? null,
-    isEmployer: !!role && role !== 'employee',
+    isEmployer: employerRole,
+    canEmployer: employerRole,
+    canEmployee: Boolean((member as any)?.employee_id),
+    view,
     perms,
     can: (perm: string) => permSet.has('*') || permSet.has(perm),
   };
@@ -145,7 +170,8 @@ export async function CustomerShell({
   children: React.ReactNode;
 }) {
   const v = await getViewer();
-  const employer = v.isEmployer;
+  const employer = v.view === 'employer';
+  const both = v.canEmployer && v.canEmployee;
 
   const all = employer ? EMPLOYER_MENU : EMPLOYEE_MENU;
   const enabled = await getEnabledModules(v.orgId);
@@ -166,6 +192,7 @@ export async function CustomerShell({
       userMeta={v.role ? ROLE_LABEL[v.role] ?? v.role : v.email}
       menu={menu}
       current={current}
+      aside={both ? <ViewSwitch view={v.view} /> : undefined}
       upsell={
         employer
           ? {

@@ -70,3 +70,51 @@ export function customerInviteRedirectTo(): string {
 export function activationRedirectTo(): string {
   return `${origin(process.env.NEXT_PUBLIC_SITE_URL)}/auth/callback`;
 }
+
+/**
+ * Checks that SUPABASE_SERVICE_ROLE_KEY really is a service-role key, and says
+ * what is wrong when it is not.
+ *
+ * This exists because of the single most common misconfiguration in any Supabase
+ * project: pasting the anon or publishable key into the service-role slot. Both
+ * are on the same settings page, both are long opaque strings, and nothing
+ * rejects the wrong one until an Auth admin call comes back 401 — which reads as
+ * a vague "API error" and sends people hunting through their own code.
+ *
+ * A legacy key is a JWT whose payload carries the role, so it can be read
+ * without verifying the signature: no secret is needed to see whether it claims
+ * to be 'service_role' or 'anon'. A modern key is prefixed, so the prefix alone
+ * settles it. Returns null when the key looks right.
+ */
+export function serviceRoleProblem(): string | null {
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!key || !key.trim()) {
+    return 'SUPABASE_SERVICE_ROLE_KEY is not set on this deployment. Copy the service_role key from Supabase → Project Settings → API keys, and add it in Vercel → Settings → Environment Variables. It must NOT have a NEXT_PUBLIC_ prefix.';
+  }
+  const k = key.trim();
+
+  if (k.startsWith('sb_publishable_')) {
+    return 'SUPABASE_SERVICE_ROLE_KEY holds a publishable key (it starts with sb_publishable_). That one is for the browser and cannot invite anybody. You need the secret key — it starts with sb_secret_ — from Supabase → Project Settings → API keys.';
+  }
+  if (k.startsWith('sb_secret_')) return null;
+
+  /* A legacy JWT. Read the payload without verifying it: the role is public
+     information inside the token, and knowing it does not require the secret. */
+  const parts = k.split('.');
+  if (parts.length === 3) {
+    try {
+      const pad = parts[1] + '='.repeat((4 - (parts[1].length % 4)) % 4);
+      const payload = JSON.parse(
+        atob(pad.replace(/-/g, '+').replace(/_/g, '/')),
+      ) as { role?: string };
+      if (payload.role === 'service_role') return null;
+      if (payload.role) {
+        return `SUPABASE_SERVICE_ROLE_KEY holds the "${payload.role}" key, not the service_role one. Those two sit next to each other in Supabase → Project Settings → API keys, and it is an easy copy to get wrong. Replace it with the key whose role is service_role.`;
+      }
+    } catch {
+      /* Not decodable — fall through to the generic message rather than guess. */
+    }
+  }
+
+  return 'SUPABASE_SERVICE_ROLE_KEY does not look like a Supabase secret key. It should be either a JWT whose role is service_role, or a key starting with sb_secret_. Copy it again from Supabase → Project Settings → API keys.';
+}

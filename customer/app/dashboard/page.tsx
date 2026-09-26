@@ -11,7 +11,11 @@ export default async function Dashboard() {
   const v = await getViewer();
   const supabase = createClient();
 
-  if (!v.isEmployer) {
+  /* Which dashboard depends on the view, not the role. Somebody who is both an
+     owner and an employee gets the company figures in the employer view and
+     their own in the employee view; somebody who is only an employee has no
+     employer view to switch to, so this is the only thing they ever see. */
+  if (v.view !== 'employer') {
     // Employee self-service. Every figure below is scoped to this employee by row level security.
     const { count: myLeave } = await supabase
       .from('leave_requests')

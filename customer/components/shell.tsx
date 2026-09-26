@@ -28,6 +28,7 @@ export function Shell({
   menu,
   current,
   upsell,
+  aside,
   children,
 }: {
   host: string;
@@ -38,6 +39,8 @@ export function Shell({
   menu: MenuItem[];
   current: string;
   upsell?: { title: string; body: string; cta: string };
+  /** Rendered in the header, between the URL badge and the account block. */
+  aside?: React.ReactNode;
   children: React.ReactNode;
 }) {
   return (
@@ -49,6 +52,7 @@ export function Shell({
           <UrlBadge host={host} />
         </span>
         <div className="flex-1" />
+        {aside ? <div className="mr-1">{aside}</div> : null}
         <div className="flex items-center gap-2.5">
           <span className="hidden text-right sm:block">
             <b className="block text-[13px] font-semibold leading-tight text-ink">{userName}</b>

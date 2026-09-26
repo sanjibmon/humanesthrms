@@ -47,21 +47,19 @@ export default async function SettingsPage() {
     supabase.from('leave_types').select('*').eq('org_id', org).order('code'),
     supabase.from('holidays').select('id,holiday_date,name,is_optional,location_id').eq('org_id', org).order('holiday_date'),
     supabase.from('shifts').select('id,name,start_time,end_time,grace_minutes,half_day_minutes,full_day_minutes,is_default').eq('org_id', org).order('name'),
-    supabase.from('org_members').select('id,user_id,role,employee_id,phone,is_active,created_at').eq('org_id', org).order('created_at'),
+    supabase.schema('api').rpc('list_org_logins', { p_org: org }),
     supabase.from('org_role_permissions').select('role,permission').eq('org_id', org),
     supabase.from('trusted_devices').select('id,label,first_seen,last_seen,revoked_at').order('last_seen', { ascending: false }),
     supabase.from('security_events').select('id,event_type,ip,user_agent,created_at').order('created_at', { ascending: false }).limit(40),
   ]);
 
-  /* Member rows carry a user id, not a name. Names come from the employee
-     record when the login has been linked to one — which is exactly the gap the
-     employee page fills. */
-  const memberRows = (members ?? []) as any[];
-  const empIds = memberRows.map((m) => m.employee_id).filter(Boolean);
-  const { data: emps } = empIds.length
-    ? await supabase.from('employees').select('id,full_name,work_email').in('id', empIds)
-    : { data: [] as unknown[] };
-  const empById = new Map(((emps ?? []) as any[]).map((e) => [e.id as string, e]));
+  /* One row per login, employer and employee alike. The join to auth.users --
+     the email, when they were invited, when they activated, when they last
+     signed in -- can only happen inside a security definer function, which is
+     why this is an RPC rather than a select. Without activated_at the portal
+     cannot tell somebody who never arrived from somebody who simply has not
+     signed in today, and "resend activation" would be a guess. */
+  const loginRows = (members ?? []) as any[];
 
   return (
     <CustomerShell current="/settings">
@@ -77,11 +75,7 @@ export default async function SettingsPage() {
         leaveTypes={(leaveTypes ?? []) as any[]}
         holidays={(holidays ?? []) as any[]}
         shifts={(shifts ?? []) as any[]}
-        members={memberRows.map((m) => ({
-          ...m,
-          employee_name: m.employee_id ? (empById.get(m.employee_id)?.full_name ?? null) : null,
-          email: m.employee_id ? (empById.get(m.employee_id)?.work_email ?? null) : null,
-        }))}
+        members={loginRows}
         rolePermissions={(rolePerms ?? []) as { role: string; permission: string }[]}
         permissionCodes={PERMISSIONS}
         devices={(devices ?? []) as any[]}
@@ -91,7 +85,7 @@ export default async function SettingsPage() {
             settings: v.can('settings.write'),
             leave: v.can('leave.config'),
             attendance: v.can('attendance.write'),
-            members: v.can('members.manage'),
+            members: v.can('members.manage') || v.can('people.write'),
             audit: v.can('audit.read'),
           } satisfies Caps
         }

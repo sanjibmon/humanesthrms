@@ -19,7 +19,9 @@ import {
   deleteHoliday,
   saveShift,
   setMemberRole,
-  setMemberActive,
+  setMemberEnabled,
+  setMemberPhone,
+  resendActivation,
   setRolePermission,
   revokeTrustedDevice,
 } from '@/app/actions/settings';
@@ -70,6 +72,17 @@ const DAYS = [
   ['thu', 'Thursday'], ['fri', 'Friday'], ['sat', 'Saturday'],
 ];
 
+const ROLE_WORDS: Record<string, string> = {
+  owner: 'Owner',
+  hr_admin: 'HR Admin',
+  payroll_admin: 'Payroll Admin',
+  finance_approver: 'Finance Approver',
+  manager: 'Manager',
+  recruiter: 'Recruiter',
+  auditor: 'Auditor',
+  employee: 'Employee',
+};
+
 const ROLES = ['owner', 'hr_admin', 'payroll_admin', 'finance_approver', 'manager', 'recruiter', 'auditor', 'employee'];
 
 const MONTHS = [
@@ -118,6 +131,70 @@ export function SettingsConsole({
     setBusy(false);
     toast(res.ok ? (res.message ?? 'Saved') : (res.error ?? 'Failed'), !res.ok);
     if (res.ok) router.refresh();
+  }
+
+  /* Two lists, because they are two different populations with two different
+     questions attached. For an employer login you ask what it may do; for an
+     employee login you ask whether the person ever managed to activate it.
+     Somebody can hold both -- an owner who is also on the payroll -- and that
+     login appears once, under Employer, carrying a badge rather than being
+     duplicated into a list where the actions would not apply. */
+  const employerLogins = members.filter((m) => m.role !== 'employee');
+  const employeeLogins = members.filter((m) => m.role === 'employee');
+
+  function loginRow(m: Row) {
+    const dual = m.role !== 'employee' && Boolean(m.employee_id);
+    const activated = Boolean(m.activated_at);
+    const name = m.employee_name ?? m.email ?? 'Invited user';
+    const bits = [ROLE_WORDS[m.role] ?? m.role.replace(/_/g, ' ')];
+    if (m.employee_code) bits.push(m.employee_code);
+    if (m.phone) bits.push(m.phone);
+    bits.push(activated ? `active since ${dateLabel(m.activated_at)}` : `invited ${dateLabel(m.invited_at ?? m.created_at)}`);
+
+    return (
+      <div key={m.id} className="flex flex-wrap items-center gap-2.5 py-2.5">
+        <div className="min-w-0 flex-1">
+          <b className="block truncate text-[13px] font-semibold text-ink">
+            {name}
+            {m.is_self ? <span className="ml-1.5 text-[11px] font-normal text-slate-muted">(you)</span> : null}
+          </b>
+          <span className="block truncate text-[11px] text-slate-muted">
+            {m.email ? `${m.email} · ` : ''}
+            {bits.join(' · ')}
+          </span>
+        </div>
+
+        {dual ? (
+          <span className="badge" title="Holds an employer role and is also on the payroll. One password, two portals — the view switch in the header moves between them.">
+            employer + employee
+          </span>
+        ) : null}
+        {activated ? null : <span className="badge">never activated</span>}
+        {m.is_active ? null : <span className="badge">disabled</span>}
+
+        {caps.members ? (
+          <>
+            <button className="btn btn-sm" disabled={m.is_self} title={m.is_self ? 'Nobody changes their own role.' : undefined}
+                    onClick={() => setOpen({ kind: 'role', row: m })}>
+              Role
+            </button>
+            <button className="btn btn-sm" onClick={() => setOpen({ kind: 'member-phone', row: m })}>
+              {m.phone ? 'Phone' : 'Add phone'}
+            </button>
+            <button className="btn btn-sm" disabled={busy || !m.is_active}
+                    title={m.is_active ? undefined : 'Enable the login first.'}
+                    onClick={() => run(() => resendActivation(m.id))}>
+              Resend link
+            </button>
+            <button className="btn btn-sm" disabled={busy || m.is_self}
+                    title={m.is_self ? 'You cannot disable your own login.' : undefined}
+                    onClick={() => run(() => setMemberEnabled({ id: m.id, enabled: !m.is_active }))}>
+              {m.is_active ? 'Disable' : 'Enable'}
+            </button>
+          </>
+        ) : null}
+      </div>
+    );
   }
 
   const granted = new Set(rolePermissions.map((p) => `${p.role}|${p.permission}`));
@@ -290,46 +367,21 @@ export function SettingsConsole({
       {/* -------------------------------------------------- people and roles */}
       {tab === 'People & roles' ? (
         <div className="flex flex-col gap-4">
-          <div className="card">
-            <h3 className="mb-1 text-sm">Who can sign in</h3>
-            <p className="mb-3 text-xs text-slate-muted">
-              Everybody here is forced through authenticator enrolment on first sign-in.
-            </p>
-            {members.length === 0 ? (
-              <p className="text-[13px] text-slate-muted">Nobody yet.</p>
-            ) : (
-              <div className="flex flex-col divide-y divide-slate-line2">
-                {members.map((m) => (
-                  <div key={m.id} className="flex flex-wrap items-center gap-3 py-2.5">
-                    <div className="min-w-0 flex-1">
-                      <b className="block truncate text-[13px] font-semibold text-ink">
-                        {m.employee_name ?? m.email ?? 'Invited user'}
-                      </b>
-                      <span className="block truncate text-[11px] text-slate-muted">
-                        {m.role.replace(/_/g, ' ')}
-                        {m.phone ? ` · ${m.phone}` : ''} · added {dateLabel(m.created_at)}
-                      </span>
-                    </div>
-                    {m.is_active ? null : <span className="badge">inactive</span>}
-                    {caps.members ? (
-                      <>
-                        <button className="btn btn-sm" onClick={() => setOpen({ kind: 'role', row: m })}>
-                          Role
-                        </button>
-                        <button
-                          className="btn btn-sm"
-                          disabled={busy}
-                          onClick={() => run(() => setMemberActive({ id: m.id, is_active: !m.is_active }))}
-                        >
-                          {m.is_active ? 'Deactivate' : 'Reactivate'}
-                        </button>
-                      </>
-                    ) : null}
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
+          <LoginList
+            title="Employer logins"
+            note="People who administer the company: the owner, HR, payroll, finance, managers. Everybody here is forced through authenticator enrolment on first sign-in."
+            empty="Nobody yet."
+            rows={employerLogins}
+            render={loginRow}
+          />
+
+          <LoginList
+            title="Employee logins"
+            note="Self service only. Each of these is tied to an employee record, and row level security keeps them to their own data — the menu is not what stops them."
+            empty="No employee has been invited to self service yet. Invite them from the Employees page."
+            rows={employeeLogins}
+            render={loginRow}
+          />
 
           <div className="card">
             <h3 className="mb-1 text-sm">What each role can do</h3>
@@ -730,9 +782,9 @@ export function SettingsConsole({
                 name: 'role',
                 label: 'Role',
                 type: 'select',
-                options: ROLES.map((r) => ({ value: r, label: r.replace(/_/g, ' ') })),
+                options: ROLES.map((r) => ({ value: r, label: ROLE_WORDS[r] ?? r })),
                 rules: [V.required('Role')],
-                hint: 'What each role can do is set on the permission grid below this list.',
+                hint: 'What each role can do is set on the permission grid below this list. Employee means self service only, so it needs an employee record behind the login; any administrator role needs a contact number on file.',
               },
             ]}
             initial={{ role: open.row?.role ?? 'employee' }}
@@ -743,7 +795,61 @@ export function SettingsConsole({
           />
         </Modal>
       ) : null}
+
+      {open?.kind === 'member-phone' ? (
+        <Modal
+          title="Contact number"
+          sub={open.row?.employee_name ?? open.row?.email ?? undefined}
+          onClose={close}
+        >
+          <RecordForm
+            fields={[
+              {
+                name: 'phone',
+                label: 'Mobile number',
+                rules: [V.required('Mobile number'), V.phone],
+                hint: 'International form, for example +919876543210. Every administrator role has to have one — it is the second channel when an account is locked out.',
+              },
+            ]}
+            initial={{ phone: open.row?.phone ?? '' }}
+            action={(vals: Values) => setMemberPhone({ ...vals, id: open.row?.id ?? '' })}
+            submitLabel="Save number"
+            onDone={close}
+            onCancel={close}
+          />
+        </Modal>
+      ) : null}
     </>
+  );
+}
+
+/** A card holding one population of logins. */
+function LoginList({
+  title,
+  note,
+  empty,
+  rows,
+  render,
+}: {
+  title: string;
+  note: string;
+  empty: string;
+  rows: Row[];
+  render: (row: Row) => React.ReactNode;
+}) {
+  return (
+    <div className="card">
+      <div className="mb-3 flex items-baseline gap-2">
+        <h3 className="text-sm">{title}</h3>
+        <span className="text-[11px] text-slate-muted">{rows.length}</span>
+      </div>
+      <p className="mb-3 text-xs leading-relaxed text-slate-muted">{note}</p>
+      {rows.length === 0 ? (
+        <p className="text-[13px] text-slate-muted">{empty}</p>
+      ) : (
+        <div className="flex flex-col divide-y divide-slate-line2">{rows.map(render)}</div>
+      )}
+    </div>
   );
 }
 

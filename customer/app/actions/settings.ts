@@ -5,6 +5,7 @@ import { createClient } from '@/lib/supabase/server';
 import { getViewer } from '@/components/customer-shell';
 import { ok, fail, friendly, str, nullIfBlank, numOrNull, boolOf, type ActionResult } from '@/lib/action';
 import type { Values } from '@/components/ui/form';
+import { createAdminClient, serviceRoleProblem, activationRedirectTo } from '@/lib/supabase/admin';
 
 /**
  * Security & Admin.
@@ -265,56 +266,177 @@ export async function saveShift(vals: Values): Promise<ActionResult> {
 
 /* -------------------------------------------------------- people and roles */
 
+/* ------------------------------------------------------------ the people */
+
+/**
+ * Changes an employer user's role.
+ *
+ * The owner and HR Admin may both do this — the product owner's decision. Two
+ * guards make the obvious abuses impossible rather than merely unlikely, and
+ * both live in the database so they hold whatever calls them: nobody changes
+ * their own role, and the last active owner cannot be demoted. Without the
+ * first, "HR may change roles" would quietly mean "HR may become the owner".
+ */
 export async function setMemberRole(vals: Values): Promise<ActionResult> {
   try {
-    const { v, supabase } = await ctx('members.manage');
-    const id = str(vals.id);
-    const role = str(vals.role);
+    const supabase = createClient();
+    const { data, error } = await supabase.schema('api').rpc('set_member_role', {
+      p_member: str(vals.id),
+      p_role: str(vals.role),
+    });
+    if (error) return fail(memberMessage(error));
 
-    const { data: current } = await supabase
-      .from('org_members')
-      .select('user_id,role')
-      .eq('id', id)
-      .maybeSingle();
-    const row = current as { user_id: string; role: string } | null;
-    if (row && row.user_id === v.userId && row.role === 'owner' && role !== 'owner') {
-      return fail('You cannot remove your own owner role. Ask another owner to do it.', 'role');
-    }
-
-    const { error } = await supabase.from('org_members').update({ role }).eq('id', id);
-    if (error) return fail(friendly(error));
+    const r = (data ?? {}) as { status?: string; from?: string; to?: string };
     touch();
-    return ok('Role changed. It takes effect on their next request.');
+    if (r.status === 'unchanged') return ok('That is already their role.');
+    return ok(`Role changed from ${label(r.from)} to ${label(r.to)}. It applies to their next request.`);
   } catch (e) {
     return boom(e);
   }
 }
 
-export async function setMemberActive(vals: Values): Promise<ActionResult> {
+/** Disable or enable a login. Nothing is deleted; access simply stops. */
+export async function setMemberEnabled(vals: Values): Promise<ActionResult> {
   try {
-    const { v, supabase } = await ctx('members.manage');
-    const id = str(vals.id);
-    const active = boolOf(vals.is_active);
+    const enabled = boolOf(vals.enabled);
+    const supabase = createClient();
+    const { error } = await supabase.schema('api').rpc('set_member_enabled', {
+      p_member: str(vals.id),
+      p_enabled: enabled,
+    });
+    if (error) return fail(memberMessage(error));
 
-    const { data: current } = await supabase
-      .from('org_members')
-      .select('user_id')
-      .eq('id', id)
-      .maybeSingle();
-    if ((current as { user_id: string } | null)?.user_id === v.userId && !active) {
-      return fail('You cannot deactivate your own access.');
-    }
-
-    const { error } = await supabase.from('org_members').update({ is_active: active }).eq('id', id);
-    if (error) return fail(friendly(error));
     touch();
-    return ok(active ? 'Access restored.' : 'Access withdrawn.');
+    return ok(
+      enabled
+        ? 'Enabled. They can sign in again with the password and authenticator they already had.'
+        : 'Disabled. They cannot sign in, and every page refuses them until you enable it again. Nothing has been deleted.',
+    );
   } catch (e) {
     return boom(e);
   }
 }
 
-/** Grants or revokes one permission for one role in this organisation. */
+/** A contact number, which every administrator role is required to have. */
+export async function setMemberPhone(vals: Values): Promise<ActionResult> {
+  try {
+    const supabase = createClient();
+    const { data, error } = await supabase.schema('api').rpc('set_member_phone', {
+      p_member: str(vals.id),
+      p_phone: str(vals.phone),
+    });
+    if (error) return fail(memberMessage(error));
+    touch();
+    return ok(`Contact number saved as ${(data as { phone?: string })?.phone ?? str(vals.phone)}.`);
+  } catch (e) {
+    return boom(e);
+  }
+}
+
+/**
+ * Sends the activation email again.
+ *
+ * Which email depends on where they got to. If they never set a password, the
+ * original invitation is still the right thing and is simply reissued. If they
+ * did, a fresh invitation would fail — the address already has an account — so
+ * they get a set-password link instead. Saying which one went out matters,
+ * because "resend" means different things to somebody who never arrived and
+ * somebody who forgot their password.
+ */
+export async function resendActivation(memberId: string): Promise<ActionResult> {
+  try {
+    const supabase = createClient();
+    const { data, error } = await supabase
+      .schema('api')
+      .rpc('member_activation_state', { p_member: str(memberId) });
+    if (error) return fail(memberMessage(error));
+
+    const st = (data ?? {}) as {
+      email?: string | null;
+      activated?: boolean;
+      is_active?: boolean;
+    };
+    if (!st.email) {
+      return fail('That login has no email address on record, so there is nowhere to send it.');
+    }
+    if (st.is_active === false) {
+      return fail('That login is disabled. Enable it first — otherwise they activate an account that cannot sign in.');
+    }
+
+    const problem = serviceRoleProblem();
+    if (problem) return fail(problem);
+
+    const admin = createAdminClient();
+    const email = st.email.toLowerCase();
+
+    if (!st.activated) {
+      const { error: inviteErr } = await admin.auth.admin.inviteUserByEmail(email, {
+        redirectTo: activationRedirectTo(),
+      });
+      if (inviteErr) return fail(authMessage(inviteErr));
+      touch();
+      return ok(`Invitation sent again to ${email}. The earlier link stops working.`);
+    }
+
+    const { error: resetErr } = await createClient().auth.resetPasswordForEmail(email, {
+      redirectTo: activationRedirectTo(),
+    });
+    if (resetErr) return fail(authMessage(resetErr));
+    touch();
+    return ok(
+      `${email} already activated their account, so a set-password link has gone out instead of an invitation.`,
+    );
+  } catch (e) {
+    return boom(e);
+  }
+}
+
+const ROLE_WORDS: Record<string, string> = {
+  owner: 'Owner',
+  hr_admin: 'HR Admin',
+  payroll_admin: 'Payroll Admin',
+  finance_approver: 'Finance Approver',
+  manager: 'Manager',
+  recruiter: 'Recruiter',
+  auditor: 'Auditor',
+  employee: 'Employee',
+};
+const label = (r?: string) => (r ? ROLE_WORDS[r] ?? r.replace(/_/g, ' ') : 'their role');
+
+/** The prefixed exceptions the member functions raise, turned into English. */
+function memberMessage(e: { message?: string; code?: string }): string {
+  const m = e.message ?? '';
+  if (m.startsWith('SELF_ROLE')) {
+    return 'You cannot change your own role. Ask another owner or HR admin to do it — this is what stops anybody quietly promoting themselves.';
+  }
+  if (m.startsWith('SELF_DISABLE')) return 'You cannot disable your own login.';
+  if (m.startsWith('LAST_OWNER')) {
+    return 'This is the only owner. Make somebody else an owner first, or the organisation would be left with nobody who can administer it.';
+  }
+  if (m.startsWith('NO_EMPLOYEE')) {
+    return 'The employee role is for self service only, so it needs an employee record behind it. Link this login to an employee first, from the Employees page.';
+  }
+  if (m.startsWith('NEEDS_PHONE')) {
+    return 'An administrator has to have a contact number. Add one for this person first, then change the role.';
+  }
+  if (m.startsWith('BAD_PHONE') || /org_members_phone_check/.test(m)) {
+    return 'Enter the number in international form, for example +919876543210.';
+  }
+  if (m.startsWith('BAD_ROLE')) return 'That is not a role this product has.';
+  return friendly(e);
+}
+
+function authMessage(e: { message?: string; status?: number }): string {
+  const m = e.message ?? '';
+  if ((e.status ?? 0) === 401 || /invalid api key|unauthor/i.test(m)) {
+    return 'Supabase refused the request with 401, which means SUPABASE_SERVICE_ROLE_KEY is not a service-role key on this deployment.';
+  }
+  if (/sending.*email|smtp|rate limit/i.test(m)) {
+    return 'Supabase could not send the email. Either no SMTP sender is configured, or the built-in one has hit its limit of a couple of emails an hour.';
+  }
+  return `The email could not be sent. Supabase said: ${m || 'no reason given'}.`;
+}
+
 export async function setRolePermission(
   role: string,
   permission: string,

@@ -2,7 +2,7 @@
 
 import { revalidatePath } from 'next/cache';
 import { createClient } from '@/lib/supabase/server';
-import { createAdminClient, hasServiceRole, activationRedirectTo } from '@/lib/supabase/admin';
+import { createAdminClient, serviceRoleProblem, activationRedirectTo } from '@/lib/supabase/admin';
 import { getViewer } from '@/components/customer-shell';
 import { ok, fail, friendly, str, nullIfBlank, numOrNull, boolOf, type ActionResult } from '@/lib/action';
 import type { Values } from '@/components/ui/form';
@@ -521,11 +521,11 @@ export async function inviteEmployee(employeeId: string): Promise<ActionResult> 
       return fail('That employee has left. Reactivating their access is a separate decision.');
     }
 
-    if (!hasServiceRole()) {
-      return fail(
-        'Inviting an employee needs SUPABASE_SERVICE_ROLE_KEY set on this deployment. Add it in Vercel under Settings, Environment Variables — it must not have a NEXT_PUBLIC_ prefix.',
-      );
-    }
+    /* Check the key before spending a round trip on it. A wrong key comes back
+       as a bare 401 from the Auth API, which tells the person nothing about
+       which of the three keys on that settings page is in the wrong slot. */
+    const keyProblem = serviceRoleProblem();
+    if (keyProblem) return fail(keyProblem);
 
     const admin = createAdminClient();
     const email = e.work_email.toLowerCase();
@@ -545,7 +545,7 @@ export async function inviteEmployee(employeeId: string): Promise<ActionResult> 
          set-password link for the account that exists instead of reporting a
          failure that is really a duplicate. */
       const already = /already|registered|exists/i.test(inviteErr.message ?? '') || inviteErr.status === 422;
-      if (!already) return fail(`The invitation could not be sent: ${inviteErr.message}`);
+      if (!already) return fail(inviteMessage(inviteErr));
 
       const { data: list } = await admin.auth.admin.listUsers({ page: 1, perPage: 200 });
       const found = (list?.users ?? []).find((u) => (u.email ?? '').toLowerCase() === email);
@@ -627,4 +627,31 @@ export async function confirmDueProbations(): Promise<ActionResult> {
   } catch (e) {
     return boom(e);
   }
+}
+
+/**
+ * Turns an Auth admin failure into something a person can act on.
+ *
+ * The two that actually happen in practice are a wrong service-role key and no
+ * SMTP sender, and both arrive as short, unhelpful strings. Saying which one it
+ * is, and where to fix it, is the difference between a five-minute fix and an
+ * afternoon.
+ */
+function inviteMessage(e: { message?: string; status?: number; code?: string }): string {
+  const m = e.message ?? '';
+  const status = e.status ?? 0;
+
+  if (status === 401 || /invalid api key|unauthor/i.test(m)) {
+    return 'Supabase refused the invitation with 401 Unauthorized, which means the key in SUPABASE_SERVICE_ROLE_KEY is not a service-role key. The anon and publishable keys sit next to it on the same settings page and cannot invite anybody. Copy the service_role key from Supabase → Project Settings → API keys, replace the value, and redeploy.';
+  }
+  if (/sending.*email|smtp|rate limit|email rate/i.test(m)) {
+    return 'The account was not created because Supabase could not send the email. Either no SMTP sender is configured, or the built-in one has hit its limit — it allows only a couple of emails an hour and is not meant for real use. Set up SMTP under Supabase → Project Settings → Authentication → SMTP, then try again.';
+  }
+  if (/redirect|not allowed/i.test(m)) {
+    return 'Supabase rejected the activation link target. Add the customer portal callback URL to Supabase → Authentication → URL Configuration → Redirect URLs, then try again.';
+  }
+  if (status === 403) {
+    return 'Supabase refused the invitation with 403 Forbidden. That usually means signups are disabled for this project — check Supabase → Authentication → Sign In / Providers.';
+  }
+  return `The invitation could not be sent. Supabase said: ${m || 'no reason given'}${status ? ` (HTTP ${status})` : ''}.`;
 }
