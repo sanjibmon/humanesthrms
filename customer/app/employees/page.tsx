@@ -1,6 +1,7 @@
 import { CustomerShell, getViewer } from '@/components/customer-shell';
 import { PageHead } from '@/components/shell';
 import { createClient } from '@/lib/supabase/server';
+import { confirmDueProbations } from '@/app/actions/employees';
 import {
   EmployeeConsole,
   type EmployeeRow,
@@ -19,6 +20,8 @@ type Raw = {
   exit_date: string | null;
   status: string;
   employment_type: string;
+  probation_days: number | null;
+  probation_end_date: string | null;
   department_id: string | null;
   designation_id: string | null;
   location_id: string | null;
@@ -29,6 +32,15 @@ export default async function EmployeesPage() {
   const v = await getViewer();
   const supabase = createClient();
   const org = v.orgId ?? '';
+
+  /* Confirm anybody whose probation has run out, before reading the list, so
+     the page never shows somebody as "due for confirmation" and then leaves
+     them that way. There is no scheduler in this project; doing it here makes
+     the feature self-healing — it lands the first time HR opens this page on or
+     after the due date, and the effective date recorded is the real due date
+     rather than the day somebody noticed. The function is idempotent, so a
+     refresh costs one cheap indexed query and changes nothing. */
+  if (v.can('people.write')) await confirmDueProbations();
 
   /* One round trip for the directory and everything the form needs to offer as
      a choice. Row level security scopes all of it to this organisation, so
@@ -44,7 +56,8 @@ export default async function EmployeesPage() {
         .from('employees')
         .select(
           'id,employee_code,full_name,work_email,work_phone,doj,exit_date,status,' +
-            'employment_type,department_id,designation_id,location_id,reporting_manager_id',
+            'employment_type,probation_days,probation_end_date,' +
+            'department_id,designation_id,location_id,reporting_manager_id',
         )
         .eq('org_id', org)
         .order('employee_code'),
@@ -54,6 +67,16 @@ export default async function EmployeesPage() {
       supabase.from('legal_entities').select('id,name').eq('org_id', org).order('name'),
       supabase.from('organization_licenses').select('seats_total,seats_used').eq('org_id', org).maybeSingle(),
     ]);
+
+  /* Which employees already have a login, and the organisation's own default
+     probation length. Both are small reads the console needs to render honestly
+     rather than guessing. */
+  const [{ data: members }, { data: settings }] = await Promise.all([
+    supabase.from('org_members').select('employee_id').eq('org_id', org).not('employee_id', 'is', null),
+    supabase.from('org_settings').select('default_probation_days').eq('org_id', org).maybeSingle(),
+  ]);
+  const invitedIds = ((members ?? []) as { employee_id: string }[]).map((m) => m.employee_id);
+  const defaultProbationDays = Number((settings as { default_probation_days?: number } | null)?.default_probation_days ?? 180);
 
   const raw = (emps ?? []) as unknown as Raw[];
 
@@ -68,6 +91,8 @@ export default async function EmployeesPage() {
     employee_code: e.employee_code,
     full_name: e.full_name,
     work_email: e.work_email,
+    probation_days: e.probation_days,
+    probation_end_date: e.probation_end_date,
     work_phone: e.work_phone,
     doj: e.doj,
     exit_date: e.exit_date,
@@ -109,6 +134,8 @@ export default async function EmployeesPage() {
         nextCode={nextCode(rows.map((r) => r.employee_code))}
         canWrite={v.can('people.write')}
         canSettings={v.can('settings.write')}
+        defaultProbationDays={defaultProbationDays}
+        invitedIds={invitedIds}
         seats={seatRow ? { used: seatRow.seats_used, total: seatRow.seats_total } : null}
       />
 

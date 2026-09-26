@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { DataTable, type Column } from '@/components/ui/data-table';
@@ -8,6 +8,7 @@ import { Modal } from '@/components/ui/modal';
 import { RecordForm, type FieldDef, type Values } from '@/components/ui/form';
 import { Avatar } from '@/components/shell';
 import { Icon } from '@/components/icon';
+import { toast } from '@/components/ui/toast';
 import { dateLabel } from '@/lib/format';
 import * as V from '@/lib/validate';
 import {
@@ -16,6 +17,7 @@ import {
   createDesignation,
   createLocation,
   setEmployeeStatus,
+  inviteEmployee,
 } from '@/app/actions/employees';
 
 export type EmployeeRow = {
@@ -28,6 +30,8 @@ export type EmployeeRow = {
   exit_date: string | null;
   status: string;
   employment_type: string;
+  probation_days: number | null;
+  probation_end_date: string | null;
   department_name: string | null;
   designation_name: string | null;
   location_name: string | null;
@@ -64,6 +68,7 @@ const STATUS_OPTIONS: Option[] = [
 ];
 
 const EMPLOYMENT_TYPES: Option[] = [
+  { value: 'probation', label: 'Probation' },
   { value: 'permanent', label: 'Permanent' },
   { value: 'fixed_term', label: 'Fixed term' },
   { value: 'contract', label: 'Contract' },
@@ -110,6 +115,8 @@ export function EmployeeConsole({
   canWrite,
   canSettings,
   seats,
+  defaultProbationDays,
+  invitedIds,
 }: {
   rows: EmployeeRow[];
   masters: Masters;
@@ -117,6 +124,9 @@ export function EmployeeConsole({
   canWrite: boolean;
   canSettings: boolean;
   seats: { used: number; total: number } | null;
+  defaultProbationDays: number;
+  /** Employee ids that already have a login attached. */
+  invitedIds: string[];
 }) {
   const router = useRouter();
   const [open, setOpen] = useState<
@@ -127,6 +137,16 @@ export function EmployeeConsole({
   >(null);
 
   const close = () => setOpen(null);
+  const [busy, setBusy] = useState<string | null>(null);
+  const invited = useMemo(() => new Set(invitedIds), [invitedIds]);
+
+  async function invite(r: EmployeeRow) {
+    setBusy(r.id);
+    const res = await inviteEmployee(r.id);
+    setBusy(null);
+    toast(res.ok ? (res.message ?? 'Invitation sent.') : res.error, !res.ok);
+    if (res.ok) router.refresh();
+  }
   const seatsLeft = seats ? seats.total - seats.used : null;
   const full = seatsLeft !== null && seatsLeft <= 0;
 
@@ -142,6 +162,7 @@ export function EmployeeConsole({
     { name: 'doj', label: 'Date of joining', type: 'date', step: 'Employment', rules: [V.required('Date of joining')], half: true },
     { name: 'status', label: 'Status', type: 'select', step: 'Employment', options: STATUS_OPTIONS, rules: [V.required('Status')], half: true },
     { name: 'employment_type', label: 'Employment type', type: 'select', step: 'Employment', options: EMPLOYMENT_TYPES, rules: [V.required('Employment type')], half: true },
+    { name: 'probation_days', label: 'Probation period, in days', type: 'number', step: 'Employment', showWhen: { field: 'employment_type', in: ['probation'] }, rules: [V.required('Probation period'), V.positiveInt('Probation period')], hint: `Days, not months — ${defaultProbationDays} is the usual Indian default. Confirmation happens automatically on the day it ends.`, half: true },
     { name: 'contract_end_date', label: 'Contract end date', type: 'date', step: 'Employment', showWhen: { field: 'employment_type', in: ['fixed_term'] }, rules: [V.required('Contract end date')], hint: 'The database will not accept a fixed-term record without one.', half: true },
     { name: 'department_id', label: 'Department', type: 'select', step: 'Employment', options: withBlank(masters.departments), half: true },
     { name: 'designation_id', label: 'Designation', type: 'select', step: 'Employment', options: withBlank(masters.designations), half: true },
@@ -229,7 +250,18 @@ export function EmployeeConsole({
       sortable: true,
       hideBelow: 'lg',
       value: (r) => r.employment_type,
-      cell: (r) => <span className="badge">{r.employment_type.replace(/_/g, ' ')}</span>,
+      cell: (r) => (
+        <span>
+          <span className={`badge ${r.employment_type === 'probation' ? 'bg-amber-bg text-amber-text' : ''}`}>
+            {r.employment_type.replace(/_/g, ' ')}
+          </span>
+          {r.employment_type === 'probation' && r.probation_end_date ? (
+            <span className="mt-0.5 block text-[11px] text-slate-muted">
+              {r.probation_days} days · {probationNote(r.probation_end_date)}
+            </span>
+          ) : null}
+        </span>
+      ),
     },
     {
       key: 'doj',
@@ -247,6 +279,28 @@ export function EmployeeConsole({
       cell: (r) => (
         <span className={`badge ${STATUS_CLASS[r.status] ?? ''}`}>{r.status.replace(/_/g, ' ')}</span>
       ),
+    },
+    {
+      key: 'ess',
+      header: 'Self service',
+      hideBelow: 'md',
+      value: (r) => (invited.has(r.id) ? 'active' : r.work_email ? 'not invited' : 'no email'),
+      cell: (r) =>
+        invited.has(r.id) ? (
+          <span className="badge bg-leaf-soft text-leaf-text">has a login</span>
+        ) : !r.work_email ? (
+          <span className="text-[11px] text-slate-muted">no work email</span>
+        ) : canWrite ? (
+          <button
+            className="btn btn-sm"
+            disabled={busy === r.id}
+            onClick={() => invite(r)}
+          >
+            {busy === r.id ? 'Sending…' : 'Invite'}
+          </button>
+        ) : (
+          <span className="text-[11px] text-slate-muted">not invited</span>
+        ),
     },
   ];
 
@@ -327,7 +381,8 @@ export function EmployeeConsole({
             initial={{
               employee_code: nextCode,
               status: 'onboarding',
-              employment_type: 'permanent',
+              employment_type: 'probation',
+              probation_days: String(defaultProbationDays),
               nationality: 'Indian',
               same_address: true,
             }}
@@ -421,4 +476,16 @@ export function EmployeeConsole({
       ) : null}
     </>
   );
+}
+
+/** How a probation end date reads to somebody scanning the list. */
+function probationNote(end: string): string {
+  const days = Math.round(
+    (new Date(`${end}T00:00:00`).getTime() - new Date(new Date().toDateString()).getTime()) / 86400000,
+  );
+  if (days < 0) return `due for confirmation (${Math.abs(days)} days ago)`;
+  if (days === 0) return 'confirms today';
+  if (days === 1) return 'confirms tomorrow';
+  if (days <= 30) return `confirms in ${days} days`;
+  return `confirms ${new Date(`${end}T00:00:00`).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}`;
 }

@@ -2,6 +2,7 @@
 
 import { revalidatePath } from 'next/cache';
 import { createClient } from '@/lib/supabase/server';
+import { createAdminClient, hasServiceRole, activationRedirectTo } from '@/lib/supabase/admin';
 import { getViewer } from '@/components/customer-shell';
 import { ok, fail, friendly, str, nullIfBlank, numOrNull, boolOf, type ActionResult } from '@/lib/action';
 import type { Values } from '@/components/ui/form';
@@ -86,6 +87,24 @@ export async function suggestEmployeeCode(): Promise<ActionResult> {
   }
 }
 
+/**
+ * Probation is always expressed in days, never months. "Six months from the
+ * 31st of August" is a question with three defensible answers, and payroll
+ * cannot afford an argument about which one applied. 180 days is the usual
+ * Indian default and is what the organisation setting ships with.
+ */
+function probationDays(vals: Values, employmentType: string): { days: number | null; error?: ActionResult } {
+  if (employmentType !== 'probation') return { days: null };
+  const days = numOrNull(vals.probation_days);
+  if (days === null || !Number.isInteger(days) || days < 1) {
+    return { days: null, error: fail('How many days is the probation?', 'probation_days') };
+  }
+  if (days > 730) {
+    return { days: null, error: fail('That is more than two years. Check the figure.', 'probation_days') };
+  }
+  return { days };
+}
+
 /* ------------------------------------------------------------------ create */
 
 export async function createEmployee(vals: Values): Promise<ActionResult> {
@@ -96,6 +115,8 @@ export async function createEmployee(vals: Values): Promise<ActionResult> {
     if (employmentType === 'fixed_term' && !str(vals.contract_end_date)) {
       return fail('A fixed-term employee needs a contract end date.', 'contract_end_date');
     }
+    const prob = probationDays(vals, employmentType);
+    if (prob.error) return prob.error;
 
     const { data, error } = await supabase
       .from('employees')
@@ -109,6 +130,7 @@ export async function createEmployee(vals: Values): Promise<ActionResult> {
         doj: str(vals.doj),
         status: str(vals.status) || 'onboarding',
         employment_type: employmentType,
+        probation_days: prob.days,
         contract_end_date: nullIfBlank(vals.contract_end_date),
         department_id: nullIfBlank(vals.department_id),
         designation_id: nullIfBlank(vals.designation_id),
@@ -169,6 +191,8 @@ export async function updateEmployeeJob(vals: Values): Promise<ActionResult> {
     if (str(vals.reporting_manager_id) === id) {
       return fail('Somebody cannot report to themselves.', 'reporting_manager_id');
     }
+    const prob = probationDays(vals, employmentType);
+    if (prob.error) return prob.error;
 
     const { error } = await supabase
       .from('employees')
@@ -178,6 +202,7 @@ export async function updateEmployeeJob(vals: Values): Promise<ActionResult> {
         work_phone: nullIfBlank(vals.work_phone),
         doj: str(vals.doj),
         employment_type: employmentType,
+        probation_days: prob.days,
         contract_end_date: nullIfBlank(vals.contract_end_date),
         department_id: nullIfBlank(vals.department_id),
         designation_id: nullIfBlank(vals.designation_id),
@@ -447,4 +472,159 @@ function emergencyOf(v: Values) {
   const phone = str(v.emg_phone);
   if (!name && !phone) return [];
   return [{ name, relationship: str(v.emg_relation), phone }];
+}
+
+/* ---------------------------------------------------- self-service access */
+
+/**
+ * Gives an employee a login.
+ *
+ * Until this existed there was no way at all to get somebody into self service:
+ * the portal could change an existing member's role but could not create one,
+ * and nothing invited anybody. HR added an employee and the employee had no
+ * account, no email and no route in.
+ *
+ * Three steps, in this order, because the order matters if one of them fails:
+ *
+ *   1. Create or find the auth user. Supabase sends the activation email; this
+ *      is a Supabase Auth email, so it goes out over whatever SMTP the project
+ *      has configured rather than needing a sender of our own.
+ *   2. Attach that user to the employee record. api.link_employee_login forces
+ *      the role to 'employee' and is gated on people.write, so inviting
+ *      somebody to read their own payslip does not need the owner-only
+ *      members.manage permission and cannot be used to escalate anybody.
+ *   3. Queue the welcome email.
+ *
+ * If step 1 succeeds and step 2 fails, the auth user exists unlinked and a
+ * second attempt recovers: inviting an existing address returns 422, which is
+ * handled by falling back to a password-reset link for the same account.
+ */
+export async function inviteEmployee(employeeId: string): Promise<ActionResult> {
+  try {
+    const { v, supabase } = await ctx();
+
+    const { data: emp, error: readErr } = await supabase
+      .from('employees')
+      .select('id,full_name,work_email,status,employee_code')
+      .eq('id', str(employeeId))
+      .maybeSingle();
+    if (readErr) return fail(friendly(readErr));
+    if (!emp) return fail('That employee record does not exist.');
+
+    const e = emp as { id: string; full_name: string; work_email: string | null; status: string };
+    if (!e.work_email) {
+      return fail(
+        `${e.full_name} has no work email, so there is nowhere to send the invitation. Add one on their record first.`,
+      );
+    }
+    if (e.status === 'exited') {
+      return fail('That employee has left. Reactivating their access is a separate decision.');
+    }
+
+    if (!hasServiceRole()) {
+      return fail(
+        'Inviting an employee needs SUPABASE_SERVICE_ROLE_KEY set on this deployment. Add it in Vercel under Settings, Environment Variables — it must not have a NEXT_PUBLIC_ prefix.',
+      );
+    }
+
+    const admin = createAdminClient();
+    const email = e.work_email.toLowerCase();
+    let userId: string | null = null;
+    let sent: 'invitation' | 'password reset' = 'invitation';
+
+    const { data: invited, error: inviteErr } = await admin.auth.admin.inviteUserByEmail(email, {
+      redirectTo: activationRedirectTo(),
+      data: { full_name: e.full_name, org_id: v.orgId, employee_id: e.id },
+    });
+
+    if (invited?.user) {
+      userId = invited.user.id;
+    } else if (inviteErr) {
+      /* 422 means the address already has an account — somebody re-invited, or
+         this person is already a user of another organisation. Send them a
+         set-password link for the account that exists instead of reporting a
+         failure that is really a duplicate. */
+      const already = /already|registered|exists/i.test(inviteErr.message ?? '') || inviteErr.status === 422;
+      if (!already) return fail(`The invitation could not be sent: ${inviteErr.message}`);
+
+      const { data: list } = await admin.auth.admin.listUsers({ page: 1, perPage: 200 });
+      const found = (list?.users ?? []).find((u) => (u.email ?? '').toLowerCase() === email);
+      if (!found) {
+        return fail(
+          'That address already has an account, but it could not be found to send a reset link. Ask them to use "Forgot password" on the sign-in page.',
+        );
+      }
+      userId = found.id;
+      const { error: resetErr } = await createClient().auth.resetPasswordForEmail(email, {
+        redirectTo: activationRedirectTo(),
+      });
+      if (resetErr) return fail(`A set-password email could not be sent: ${resetErr.message}`);
+      sent = 'password reset';
+    }
+
+    if (!userId) return fail('The account could not be created. Try again.');
+
+    const { data: linked, error: linkErr } = await supabase
+      .schema('api')
+      .rpc('link_employee_login', { p_employee: e.id, p_user: userId });
+    if (linkErr) {
+      const m = linkErr.message ?? '';
+      if (/EMPLOYEE_HAS_LOGIN/.test(m)) {
+        return fail(
+          `${e.full_name} already has a different login attached. Unlink it under Settings, People and roles before attaching another.`,
+        );
+      }
+      return fail(friendly(linkErr));
+    }
+
+    await supabase.schema('api').rpc('queue_employee_welcome', { p_employee: e.id });
+
+    touch(e.id);
+    revalidatePath('/settings');
+
+    const status = (linked as { status?: string } | null)?.status;
+    if (status === 'already_linked') {
+      return ok(`A fresh ${sent} email has been sent to ${email}. Their account was already linked.`);
+    }
+    if (status === 'attached_to_existing') {
+      return ok(
+        `${email} already had access to this organisation, so their existing login is now linked to this employee record. A ${sent} email has been sent.`,
+      );
+    }
+    return ok(
+      `Invitation sent to ${email}. They set a password, enrol an authenticator, and then have self service. Nothing else is needed from you.`,
+    );
+  } catch (e) {
+    return boom(e);
+  }
+}
+
+/**
+ * Confirms anybody whose probation has run out.
+ *
+ * Called when the Employees page loads, because there is no scheduler in this
+ * project. That is less tidy than a cron job but it is self-healing: the
+ * confirmation happens the first time HR opens the page on or after the due
+ * date, and the recorded effective date is the real due date rather than the
+ * day somebody noticed. The function is idempotent, so a page refresh does
+ * nothing the second time.
+ */
+export async function confirmDueProbations(): Promise<ActionResult> {
+  try {
+    const { v, supabase } = await ctx();
+    const { data, error } = await supabase
+      .schema('api')
+      .rpc('confirm_due_probations', { p_org: v.orgId });
+    if (error) return fail(friendly(error));
+
+    const r = (data ?? {}) as { confirmed?: number; names?: string[] };
+    if (!r.confirmed) return ok();
+
+    touch();
+    return ok(
+      `${r.confirmed} employee(s) confirmed as permanent: ${(r.names ?? []).join(', ')}. Each has been told in the portal and an email is queued.`,
+    );
+  } catch (e) {
+    return boom(e);
+  }
 }

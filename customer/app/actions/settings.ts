@@ -60,6 +60,7 @@ export async function saveOrgPolicy(vals: Values): Promise<ActionResult> {
         org_id: v.orgId,
         weekly_offs: weekly,
         leave_year_start_month: numOrNull(vals.leave_year_start_month) ?? 4,
+        default_probation_days: Math.min(730, Math.max(1, numOrNull(vals.default_probation_days) ?? 180)),
         selfie_mandatory: boolOf(vals.selfie_mandatory),
         geofence_mandatory: boolOf(vals.geofence_mandatory),
         allow_wfh: boolOf(vals.allow_wfh),

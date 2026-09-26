@@ -26,6 +26,7 @@ export default async function EmployeePage({ params }: { params: { id: string } 
     .from('employees')
     .select(
       'id,employee_code,full_name,work_email,work_phone,doj,exit_date,status,employment_type,' +
+        'probation_days,probation_end_date,probation_confirmed_on,' +
         'contract_end_date,department_id,designation_id,location_id,entity_id,reporting_manager_id',
     )
     .eq('id', id)
@@ -45,6 +46,9 @@ export default async function EmployeePage({ params }: { params: { id: string } 
     exit_date: e.exit_date,
     status: e.status,
     employment_type: e.employment_type,
+    probation_days: e.probation_days,
+    probation_end_date: e.probation_end_date,
+    probation_confirmed_on: e.probation_confirmed_on,
     contract_end_date: e.contract_end_date,
     department_id: e.department_id,
     designation_id: e.designation_id,

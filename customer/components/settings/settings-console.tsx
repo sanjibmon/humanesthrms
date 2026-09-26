@@ -39,6 +39,7 @@ export type Org = {
 export type Policy = {
   weekly_offs: number[] | null;
   leave_year_start_month: number;
+  default_probation_days: number;
   selfie_mandatory: boolean;
   geofence_mandatory: boolean;
   allow_wfh: boolean;
@@ -205,6 +206,10 @@ export function SettingsConsole({
           <dl className="grid gap-x-6 gap-y-3 sm:grid-cols-2">
             <Item label="Weekly offs" value={DAYS.filter((_, i) => offs.has(i)).map((d) => d[1]).join(', ') || 'None'} />
             <Item label="Leave year starts" value={MONTHS[(policy?.leave_year_start_month ?? 4) - 1]?.label ?? '—'} />
+            <Item
+              label="Default probation"
+              value={`${policy?.default_probation_days ?? 180} days`}
+            />
             <Item label="Selfie on check-in" value={policy?.selfie_mandatory ? 'Required' : 'Not required'} />
             <Item label="Geofence" value={policy?.geofence_mandatory ? 'Enforced' : 'Not enforced'} />
             <Item label="Mock location" value={policy?.reject_mock_location ? 'Rejected' : 'Allowed'} />
@@ -495,6 +500,14 @@ export function SettingsConsole({
                 step: 'Working week',
                 hint: 'April matches the Indian financial year, which is what most balances are reckoned against.',
               },
+              {
+                name: 'default_probation_days',
+                label: 'Default probation period, in days',
+                type: 'number',
+                step: 'Working week',
+                rules: [V.required('Probation period'), V.positiveInt('Probation period')],
+                hint: '180 days is the usual Indian default. It only prefills the field when HR adds somebody — each employee can be given a different period, and confirmation to permanent happens automatically on the day it ends.',
+              },
 
               { name: 'selfie_mandatory', label: 'Selfie required on check-in', type: 'switch', step: 'Attendance' },
               { name: 'geofence_mandatory', label: 'Check-in must be inside a location geofence', type: 'switch', step: 'Attendance' },
@@ -533,6 +546,7 @@ export function SettingsConsole({
               off_sun: offs.has(0), off_mon: offs.has(1), off_tue: offs.has(2), off_wed: offs.has(3),
               off_thu: offs.has(4), off_fri: offs.has(5), off_sat: offs.has(6),
               leave_year_start_month: String(policy?.leave_year_start_month ?? 4),
+              default_probation_days: String(policy?.default_probation_days ?? 180),
               selfie_mandatory: policy?.selfie_mandatory ?? false,
               geofence_mandatory: policy?.geofence_mandatory ?? false,
               reject_mock_location: policy?.reject_mock_location ?? true,

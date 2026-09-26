@@ -28,6 +28,9 @@ export type EmployeeFull = {
   exit_date: string | null;
   status: string;
   employment_type: string;
+  probation_days: number | null;
+  probation_end_date: string | null;
+  probation_confirmed_on: string | null;
   contract_end_date: string | null;
   department_id: string | null;
   designation_id: string | null;
@@ -135,12 +138,14 @@ export function EmployeeDetail({
     { name: 'work_phone', label: 'Work phone', rules: [V.phone], half: true },
     { name: 'doj', label: 'Date of joining', type: 'date', rules: [V.required('Date of joining')], half: true },
     { name: 'employment_type', label: 'Employment type', type: 'select', options: [
+        { value: 'probation', label: 'Probation' },
         { value: 'permanent', label: 'Permanent' },
         { value: 'fixed_term', label: 'Fixed term' },
         { value: 'contract', label: 'Contract' },
         { value: 'intern', label: 'Intern' },
         { value: 'consultant', label: 'Consultant' },
       ], rules: [V.required('Employment type')], half: true },
+    { name: 'probation_days', label: 'Probation period, in days', type: 'number', showWhen: { field: 'employment_type', in: ['probation'] }, rules: [V.required('Probation period'), V.positiveInt('Probation period')], hint: 'Counted from the date of joining. Confirmation to permanent happens automatically the day it ends.', half: true },
     { name: 'contract_end_date', label: 'Contract end date', type: 'date', showWhen: { field: 'employment_type', in: ['fixed_term'] }, rules: [V.required('Contract end date')], half: true },
     { name: 'department_id', label: 'Department', type: 'select', options: withBlank(masters.departments), half: true },
     { name: 'designation_id', label: 'Designation', type: 'select', options: withBlank(masters.designations), half: true },
@@ -221,7 +226,9 @@ export function EmployeeDetail({
             </p>
             <div className="mt-2.5 flex flex-wrap gap-2">
               <span className="badge">{emp.status.replace(/_/g, ' ')}</span>
-              <span className="badge">{emp.employment_type.replace(/_/g, ' ')}</span>
+              <span className={`badge ${emp.employment_type === 'probation' ? 'bg-amber-bg text-amber-text' : ''}`}>
+                {emp.employment_type.replace(/_/g, ' ')}
+              </span>
               <span className="badge">Joined {dateLabel(emp.doj)}</span>
               {emp.exit_date ? <span className="badge">Left {dateLabel(emp.exit_date)}</span> : null}
             </div>
@@ -254,6 +261,12 @@ export function EmployeeDetail({
             ['Work phone', emp.work_phone],
             ['Date of joining', dateLabel(emp.doj)],
             ['Employment type', emp.employment_type.replace(/_/g, ' ')],
+            ...(emp.employment_type === 'probation' && emp.probation_end_date
+              ? [['Probation', `${emp.probation_days} days, confirms ${dateLabel(emp.probation_end_date)}`] as [string, string]]
+              : []),
+            ...(emp.probation_confirmed_on
+              ? [['Confirmed permanent', dateLabel(emp.probation_confirmed_on)] as [string, string]]
+              : []),
             ['Contract ends', emp.contract_end_date ? dateLabel(emp.contract_end_date) : null],
             ['Department', emp.department_name],
             ['Designation', emp.designation_name],
@@ -420,6 +433,7 @@ export function EmployeeDetail({
               work_phone: emp.work_phone ?? '',
               doj: emp.doj,
               employment_type: emp.employment_type,
+              probation_days: String(emp.probation_days ?? ''),
               contract_end_date: emp.contract_end_date ?? '',
               department_id: emp.department_id ?? '',
               designation_id: emp.designation_id ?? '',

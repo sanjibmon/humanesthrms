@@ -58,3 +58,15 @@ export function customerInviteRedirectTo(): string {
     process.env.NEXT_PUBLIC_CUSTOMER_PORTAL_URL ?? process.env.NEXT_PUBLIC_SITE_URL,
   )}/auth/callback`;
 }
+
+/**
+ * Where an employee lands after clicking Activate in their invitation email.
+ *
+ * This is the customer portal's own origin. The employee has no account on the
+ * platform admin site, so sending them there would drop them on a sign-in page
+ * they can never get past — which is exactly the bug the two separate helpers
+ * above exist to prevent.
+ */
+export function activationRedirectTo(): string {
+  return `${origin(process.env.NEXT_PUBLIC_SITE_URL)}/auth/callback`;
+}
