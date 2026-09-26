@@ -191,20 +191,171 @@ export async function setOrgMemberPhone(v: Values): Promise<ActionResult> {
   }
 }
 
-export async function setMemberActive(memberId: string, active: boolean): Promise<ActionResult> {
+/**
+ * Disable or enable a login. The word matters: nothing is deleted, the
+ * membership and the authenticator stay, and access simply stops.
+ */
+export async function setMemberEnabled(memberId: string, enabled: boolean): Promise<ActionResult> {
   try {
     await requirePlatform('manage_customers');
     const supabase = createClient();
     const { error } = await supabase.schema('api').rpc('set_org_member_active', {
       p_member: memberId,
-      p_active: active,
+      p_active: enabled,
     });
-    if (error) return fail(friendly(error));
+    if (error) return fail(memberMessage(error));
     revalidatePath('/customers');
-    return ok(active ? 'Member reactivated.' : 'Member deactivated.');
+    return ok(
+      enabled
+        ? 'Enabled. They can sign in again with the password and authenticator they already had.'
+        : 'Disabled. They cannot sign in, and nothing has been deleted.',
+    );
   } catch (e) {
     return boom(e);
   }
+}
+
+/** Change what a customer's user may do. */
+export async function setOrgMemberRole(v: Values): Promise<ActionResult> {
+  try {
+    await requirePlatform('manage_customers');
+    const supabase = createClient();
+    const { data, error } = await supabase.schema('api').rpc('set_org_member_role', {
+      p_member: str(v.id),
+      p_role: str(v.role),
+    });
+    if (error) return fail(memberMessage(error), 'role');
+
+    const r = (data ?? {}) as { status?: string; from?: string; to?: string };
+    revalidatePath(`/customers/${str(v.org_id)}`);
+    return r.status === 'unchanged'
+      ? ok('That is already their role.')
+      : ok(`Role changed from ${roleWord(r.from)} to ${roleWord(r.to)}.`);
+  } catch (e) {
+    return boom(e);
+  }
+}
+
+/**
+ * Attach an employer login to the person's own employee record, or detach it.
+ *
+ * This is what makes an HR admin who is also on the payroll work. The login and
+ * the employee record are two different rows, and self service reads the second
+ * one — so until they are joined, the person who runs payroll has no payslip of
+ * their own. Matching addresses are joined automatically; this is for when the
+ * two addresses differ.
+ */
+export async function setOrgMemberEmployee(
+  memberId: string,
+  employeeId: string | null,
+  orgId: string,
+): Promise<ActionResult> {
+  try {
+    await requirePlatform('manage_customers');
+    const supabase = createClient();
+    const { data, error } = await supabase.schema('api').rpc('set_org_member_employee', {
+      p_member: memberId,
+      p_employee: employeeId,
+    });
+    if (error) return fail(memberMessage(error));
+
+    const r = (data ?? {}) as { status?: string; employee?: string };
+    revalidatePath(`/customers/${orgId}`);
+    return ok(
+      r.status === 'linked'
+        ? `Linked to ${r.employee}. They keep their employer role and now also get self service — a view switch appears in their portal.`
+        : 'Unlinked. Their employer access is unchanged; only self service is gone.',
+    );
+  } catch (e) {
+    return boom(e);
+  }
+}
+
+/**
+ * Send the activation email again.
+ *
+ * Which email depends on how far they got, and that is read from the database
+ * rather than taken from the page: never activated means the invitation is
+ * still the right thing and is reissued, while an account that already has a
+ * password would have a second invitation refused by Supabase with a 422, so it
+ * gets a set-password link instead.
+ */
+export async function resendOrgMemberActivation(
+  memberId: string,
+  orgId: string,
+): Promise<ActionResult> {
+  try {
+    await requirePlatform('manage_customers');
+    const supabase = createClient();
+
+    const { data, error } = await supabase.schema('api').rpc('list_org_members', { p_org: orgId });
+    if (error) return fail(friendly(error));
+    const row = ((data ?? []) as any[]).find((m) => m.id === memberId);
+    if (!row) return fail('That member is no longer part of this organisation.');
+    if (!row.email) {
+      return fail('That membership has no sign-in behind it, so there is nowhere to send anything.');
+    }
+    if (!row.is_active) {
+      return fail('That login is disabled. Enable it first — otherwise they activate an account that cannot sign in.');
+    }
+    if (!hasServiceRole()) {
+      return fail('Sending invitations needs SUPABASE_SERVICE_ROLE_KEY in this deployment.');
+    }
+
+    const email = String(row.email).toLowerCase();
+
+    if (!row.activated_at) {
+      const { error: inviteErr } = await createAdminClient().auth.admin.inviteUserByEmail(email, {
+        redirectTo: customerInviteRedirectTo(),
+        data: { org_id: orgId, invited_as: row.role },
+      });
+      if (inviteErr) return fail(`The invitation could not be sent: ${inviteErr.message}`);
+      revalidatePath(`/customers/${orgId}`);
+      return ok(`Invitation sent again to ${email}. The earlier link stops working.`);
+    }
+
+    const { error: resetErr } = await createClient().auth.resetPasswordForEmail(email, {
+      redirectTo: customerInviteRedirectTo(),
+    });
+    if (resetErr) return fail(`A set-password email could not be sent: ${resetErr.message}`);
+    revalidatePath(`/customers/${orgId}`);
+    return ok(
+      `${email} already activated their account, so a set-password link has gone out instead of an invitation.`,
+    );
+  } catch (e) {
+    return boom(e);
+  }
+}
+
+const ROLE_WORDS: Record<string, string> = {
+  owner: 'Owner',
+  hr_admin: 'HR Admin',
+  payroll_admin: 'Payroll Admin',
+  finance_approver: 'Finance Approver',
+  manager: 'Manager',
+  recruiter: 'Recruiter',
+  auditor: 'Auditor',
+  employee: 'Employee',
+};
+const roleWord = (r?: string) => (r ? (ROLE_WORDS[r] ?? r.replace(/_/g, ' ')) : 'their role');
+
+/** The prefixed exceptions the member functions raise, turned into English. */
+function memberMessage(e: { message?: string; code?: string }): string {
+  const m = e.message ?? '';
+  if (m.startsWith('LAST_OWNER') || /only active owner|only owner/i.test(m)) {
+    return 'This is the only owner. Make somebody else an owner first, or the organisation is left with nobody who can administer it.';
+  }
+  if (m.startsWith('NO_EMPLOYEE')) {
+    return 'The employee role is self service only, so it needs an employee record behind it. Link this login to an employee first.';
+  }
+  if (m.startsWith('NEEDS_PHONE')) {
+    return 'An administrator has to have a contact number. Add one for this person first, then change the role.';
+  }
+  if (m.startsWith('EMPLOYEE_HAS_LOGIN')) {
+    return m.split(':').slice(1).join(':') || 'That employee already has a different login attached.';
+  }
+  if (m.startsWith('BAD_ROLE')) return 'That is not a role this product has.';
+  return friendly(e);
 }
 
 /**

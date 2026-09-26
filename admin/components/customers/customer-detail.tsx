@@ -14,7 +14,10 @@ import {
   syncModulesToPlan,
   updateLicense,
   inviteOrgOwnerAction,
-  setMemberActive,
+  setMemberEnabled,
+  setOrgMemberRole,
+  setOrgMemberEmployee,
+  resendOrgMemberActivation,
   deleteOrgMember,
   setOrgMemberPhone,
 } from '@/app/actions/customers';
@@ -42,6 +45,22 @@ export type MemberRow = {
   /** E.164. Mandatory for owner / hr_admin / payroll_admin. */
   phone: string | null;
   created_at: string;
+  /** Set when this login is also an employee of the organisation. */
+  employee_id: string | null;
+  invited_at: string | null;
+  /** When they set a password. Null means the invitation is still outstanding. */
+  activated_at: string | null;
+  last_sign_in_at: string | null;
+};
+
+/** A thin employee row, only enough to choose one in the link picker. */
+export type EmployeeChoice = {
+  id: string;
+  employee_code: string;
+  full_name: string;
+  work_email: string | null;
+  status: string;
+  has_login: boolean;
 };
 
 export type LicenseInfo = {
@@ -57,6 +76,19 @@ export type LicenseInfo = {
 
 /** Roles the database requires a contact number for — mirrors app.require_phone. */
 const ADMIN_ROLES = ['owner', 'hr_admin', 'payroll_admin'];
+
+/** The same words the customer portal uses, so support and customer agree. */
+const ROLE_LABELS: Record<string, string> = {
+  owner: 'Owner',
+  hr_admin: 'HR Admin',
+  payroll_admin: 'Payroll Admin',
+  finance_approver: 'Finance Approver',
+  manager: 'Manager',
+  recruiter: 'Recruiter',
+  auditor: 'Auditor',
+  employee: 'Employee',
+};
+const roleLabel = (r: string) => ROLE_LABELS[r] ?? r.replace(/_/g, ' ');
 
 const ROLE_OPTIONS = [
   { value: 'owner', label: 'Owner' },
@@ -273,10 +305,12 @@ export function LicensePanel({
 export function MemberPanel({
   orgId,
   members,
+  employees,
   canEdit,
 }: {
   orgId: string;
   members: MemberRow[];
+  employees: EmployeeChoice[];
   canEdit: boolean;
 }) {
   const router = useRouter();
@@ -284,29 +318,28 @@ export function MemberPanel({
   const [target, setTarget] = useState<MemberRow | null>(null);
   const [doomed, setDoomed] = useState<MemberRow | null>(null);
   const [editPhone, setEditPhone] = useState<MemberRow | null>(null);
+  const [editRole, setEditRole] = useState<MemberRow | null>(null);
+  const [linking, setLinking] = useState<MemberRow | null>(null);
   const [typed, setTyped] = useState('');
   const [busy, setBusy] = useState(false);
 
-  async function flip(m: MemberRow) {
+  async function run(fn: () => Promise<{ ok: boolean; message?: string; error?: string }>) {
     setBusy(true);
-    const res = await setMemberActive(m.id, !m.is_active);
+    const res = await fn();
     setBusy(false);
-    toast(res.ok ? (res.message ?? 'Updated') : res.error, !res.ok);
-    if (res.ok) {
-      setTarget(null);
-      router.refresh();
-    }
+    toast(res.ok ? (res.message ?? 'Updated') : (res.error ?? 'Failed'), !res.ok);
+    if (res.ok) router.refresh();
+    return res.ok;
+  }
+
+  async function flip(m: MemberRow) {
+    if (await run(() => setMemberEnabled(m.id, !m.is_active))) setTarget(null);
   }
 
   async function purge(m: MemberRow) {
-    setBusy(true);
-    const res = await deleteOrgMember(m.id, orgId);
-    setBusy(false);
-    toast(res.ok ? (res.message ?? 'Removed') : res.error, !res.ok);
-    if (res.ok) {
+    if (await run(() => deleteOrgMember(m.id, orgId))) {
       setDoomed(null);
       setTyped('');
-      router.refresh();
     }
   }
 
@@ -315,14 +348,97 @@ export function MemberPanel({
   const phrase = doomed?.email ?? 'DELETE';
   const armed = typed.trim().toLowerCase() === phrase.toLowerCase();
 
+  /* Two populations, two questions. Of an employer login you ask what it may
+     do; of an employee login you ask whether the person ever activated it.
+     Somebody who is both appears once, under employer, with a badge -- they are
+     one login with two portals, not two accounts. */
+  const employerLogins = members.filter((m) => m.role !== 'employee');
+  const employeeLogins = members.filter((m) => m.role === 'employee');
+
+  function row(m: MemberRow) {
+    const dual = m.role !== 'employee' && Boolean(m.employee_id);
+    const activated = Boolean(m.activated_at);
+    const stamp = activated
+      ? `active since ${dateLabel(m.activated_at as string)}`
+      : `invited ${dateLabel(m.invited_at ?? m.created_at)}`;
+
+    return (
+      <div key={m.id} className="flex flex-wrap items-center gap-2 py-2.5">
+        <Avatar name={m.employee_name ?? m.email ?? m.role} slate={!m.is_active} />
+        <div className="min-w-0 flex-1">
+          <b className="block truncate text-[13px] font-semibold text-ink">
+            {m.employee_name ?? m.email ?? 'Invited user'}
+          </b>
+          <span className="block truncate text-[11px] text-slate-muted">
+            {roleLabel(m.role)}
+            {m.employee_name && m.email ? ` · ${m.email}` : ''}
+            {m.phone ? ` · ${m.phone}` : ''} · {stamp}
+          </span>
+        </div>
+
+        {dual ? (
+          <span
+            className="badge"
+            title="Holds an employer role and is also on the payroll. One login: the employer portal and self service, with a view switch in the header."
+          >
+            employer + employee
+          </span>
+        ) : null}
+        {activated || !m.email ? null : <span className="badge">never activated</span>}
+        {m.is_active ? null : <span className="badge">disabled</span>}
+        {m.email ? null : <span className="badge">no sign-in</span>}
+        {m.phone || !ADMIN_ROLES.includes(m.role) ? null : (
+          <span className="badge">no contact number</span>
+        )}
+
+        {canEdit ? (
+          <>
+            <button className="btn btn-sm" onClick={() => setEditRole(m)} disabled={busy}>
+              Role
+            </button>
+            <button className="btn btn-sm" onClick={() => setEditPhone(m)} disabled={busy}>
+              {m.phone ? 'Number' : 'Add number'}
+            </button>
+            {m.role === 'employee' ? null : (
+              <button className="btn btn-sm" onClick={() => setLinking(m)} disabled={busy}>
+                {m.employee_id ? 'Employee record' : 'Link employee'}
+              </button>
+            )}
+            <button
+              className="btn btn-sm"
+              disabled={busy || !m.email || !m.is_active}
+              title={!m.email ? 'No sign-in behind this row.' : m.is_active ? undefined : 'Enable the login first.'}
+              onClick={() => run(() => resendOrgMemberActivation(m.id, orgId))}
+            >
+              Resend link
+            </button>
+            <button className="btn btn-sm" onClick={() => setTarget(m)} disabled={busy}>
+              {m.is_active ? 'Disable' : 'Enable'}
+            </button>
+            <button
+              className="btn btn-sm btn-danger"
+              onClick={() => {
+                setTyped('');
+                setDoomed(m);
+              }}
+              disabled={busy}
+            >
+              Delete
+            </button>
+          </>
+        ) : null}
+      </div>
+    );
+  }
+
   return (
     <div className="card">
       <div className="mb-3.5 flex items-start gap-3">
         <div className="min-w-0 flex-1">
           <h3 className="text-sm">Portal access</h3>
-          <p className="mt-0.5 text-xs text-slate-muted">
-            Who can sign in to this organisation&rsquo;s portal. Everyone is forced through
-            authenticator enrolment on first sign-in.
+          <p className="mt-0.5 text-xs leading-relaxed text-slate-muted">
+            Who can sign in to this organisation&rsquo;s portal, and as what. Everyone is forced
+            through authenticator enrolment on first sign-in.
           </p>
         </div>
         {canEdit ? (
@@ -338,47 +454,47 @@ export function MemberPanel({
           Nobody can sign in yet. Invite the owner to start them off.
         </p>
       ) : (
-        <div className="flex flex-col divide-y divide-slate-line2">
-          {members.map((m) => (
-            <div key={m.id} className="flex items-center gap-3 py-2.5">
-              <Avatar name={m.employee_name ?? m.role} slate={!m.is_active} />
-              <div className="min-w-0 flex-1">
-                <b className="block truncate text-[13px] font-semibold text-ink">
-                  {m.employee_name ?? m.email ?? 'Invited user'}
-                </b>
-                <span className="block truncate text-[11px] text-slate-muted">
-                  {m.role.replace(/_/g, ' ')}
-                  {m.employee_name && m.email ? ` · ${m.email}` : ''}
-                  {m.phone ? ` · ${m.phone}` : ''} · added {dateLabel(m.created_at)}
-                </span>
-              </div>
-              {m.is_active ? null : <span className="badge">inactive</span>}
-              {m.email ? null : <span className="badge">no sign-in</span>}
-              {m.phone || !ADMIN_ROLES.includes(m.role) ? null : (
-                <span className="badge">no contact number</span>
-              )}
-              {canEdit ? (
-                <>
-                  <button className="btn btn-sm" onClick={() => setEditPhone(m)} disabled={busy}>
-                    {m.phone ? 'Number' : 'Add number'}
-                  </button>
-                  <button className="btn btn-sm" onClick={() => setTarget(m)} disabled={busy}>
-                    {m.is_active ? 'Deactivate' : 'Reactivate'}
-                  </button>
-                  <button
-                    className="btn btn-sm btn-danger"
-                    onClick={() => {
-                      setTyped('');
-                      setDoomed(m);
-                    }}
-                    disabled={busy}
-                  >
-                    Delete
-                  </button>
-                </>
-              ) : null}
+        <div className="flex flex-col gap-4">
+          <section>
+            <div className="mb-1 flex items-baseline gap-2">
+              <h4 className="text-[12px] font-semibold uppercase tracking-wide text-slate-muted">
+                Employer logins
+              </h4>
+              <span className="text-[11px] text-slate-faint">{employerLogins.length}</span>
             </div>
-          ))}
+            {employerLogins.length === 0 ? (
+              <p className="py-2 text-[13px] text-slate-muted">
+                Nobody administers this organisation yet.
+              </p>
+            ) : (
+              <div className="flex flex-col divide-y divide-slate-line2">
+                {employerLogins.map(row)}
+              </div>
+            )}
+          </section>
+
+          <section>
+            <div className="mb-1 flex items-baseline gap-2">
+              <h4 className="text-[12px] font-semibold uppercase tracking-wide text-slate-muted">
+                Employee logins
+              </h4>
+              <span className="text-[11px] text-slate-faint">{employeeLogins.length}</span>
+            </div>
+            <p className="mb-1 text-[11px] leading-relaxed text-slate-muted">
+              Self service only. Their own payslips, leave and attendance — row level security keeps
+              them to their own records, not the menu.
+            </p>
+            {employeeLogins.length === 0 ? (
+              <p className="py-2 text-[13px] text-slate-muted">
+                No employee has been invited to self service yet. Their HR admin does that from the
+                Employees page in their own portal.
+              </p>
+            ) : (
+              <div className="flex flex-col divide-y divide-slate-line2">
+                {employeeLogins.map(row)}
+              </div>
+            )}
+          </section>
         </div>
       )}
 
@@ -402,25 +518,105 @@ export function MemberPanel({
             onDone={() => setInvite(false)}
             onCancel={() => setInvite(false)}
           />
+          <p className="mt-3 text-[11px] leading-relaxed text-slate-muted">
+            If this person is also on the payroll, nothing more is needed: when their employee
+            record carries the same email address, the two are joined automatically and they get
+            self service alongside their employer access.
+          </p>
+        </Modal>
+      ) : null}
+
+      {editRole ? (
+        <Modal
+          title="Change role"
+          sub={editRole.employee_name ?? editRole.email ?? undefined}
+          onClose={() => setEditRole(null)}
+        >
+          <RecordForm
+            fields={[
+              {
+                name: 'role',
+                label: 'Role',
+                type: 'select',
+                options: [...ROLE_OPTIONS, { value: 'employee', label: 'Employee (self service only)' }],
+                rules: [V.required('Role')],
+                hint: 'An owner, HR admin or payroll admin must have a contact number on file. Employee needs an employee record linked to the login.',
+              },
+            ]}
+            initial={{ role: editRole.role }}
+            action={(v) => setOrgMemberRole({ ...v, id: editRole.id, org_id: orgId })}
+            submitLabel="Save role"
+            onDone={() => setEditRole(null)}
+            onCancel={() => setEditRole(null)}
+          />
+        </Modal>
+      ) : null}
+
+      {linking ? (
+        <Modal
+          title={linking.employee_id ? 'Employee record' : 'Link an employee record'}
+          sub={linking.employee_name ?? linking.email ?? undefined}
+          onClose={() => setLinking(null)}
+        >
+          <div className="flex flex-col gap-3">
+            <p className="text-[13px] leading-relaxed text-slate-body">
+              A login and an employee record are two different things. The login decides what
+              somebody may do in the employer portal; the employee record is what self service
+              reads — payslips, leave balance, attendance. Joining them is what lets one person be
+              both, with a view switch in their portal header.
+            </p>
+            <p className="text-[12px] leading-relaxed text-slate-muted">
+              This happens automatically when the employee record carries the same email address as
+              the login. Use this when the two addresses differ.
+            </p>
+            <RecordForm
+              fields={[
+                {
+                  name: 'employee_id',
+                  label: 'Employee record',
+                  type: 'select',
+                  options: [
+                    { value: '', label: linking.employee_id ? '— unlink —' : '— none —' },
+                    ...employees
+                      .filter((e) => !e.has_login || e.id === linking.employee_id)
+                      .map((e) => ({
+                        value: e.id,
+                        label: `${e.full_name} · ${e.employee_code}${e.work_email ? ` · ${e.work_email}` : ''}`,
+                      })),
+                  ],
+                  hint: 'Only employees with no login of their own are listed — one record, one login.',
+                },
+              ]}
+              initial={{ employee_id: linking.employee_id ?? '' }}
+              action={(v) =>
+                setOrgMemberEmployee(linking.id, String(v.employee_id ?? '') || null, orgId)
+              }
+              submitLabel="Save"
+              onDone={() => setLinking(null)}
+              onCancel={() => setLinking(null)}
+            />
+          </div>
         </Modal>
       ) : null}
 
       {target ? (
         <ConfirmModal
-          title={target.is_active ? 'Deactivate this account?' : 'Reactivate this account?'}
+          title={target.is_active ? 'Disable this login?' : 'Enable this login?'}
           danger={target.is_active}
           busy={busy}
-          confirmLabel={target.is_active ? 'Deactivate' : 'Reactivate'}
+          confirmLabel={target.is_active ? 'Disable' : 'Enable'}
           onClose={() => setTarget(null)}
           onConfirm={() => flip(target)}
           body={
             target.is_active ? (
               <>
-                They lose access at their next request. An organisation must keep at least one active
-                owner, so the database will refuse if this is the last one.
+                They lose access at their next request. Nothing is deleted — the membership, the
+                history and the authenticator all stay, and enabling it again restores everything.
+                An organisation must keep at least one active owner, so the database refuses if this
+                is the last one.
               </>
             ) : (
-              <>They get access back immediately, with the same role.</>
+              <>They get access back immediately, with the same role and the same authenticator.</>
             )
           }
         />

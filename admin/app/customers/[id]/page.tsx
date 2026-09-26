@@ -9,6 +9,7 @@ import {
   MemberPanel,
   type ModuleRow,
   type MemberRow,
+  type EmployeeChoice,
   type LicenseInfo,
 } from '@/components/customers/customer-detail';
 import { createClient } from '@/lib/supabase/server';
@@ -48,7 +49,7 @@ export default async function CustomerDetail({ params }: { params: { id: string 
     non_conversion_reason: string | null; created_at: string;
   };
 
-  const [{ data: lic }, { data: catalog }, { data: orgMods }, { data: plans }, { data: members }, { count: headcount }] =
+  const [{ data: lic }, { data: catalog }, { data: orgMods }, { data: plans }, { data: members }, { data: empChoices }, { count: headcount }] =
     await Promise.all([
       supabase
         .from('organization_licenses')
@@ -59,6 +60,7 @@ export default async function CustomerDetail({ params }: { params: { id: string 
       supabase.from('organization_modules').select('module_code,enabled').eq('org_id', orgId),
       supabase.from('plans').select('code,name,price_per_seat_paise,max_seats').eq('is_active', true).order('price_per_seat_paise'),
       supabase.schema('api').rpc('list_org_members', { p_org: orgId }),
+      supabase.schema('api').rpc('list_org_employee_choices', { p_org: orgId }),
       supabase.from('employees').select('id', { count: 'exact', head: true }).eq('org_id', orgId),
     ]);
 
@@ -148,6 +150,7 @@ export default async function CustomerDetail({ params }: { params: { id: string 
           <MemberPanel
             orgId={orgId}
             members={(members ?? []) as MemberRow[]}
+            employees={(empChoices ?? []) as EmployeeChoice[]}
             canEdit={can(me, 'manage_customers')}
           />
         </div>
