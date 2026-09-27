@@ -56,9 +56,20 @@
            bg-white px-6 py-10 text-center;
   }
   /* Payroll is always the Indian Rupee glyph in a circle, never a dollar sign. */
+  /* The round badge that carries a single Rs glyph -- a menu icon, a KPI tile.
+     It is 22px wide and centres its content, so an actual AMOUNT put inside it
+     is clipped by the circle and spills over the words either side of it. That
+     is what went wrong on compensation history and pending compensation. Use
+     .amount for a figure in a sentence; .rupee is for the glyph alone. */
   .rupee {
     @apply inline-flex h-[22px] w-[22px] shrink-0 items-center justify-center rounded-full
            bg-brand-soft text-[13px] font-bold leading-none text-brand;
+  }
+  /* A money figure inside running text. inr() already carries the Rs sign, so
+     this only has to stop the number breaking across lines and keep digits
+     aligned down a column. */
+  .amount {
+    @apply whitespace-nowrap font-semibold tabular-nums text-ink;
   }
   .rupee-lg {
     @apply h-10 w-10 text-xl;

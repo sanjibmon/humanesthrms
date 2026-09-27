@@ -125,7 +125,8 @@ export function ExpenseConsole({
                   <div className="flex flex-wrap items-center gap-3">
                     <div className="min-w-0 flex-1">
                       <b className="block text-[13px] font-semibold text-ink">
-                        {c.title ?? 'Untitled claim'} · <span className="rupee">{inr(Number(c.total ?? 0))}</span>
+                        {c.title ?? 'Untitled claim'} ·{' '}
+                        <span className="amount">{inr(Number(c.total ?? 0))}</span>
                       </b>
                       <span className="block text-[11px] text-slate-muted">
                         {c.claim_no ? `${c.claim_no} · ` : ''}
@@ -170,7 +171,7 @@ export function ExpenseConsole({
                                 {i.merchant ?? ''}
                                 {i.description ? ` — ${i.description}` : ''}
                               </span>
-                              <span className="rupee font-semibold text-ink">{inr(Number(i.amount))}</span>
+                              <span className="amount">{inr(Number(i.amount))}</span>
                               {i.gst_amount ? (
                                 <span className="text-slate-muted">GST {inr(Number(i.gst_amount))}</span>
                               ) : null}

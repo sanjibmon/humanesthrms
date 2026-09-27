@@ -305,7 +305,7 @@ export function PayrollConsole({
                   <div className="min-w-0 flex-1">
                     <b className="block text-[13px] font-semibold text-ink">{c.employee_name}</b>
                     <span className="block text-[11px] text-slate-muted">
-                      <span className="rupee">{inr(Number(c.annual_ctc))}</span> a year from{' '}
+                      <span className="amount">{inr(Number(c.annual_ctc))}</span> a year from{' '}
                       {dateLabel(c.effective_from)}
                       {c.grade ? ` · grade ${c.grade}` : ''}
                     </span>

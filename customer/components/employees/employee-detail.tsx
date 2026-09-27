@@ -400,7 +400,7 @@ export function EmployeeDetail({
                 <div key={c.id} className="flex flex-wrap items-center gap-3 py-2.5">
                   <div className="min-w-0 flex-1">
                     <b className="block text-[13px] font-semibold text-ink">
-                      <span className="rupee">{inr(Number(c.annual_ctc))}</span> a year
+                      <span className="amount">{inr(Number(c.annual_ctc))}</span> a year
                     </b>
                     <span className="text-[11px] text-slate-muted">
                       From {dateLabel(c.effective_from)}
