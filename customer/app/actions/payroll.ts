@@ -73,61 +73,117 @@ async function ctx(perm: string) {
  * common Indian split; the balance component absorbs whatever is left so the
  * structure always adds up to CTC exactly rather than to CTC minus rounding.
  */
+/**
+ * A salary structure, with as many components as the organisation actually uses.
+ *
+ * The engine has always supported an open-ended component list -- four ways to
+ * calculate one, a Labour Code wage treatment, taxable, pro-rated and payslip
+ * flags on each. Only the form was closed: it offered Basic, HRA, conveyance
+ * and medical and nothing else, so anybody needing LTA, a food allowance or a
+ * city compensatory allowance had no way to say so. The components now arrive
+ * as JSON from the editor and are validated here, because a structure that does
+ * not reconcile produces wrong payslips for everybody on it, silently.
+ *
+ * Two invariants the engine depends on:
+ *   exactly one component marked as basic -- PF, gratuity and the 50% wage rule
+ *     are all computed from it;
+ *   exactly one balancing component -- it absorbs the remainder, which is what
+ *     makes the parts add up to CTC to the rupee.
+ */
 export async function saveSalaryStructure(vals: Values): Promise<ActionResult> {
   try {
     const { v, supabase } = await ctx('payroll.config');
 
-    const basicPct = numOrNull(vals.basic_pct) ?? 50;
-    const hraPct = numOrNull(vals.hra_pct) ?? 50;
-    if (basicPct < 1 || basicPct > 100) return fail('Basic has to be between 1 and 100 per cent.', 'basic_pct');
+    let raw: unknown;
+    try {
+      raw = JSON.parse(str(vals.components) || '[]');
+    } catch {
+      return fail('The component list could not be read. Reload the page and try again.');
+    }
+    if (!Array.isArray(raw) || raw.length === 0) {
+      return fail('A structure needs at least a basic component and a balancing component.');
+    }
 
-    const components: GradeTemplate['components'] = [
-      {
-        code: 'BASIC',
-        name: 'Basic',
-        calc: { type: 'pct_ctc', pct: basicPct },
-        treatment: 'wage',
-        taxable: true,
-        prorate: true,
-        showInPayslip: true,
-        isBasic: true,
-      },
-      {
-        code: 'HRA',
-        name: 'House Rent Allowance',
-        calc: { type: 'pct_basic', pct: hraPct },
-        treatment: 'excluded',
-        taxable: true,
-        prorate: true,
-        showInPayslip: true,
-      },
-    ];
+    const components: GradeTemplate['components'] = [];
+    const seen = new Set<string>();
 
-    if (numOrNull(vals.conveyance) ?? 0) {
+    for (const item of raw as Record<string, unknown>[]) {
+      const code = String(item.code ?? '').trim().toUpperCase();
+      const name = String(item.name ?? '').trim();
+      const kind = String(item.kind ?? '');
+      const value = Number(item.value ?? 0);
+
+      if (!code) return fail('Every component needs a code.');
+      if (!/^[A-Z0-9_]{1,20}$/.test(code)) {
+        return fail(`"${code}" is not a usable code. Letters, numbers and underscores only, up to 20 characters.`);
+      }
+      if (seen.has(code)) return fail(`Two components share the code ${code}. Each one has to be unique.`);
+      seen.add(code);
+      if (!name) return fail(`The component ${code} needs a name — it is what the employee reads on the payslip.`);
+
+      let calc: GradeTemplate['components'][number]['calc'];
+      if (kind === 'pct_ctc' || kind === 'pct_basic') {
+        if (!(value > 0) || value > 100) {
+          return fail(`${name}: a percentage has to be above 0 and no more than 100.`);
+        }
+        calc = { type: kind, pct: value };
+      } else if (kind === 'fixed') {
+        if (!(value >= 0)) return fail(`${name}: a fixed amount cannot be negative.`);
+        calc = { type: 'fixed', amount: value };
+      } else if (kind === 'balance') {
+        calc = { type: 'balance' };
+      } else {
+        return fail(`${name}: pick how it is calculated.`);
+      }
+
       components.push({
-        code: 'CONV', name: 'Conveyance Allowance',
-        calc: { type: 'fixed', amount: numOrNull(vals.conveyance) as number },
-        treatment: 'excluded', taxable: true, prorate: true, showInPayslip: true,
+        code,
+        name,
+        calc,
+        treatment: item.wage ? 'wage' : 'excluded',
+        taxable: item.taxable !== false,
+        prorate: item.prorate !== false,
+        showInPayslip: item.showInPayslip !== false,
+        isBasic: Boolean(item.isBasic),
       });
     }
-    if (numOrNull(vals.medical) ?? 0) {
-      components.push({
-        code: 'MED', name: 'Medical Allowance',
-        calc: { type: 'fixed', amount: numOrNull(vals.medical) as number },
-        treatment: 'excluded', taxable: true, prorate: true, showInPayslip: true,
-      });
+
+    const basics = components.filter((c) => c.isBasic);
+    if (basics.length === 0) {
+      return fail('Mark one component as the basic. PF, gratuity and the 50% wage rule are all computed from it.');
     }
-    // Always last: it takes the remainder, so the components reconcile to CTC.
-    components.push({
-      code: 'SPECIAL', name: 'Special Allowance',
-      calc: { type: 'balance' },
-      treatment: 'excluded', taxable: true, prorate: true, showInPayslip: true,
-    });
+    if (basics.length > 1) {
+      return fail(`Only one component can be the basic. ${basics.map((c) => c.code).join(' and ')} are both marked.`);
+    }
+    if (basics[0].calc.type === 'balance') {
+      return fail('The basic cannot be the balancing component — every other component would depend on a figure that depends on them.');
+    }
+
+    const balances = components.filter((c) => c.calc.type === 'balance');
+    if (balances.length === 0) {
+      return fail('One component has to take the balance, usually Special Allowance. Without it the parts do not add up to CTC and the remainder is silently lost.');
+    }
+    if (balances.length > 1) {
+      return fail(`Only one component can take the balance. ${balances.map((c) => c.code).join(' and ')} are both set to it.`);
+    }
+
+    /* A cheap reconciliation check on the percentages alone. It cannot catch
+       everything -- fixed amounts only fail at a low CTC -- but a structure
+       whose percentages already exceed 100 is wrong at every CTC. */
+    const pctOfCtc = components
+      .filter((c) => c.calc.type === 'pct_ctc')
+      .reduce((t, c) => t + (c.calc as { pct: number }).pct, 0);
+    if (pctOfCtc >= 100) {
+      return fail(`The percentages of CTC add up to ${pctOfCtc}%, leaving nothing for the balancing component.`);
+    }
+
+    // The balancing component always goes last, so it is computed after the rest.
+    const ordered = [...components.filter((c) => c.calc.type !== 'balance'), balances[0]];
 
     const template: GradeTemplate = {
       grade: str(vals.code).toUpperCase(),
       name: str(vals.name),
-      components,
+      components: ordered,
       ctcIncludesEmployerCosts: boolOf(vals.ctc_includes_employer_costs),
     };
 
@@ -150,7 +206,11 @@ export async function saveSalaryStructure(vals: Values): Promise<ActionResult> {
 
     touch();
     revalidatePath('/employees');
-    return ok(id ? 'Structure updated.' : 'Structure created. It can now be used on a compensation revision.');
+    return ok(
+      id
+        ? `Structure updated — ${ordered.length} components.`
+        : `Structure created with ${ordered.length} components. It can now be used on a compensation revision.`,
+    );
   } catch (e) {
     return boom(e);
   }

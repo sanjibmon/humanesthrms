@@ -4,13 +4,14 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Modal } from '@/components/ui/modal';
-import { RecordForm, type FieldDef, type Values } from '@/components/ui/form';
+import { RecordForm, type Values } from '@/components/ui/form';
 import { toast } from '@/components/ui/toast';
 import { EmptyState, Kpi } from '@/components/shell';
 import { Icon } from '@/components/icon';
 import { dateLabel, inr, inrShort } from '@/lib/format';
 import * as V from '@/lib/validate';
-import { createPayRun, saveSalaryStructure, approveCompensation } from '@/app/actions/payroll';
+import { createPayRun, approveCompensation } from '@/app/actions/payroll';
+import { StructureEditor } from '@/components/payroll/structure-editor';
 import { TaxVerification, type VDecl } from '@/components/payroll/tax-verification';
 
 export type RunRow = {
@@ -97,36 +98,6 @@ export function PayrollConsole({
   }
 
   const lastPaid = runs.find((r) => r.status === 'paid' || r.status === 'locked');
-
-  const structureFields: FieldDef[] = [
-    { name: 'code', label: 'Code', transform: 'upper', rules: [V.required('Code'), V.maxLen(20)], placeholder: 'STD', half: true },
-    { name: 'name', label: 'Name', rules: [V.required('Name')], placeholder: 'Standard structure', half: true },
-    {
-      name: 'basic_pct',
-      label: 'Basic as a percentage of CTC',
-      type: 'number',
-      rules: [V.required('Basic percentage'), V.positiveInt('Basic percentage')],
-      hint: 'The labour codes expect wages — basic and dearness allowance — to be at least half of total pay. Below 50% the structure is flagged and PF is computed on a floor anyway.',
-      half: true,
-    },
-    {
-      name: 'hra_pct',
-      label: 'HRA as a percentage of basic',
-      type: 'number',
-      rules: [V.required('HRA percentage'), V.nonNegative('HRA percentage')],
-      hint: '50% for the metros, 40% elsewhere, is the usual choice.',
-      half: true,
-    },
-    { name: 'conveyance', label: 'Conveyance allowance, a month', type: 'number', rules: [V.nonNegative('Conveyance')], half: true },
-    { name: 'medical', label: 'Medical allowance, a month', type: 'number', rules: [V.nonNegative('Medical')], half: true },
-    {
-      name: 'ctc_includes_employer_costs',
-      label: 'CTC already includes the employer PF, ESI and gratuity cost',
-      type: 'switch',
-      hint: 'On is the Indian norm: gross is CTC minus the employer contributions. Off means those sit on top of CTC.',
-    },
-    { name: 'is_active', label: 'Active', type: 'switch' },
-  ];
 
   return (
     <>
@@ -398,41 +369,14 @@ export function PayrollConsole({
       {open?.kind === 'structure' ? (
         <Modal
           title={open.row ? 'Edit salary structure' : 'New salary structure'}
-          sub="Percentages of CTC, not rupee amounts, so one structure serves every grade"
+          sub="As many components as you use. Percentages rather than rupee amounts, so one structure serves every salary."
           wide
           onClose={close}
         >
-          <RecordForm
-            fields={structureFields}
-            initial={{
-              code: open.row?.code ?? 'STD',
-              name: open.row?.name ?? 'Standard structure',
-              basic_pct: String(pctOf(open.row, 'BASIC') ?? 50),
-              hra_pct: String(pctOf(open.row, 'HRA') ?? 50),
-              conveyance: String(fixedOf(open.row, 'CONV') ?? ''),
-              medical: String(fixedOf(open.row, 'MED') ?? ''),
-              ctc_includes_employer_costs: open.row?.template?.ctcIncludesEmployerCosts ?? true,
-              is_active: open.row?.is_active ?? true,
-            }}
-            action={(vals: Values) => saveSalaryStructure({ ...vals, id: open.row?.id ?? '' })}
-            submitLabel="Save structure"
-            onDone={close}
-            onCancel={close}
-          />
+          <StructureEditor row={open.row} onDone={close} onCancel={close} />
         </Modal>
       ) : null}
     </>
   );
 }
 
-const pctOf = (s: StructureRow | undefined, code: string): number | undefined => {
-  const c = s?.template?.components?.find((x) => x.code === code);
-  const calc = c?.calc as { pct?: number } | undefined;
-  return calc?.pct;
-};
-
-const fixedOf = (s: StructureRow | undefined, code: string): number | undefined => {
-  const c = s?.template?.components?.find((x) => x.code === code);
-  const calc = c?.calc as { amount?: number } | undefined;
-  return calc?.amount;
-};
