@@ -50,6 +50,8 @@ export type Viewer = {
   orgId: string | null;
   orgName: string | null;
   role: string | null;
+  /** The signed-in person's own name, for the header. */
+  name: string;
   employeeId: string | null;
   isEmployer: boolean;
   /** This login carries an employer role — anything other than plain 'employee'. */
@@ -80,6 +82,30 @@ export async function getViewer(): Promise<Viewer> {
     .maybeSingle();
 
   const role = (member as any)?.role ?? null;
+
+  /* The header used to show the role under the company name, which told the
+     person something they already knew and left the account block unable to
+     answer "who am I signed in as" -- the question that matters when two people
+     share a machine. The name comes from the employee record when the login is
+     linked to one, from the invitation's metadata when it is not, and otherwise
+     falls back to the address. No guessing a name out of the local part of an
+     email: an honest address beats an invented "Sanjib Mondal". */
+  const meta = (user?.user_metadata ?? {}) as { full_name?: string; name?: string };
+  let ownName: string | null = null;
+  if ((member as any)?.employee_id) {
+    /* A separate query rather than an embed. org_members references employees
+       on a composite key (employee_id, org_id), and PostgREST cannot be relied
+       on to resolve an embed across one -- and a select that errors here would
+       return no membership at all, which renders the shell as "not a member of
+       any organisation". A name in the header is not worth that risk. */
+    const { data: emp } = await supabase
+      .from('employees')
+      .select('full_name')
+      .eq('id', (member as any).employee_id)
+      .maybeSingle();
+    ownName = (emp as { full_name?: string } | null)?.full_name ?? null;
+  }
+  const name = ownName || meta.full_name || meta.name || user?.email || 'Signed in';
   const orgId = (member as any)?.org_id ?? null;
   const employerRole = !!role && role !== 'employee';
 
@@ -117,6 +143,7 @@ export async function getViewer(): Promise<Viewer> {
     orgId,
     orgName: (member as any)?.organizations?.name ?? null,
     role,
+    name,
     employeeId: (member as any)?.employee_id ?? null,
     isEmployer: employerRole,
     canEmployer: employerRole,
@@ -151,17 +178,6 @@ export async function getEnabledModules(orgId: string | null): Promise<Set<strin
   return new Set(((data ?? []) as { module_code: string }[]).map((r) => r.module_code));
 }
 
-const ROLE_LABEL: Record<string, string> = {
-  owner: 'Owner',
-  hr_admin: 'HR Admin',
-  payroll_admin: 'Payroll Admin',
-  finance_approver: 'Finance',
-  manager: 'Manager',
-  recruiter: 'Recruiter',
-  auditor: 'Auditor',
-  employee: 'Employee',
-};
-
 export async function CustomerShell({
   current,
   children,
@@ -189,7 +205,7 @@ export async function CustomerShell({
       brandSub={employer ? 'Employer Portal' : 'Self Service'}
       roleLabel={employer ? 'Employer' : 'Employee'}
       userName={v.orgName ?? v.email ?? 'Signed in'}
-      userMeta={v.role ? ROLE_LABEL[v.role] ?? v.role : v.email}
+      userMeta={v.name}
       menu={menu}
       current={current}
       aside={both ? <ViewSwitch view={v.view} /> : undefined}

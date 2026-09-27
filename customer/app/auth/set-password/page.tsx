@@ -23,7 +23,18 @@ export default async function SetPasswordPage() {
         <p className="mb-5 mt-1 text-[13px] text-slate-muted">
           One-time setup for your HumaNest account
         </p>
-        <SetPasswordForm email={user.email ?? ''} />
+        {/* Pre-filled from the invitation when whoever invited them typed a
+            name, so the common case is one glance rather than one more field. */}
+        <SetPasswordForm
+          email={user.email ?? ''}
+          name={
+            String(
+              (user.user_metadata as { full_name?: string; name?: string } | null)?.full_name ??
+                (user.user_metadata as { name?: string } | null)?.name ??
+                '',
+            )
+          }
+        />
       </div>
       <Link href="/login" className="text-xs text-slate-muted hover:text-brand-dark">
         Back to sign in

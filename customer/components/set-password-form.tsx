@@ -12,8 +12,9 @@ const RULES: { test: (v: string) => boolean; label: string }[] = [
   { test: (v) => /[^A-Za-z0-9]/.test(v), label: 'At least one symbol' },
 ];
 
-export function SetPasswordForm({ email }: { email: string }) {
+export function SetPasswordForm({ email, name = '' }: { email: string; name?: string }) {
   const router = useRouter();
+  const [fullName, setFullName] = useState(name);
   const [pw, setPw] = useState('');
   const [again, setAgain] = useState('');
   const [show, setShow] = useState(false);
@@ -32,7 +33,14 @@ export function SetPasswordForm({ email }: { email: string }) {
 
     setBusy(true);
     const supabase = createClient();
-    const { error: err } = await supabase.auth.updateUser({ password: pw });
+    /* The name goes on the account in the same call as the password. This is the
+       one moment every invited person passes through, and it is the only place
+       somebody whose invitation carried no name can supply their own -- without
+       it their portal header can only show their email address back to them. */
+    const { error: err } = await supabase.auth.updateUser({
+      password: pw,
+      data: fullName.trim() ? { full_name: fullName.trim() } : undefined,
+    });
     setBusy(false);
     if (err) return setError(err.message);
 
@@ -47,6 +55,19 @@ export function SetPasswordForm({ email }: { email: string }) {
         Signed in as <b className="text-ink">{email}</b>. Choose a password, then you will be asked
         to set up an authenticator app — HumaNest requires it for every account.
       </p>
+
+      <label className="field">
+        <span className="lbl">Your name</span>
+        <input
+          type="text"
+          required
+          autoComplete="name"
+          placeholder="Smita Roy"
+          value={fullName}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFullName(e.target.value)}
+        />
+        <span className="hint">This is what your colleagues and your own portal header will show.</span>
+      </label>
 
       <label className="field">
         <span className="lbl">New password</span>

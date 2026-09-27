@@ -65,7 +65,7 @@ export async function createCustomer(v: Values): Promise<ActionResult> {
     let note = '';
 
     if (ownerEmail) {
-      const invited = await inviteOrgOwner(orgId, ownerEmail, ownerRole, str(v.owner_phone));
+      const invited = await inviteOrgOwner(orgId, ownerEmail, ownerRole, str(v.owner_phone), str(v.owner_name));
       note = invited.ok ? ' ' + (invited.message ?? '') : ' ' + invited.error;
     }
 
@@ -91,6 +91,7 @@ export async function inviteOrgOwner(
   email: string,
   role = 'owner',
   phone = '',
+  fullName = '',
 ): Promise<ActionResult> {
   try {
     await requirePlatform('manage_customers');
@@ -117,7 +118,10 @@ export async function inviteOrgOwner(
     const { data: invited, error: inviteErr } = await admin.auth.admin.inviteUserByEmail(lower, {
       // The customer portal, not this one — see customerInviteRedirectTo().
       redirectTo: customerInviteRedirectTo(),
-      data: { org_id: orgId, invited_as: role },
+      /* full_name is what the customer portal's header reads for somebody who
+         has no employee record yet -- an HR admin invited on day one. Without it
+         their own portal can only show their email address back to them. */
+      data: { org_id: orgId, invited_as: role, full_name: fullName.trim() || undefined },
     });
 
     if (inviteErr) {
@@ -169,7 +173,13 @@ export async function inviteOrgOwner(
 }
 
 export async function inviteOrgOwnerAction(v: Values): Promise<ActionResult> {
-  return inviteOrgOwner(str(v.org_id), str(v.email), str(v.role) || 'owner', str(v.phone));
+  return inviteOrgOwner(
+    str(v.org_id),
+    str(v.email),
+    str(v.role) || 'owner',
+    str(v.phone),
+    str(v.full_name),
+  );
 }
 
 /**

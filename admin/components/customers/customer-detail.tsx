@@ -502,7 +502,15 @@ export function MemberPanel({
         <Modal title="Invite someone to this portal" sub="They receive an email to set a password." onClose={() => setInvite(false)}>
           <RecordForm
             fields={[
-              { name: 'email', label: 'Email', type: 'email', rules: [V.required('Email'), V.email] },
+              {
+                name: 'full_name',
+                label: 'Full name',
+                rules: [V.required('Full name')],
+                placeholder: 'Smita Roy',
+                hint: 'Shown to them in their own portal header. Without it their portal can only show their email address back to them.',
+                half: true,
+              },
+              { name: 'email', label: 'Email', type: 'email', rules: [V.required('Email'), V.email], half: true },
               { name: 'role', label: 'Role', type: 'select', options: ROLE_OPTIONS, rules: [V.required('Role')] },
               {
                 name: 'phone',
